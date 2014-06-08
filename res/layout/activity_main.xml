@@ -60,31 +60,29 @@
 
                     <RadioGroup
                         android:id="@+id/types"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal"
+                        android:layout_span="2"
+                        android:scaleType="fitXY" >
 
                         <RadioButton
                             android:id="@+id/income"
-                            android:text="INCOME" />
+                            android:text="IN"
+                            android:scaleX="0.666" />
 
                         <RadioButton
                             android:id="@+id/spend"
-                            android:text="SPEND" />
-                    </RadioGroup>
-                </TableRow>
-
-                <TableRow>
-
-                    <RadioGroup
-                        android:id="@+id/types"
-                        android:orientation="horizontal" >
+                            android:text="SP" 
+                            android:scaleX="0.666" />
 
                         <RadioButton
                             android:id="@+id/credit"
-                            android:text="CREDIT" />
+                            android:text="CR" 
+                            android:scaleX="0.666" />
 
                         <RadioButton
                             android:id="@+id/debt"
-                            android:text="DEBT" />
+                            android:text="DE" 
+                            android:scaleX="0.666" />
                     </RadioGroup>
                 </TableRow>
 
