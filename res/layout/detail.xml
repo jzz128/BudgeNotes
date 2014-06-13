@@ -1,0 +1,84 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4px"
+    android:stretchColumns="1" 
+    >
+
+    <TableRow>
+
+        <TextView
+            android:paddingRight="2px"
+            android:text="Item:" />
+
+        <EditText
+            android:id="@+id/item"
+            android:maxWidth="140sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:paddingLeft="2px"
+            android:paddingRight="2px"
+            android:text="Amount:" />
+
+        <EditText
+            android:id="@+id/amount"
+            android:digits="0123456789."
+            android:inputType="numberDecimal" />
+    </TableRow>
+
+    <TextView android:text="Type:" />
+
+    <TableRow>
+
+        <RadioGroup
+            android:id="@+id/types"
+            android:layout_span="2"
+            android:orientation="horizontal"
+            android:scaleType="fitXY" >
+
+            <RadioButton
+                android:id="@+id/income"
+                android:scaleX="0.666"
+                android:text="IN" />
+
+            <RadioButton
+                android:id="@+id/spend"
+                android:scaleX="0.666"
+                android:text="SP" />
+
+            <RadioButton
+                android:id="@+id/credit"
+                android:scaleX="0.666"
+                android:text="CR" />
+
+            <RadioButton
+                android:id="@+id/debt"
+                android:scaleX="0.666"
+                android:text="DE" />
+        </RadioGroup>
+    </TableRow>
+
+    <TableRow>
+
+        <TextView android:text="Notes:" />
+
+        <EditText
+            android:id="@+id/notes"
+            android:gravity="top"
+            android:lines="1"
+            android:maxLines="2"
+            android:maxWidth="200sp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+</TableLayout>
