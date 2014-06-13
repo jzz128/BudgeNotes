@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.app.ListActivity;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -29,7 +31,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends TabActivity {
+public class MainActivity extends ListActivity {
 
 	Cursor model = null;
 	RecordAdapter adapter = null;
@@ -41,11 +43,13 @@ public class MainActivity extends TabActivity {
 	RecordHelper helper = null;
 	AtomicBoolean isActive = new AtomicBoolean(true);
 	int progress = 0;
+	public final static String ID_EXTRA="apt.tutorial._ID";
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
+		//requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.activity_main);
 
 		helper = new RecordHelper(this);
@@ -54,98 +58,27 @@ public class MainActivity extends TabActivity {
 		notes = (EditText) findViewById(R.id.notes);
 		types = (RadioGroup) findViewById(R.id.types);
 
-		Button save = (Button) findViewById(R.id.save);
-		save.setOnClickListener(onSave);
+		//Button save = (Button) findViewById(R.id.save);
+		//save.setOnClickListener(onSave);
 
-		ListView list = (ListView) findViewById(R.id.records);
+		//ListView list = (ListView) findViewById(R.id.records);
 		// list.setOnItemClickListener(onListClick);
 
 		model = helper.getAll();
 		startManagingCursor(model);
 		adapter = new RecordAdapter(model);
-		list.setAdapter(adapter);
+		setListAdapter(adapter);
 
-		TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
-		spec.setContent(R.id.records);
-		spec.setIndicator("List", getResources().getDrawable(R.drawable.list));
-		getTabHost().addTab(spec);
-
-		spec = getTabHost().newTabSpec("tag2");
-		spec.setContent(R.id.details);
-		spec.setIndicator("Details",
-				getResources().getDrawable(R.drawable.details));
-		getTabHost().addTab(spec);
-
-		getTabHost().setCurrentTab(1);
-		list.setOnItemClickListener(onListClick);
 	}
 
-	private View.OnClickListener onSave = new View.OnClickListener() {
-		public void onClick(View v) {
-			// Record r = new Record();
-			// EditText item = (EditText) findViewById(R.id.item);
-			// EditText amount = (EditText) findViewById(R.id.amount);
-			current = new Record();
 
-			current.setItem(item.getText().toString());
-			current.setAmount(amount.getText().toString());
-			current.setNotes(notes.getText().toString());
-			String type = null;
-
-			// RadioGroup types = (RadioGroup) findViewById(R.id.types);
-
-			switch (types.getCheckedRadioButtonId()) {
-			case R.id.income:
-				current.setType("Income");
-				type = "Income";
-				break;
-
-			case R.id.spend:
-				current.setType("Spend");
-				type = "Spend";
-				break;
-
-			case R.id.credit:
-				current.setType("Credit");
-				type = "Credit";
-				break;
-
-			case R.id.debt:
-				current.setType("Debt");
-				type = "Debt";
-				break;
-			}
-
-			helper.insert(item.getText().toString(), amount.getText()
-					.toString(), type, notes.getText().toString());
-			model.requery();
-			
-			// clear the EditText fields after save button was pressed
-			item.setText("");
-			amount.setText("");
-			notes.setText("");
-			types.clearCheck();
-		}
-	};
-
-	private AdapterView.OnItemClickListener onListClick = new AdapterView.OnItemClickListener() {
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			model.moveToPosition(position);
-			item.setText(helper.getItem(model));
-			amount.setText(helper.getAmount(model));
-			if (helper.getType(model).equals("Income")) {
-				types.check(R.id.income);
-			} else if (helper.getType(model).equals("Spend")) {
-				types.check(R.id.spend);
-			} else if (helper.getType(model).equals("Credit")) {
-				types.check(R.id.credit);
-			} else {
-				types.check(R.id.debt);
-			}
-			getTabHost().setCurrentTab(1);
-		}
-	};
+	
+	public void onListItemClick(ListView list, View view,
+			int position, long id) {
+			Intent i=new Intent(MainActivity.this, DetailActivity.class);
+			i.putExtra(ID_EXTRA, String.valueOf(id));
+			startActivity(i);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,13 +88,9 @@ public class MainActivity extends TabActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.toast) {
-			String message = "No record selected";
-			if (current != null) {
-				message = current.getNotes();
-			}
-			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-			return (true);
+		if (item.getItemId() == R.id.add) {
+			startActivity(new Intent(MainActivity.this, DetailActivity.class));
+			return(true);
 		} else if (item.getItemId() == R.id.run) {
 			startWork();
 			setProgressBarVisibility(true);

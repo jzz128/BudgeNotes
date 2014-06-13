@@ -23,6 +23,17 @@ class RecordHelper extends SQLiteOpenHelper {
 		getWritableDatabase().insert("records", "item", cv);
 	}
 
+	public void update(String id, String item, String amount, String type,
+			String notes) {
+		ContentValues cv = new ContentValues();
+		String[] args = { id };
+		cv.put("item", item);
+		cv.put("amount", amount);
+		cv.put("type", type);
+		cv.put("notes", notes);
+		getWritableDatabase().update("records", cv, "_ID=?", args);
+	}
+
 	public Cursor getAll() {
 		return (getReadableDatabase()
 				.rawQuery(
@@ -54,4 +65,13 @@ class RecordHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	}
+
+	public Cursor getById(String id) {
+		String[] args = { id };
+		return (getReadableDatabase()
+				.rawQuery(
+						"SELECT _id, item, amount, type, notes FROM records WHERE _ID=?",
+						args));
+	}
+
 }
