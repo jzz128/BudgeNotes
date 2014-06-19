@@ -119,7 +119,11 @@ public class MainActivity extends TabActivity {
 			helper.insert(item.getText().toString(), amount.getText()
 					.toString(), type, notes.getText().toString());
 			model.requery();
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> origin/master
 			// clear the EditText fields after save button was pressed
 			item.setText("");
 			amount.setText("");
