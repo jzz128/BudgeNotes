@@ -12,14 +12,7 @@
                     android:id="@+id/view_account"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text= "VIEW ACCOUNT" />
-                <Button
-                    android:id="@+id/main_menu"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text= "MAIN MENU" />
-                
-               
+                    android:text= "VIEW ACCOUNT" />           
     </LinearLayout>
 
 </TabHost>

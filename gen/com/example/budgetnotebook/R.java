@@ -33,7 +33,7 @@ public final class R {
         public static final int toast=0x7f020009;
     }
     public static final class id {
-        public static final int action_settings=0x7f080016;
+        public static final int action_settings=0x7f080015;
         public static final int add_transaction=0x7f08000c;
         public static final int amount=0x7f080003;
         public static final int credit=0x7f080007;
@@ -43,16 +43,15 @@ public final class R {
         public static final int icon=0x7f080012;
         public static final int income=0x7f080005;
         public static final int item=0x7f080002;
-        public static final int main_menu=0x7f080015;
         public static final int notes=0x7f080009;
         public static final int number=0x7f080014;
         public static final int record1s=0x7f080011;
         public static final int records=0x7f080000;
-        public static final int run=0x7f080018;
+        public static final int run=0x7f080017;
         public static final int save=0x7f08000a;
         public static final int spend=0x7f080006;
         public static final int title=0x7f080013;
-        public static final int toast=0x7f080017;
+        public static final int toast=0x7f080016;
         public static final int types=0x7f080004;
         public static final int view_account=0x7f08000b;
         public static final int view_goals=0x7f08000e;

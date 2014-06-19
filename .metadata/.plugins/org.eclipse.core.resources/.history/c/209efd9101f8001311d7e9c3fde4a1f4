@@ -1,0 +1,7 @@
+package com.example.budgetnotebook;
+
+import android.widget.Button;
+
+public class Account {
+	view_account = (Button) findViewById(R.id.view_account);
+}

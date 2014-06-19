@@ -11,8 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class MainMenu extends Activity {
-	//String classes[]  = {"MainActivity", "view_account", "add_transaction", "view_profile", "view_goals", "view_recommendations", "exit"};
-	boolean profile_exists = true;
+	boolean profile_exists = true; // This is being used temporarily until the profile functionality is created
 	Button view_account;
 	Button add_transaction;
 	Button view_profile;
@@ -24,23 +23,24 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Display the Main Menu if a profile exists
 		if (profile_exists) {
 			setContentView(R.layout.main_menu);
 		}
-		//Display the Create Profile page if a profile does not exist
+		// Display the Create Profile page if a profile does not exist
 		else {
 			setContentView(R.layout.create_profile);	
 		}
-		// Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
+		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				try{
-					Class mainClass = Class.forName("com.example.budgetnotebook.MainActivity");
-					Intent mainIntent = new Intent(MainMenu.this, mainClass);
-					startActivity(mainIntent);
+					Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
+					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
 					}
@@ -51,11 +51,17 @@ public class MainMenu extends Activity {
 		add_transaction = (Button) findViewById(R.id.add_transaction);
 		add_transaction.setOnClickListener(new View.OnClickListener() {
 					
+			
 			@Override
 			public void onClick(View v) {
-				setContentView(R.layout.add_transaction);
-						
-			}
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			}				
 		});
 		
 		// Set the VIEW PROFILE button to display the VIEW PROFILE page when clicked
@@ -64,7 +70,14 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				setContentView(R.layout.view_profile);
+				//setContentView(R.layout.view_profile);
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.Profile");
+					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 						
 			}
 		});
@@ -75,7 +88,14 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				setContentView(R.layout.view_goals);
+				//setContentView(R.layout.view_goals);
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 						
 			}
 		});
@@ -86,7 +106,14 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				setContentView(R.layout.view_recommendations);
+				//setContentView(R.layout.view_recommendations);
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
+					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 						
 			}
 		});
@@ -102,23 +129,9 @@ public class MainMenu extends Activity {
 						
 			}
 
-		});
-		//setListAdapter(new ArrayAdapter<String>(MainMenu.this, android.R.layout.simple_expandable_list_item_1, classes));
-		
+		});	
 	}
 }
-	/*
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
-		String className = classes[position];
-		try{
-			Class mainClass = Class.forName("com.example.budgetnotebook." + className);
-			Intent mainIntent = new Intent(MainMenu.this, mainClass);
-			startActivity(mainIntent);
-			} catch(ClassNotFoundException e) {
-				e.printStackTrace();
-			}*/
-		
+
+
 

@@ -1,0 +1,7 @@
+package com.example.budgetnotebook;
+
+import android.widget.Button;
+
+public class Account {
+	setContentView(R.layout.view_account);
+}
