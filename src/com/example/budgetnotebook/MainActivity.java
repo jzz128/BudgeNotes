@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,7 +76,7 @@ public class MainActivity extends TabActivity {
 				getResources().getDrawable(R.drawable.details));
 		getTabHost().addTab(spec);
 
-		getTabHost().setCurrentTab(0);
+		getTabHost().setCurrentTab(1);
 		list.setOnItemClickListener(onListClick);
 	}
 
@@ -118,6 +119,12 @@ public class MainActivity extends TabActivity {
 			helper.insert(item.getText().toString(), amount.getText()
 					.toString(), type, notes.getText().toString());
 			model.requery();
+
+			// clear the EditText fields after save button was pressed
+			item.setText("");
+			amount.setText("");
+			notes.setText("");
+			types.clearCheck();
 		}
 	};
 
@@ -244,11 +251,13 @@ public class MainActivity extends TabActivity {
 		void populateFrom(Cursor c, RecordHelper r) {
 			name.setText(r.getItem(c));
 			amount.setText(r.getAmount(c));
+			if (r.getType(c) == null)
+				return;
 			if (r.getType(c).equals("Income")) {
 				icon.setImageResource(R.drawable.income);
 			} else if (r.getType(c).equals("Spend")) {
 				icon.setImageResource(R.drawable.spend);
-			} else if (r.getType(c).equals("CTVredit")) {
+			} else if (r.getType(c).equals("Credit")) {
 				icon.setImageResource(R.drawable.credit);
 			} else {
 				icon.setImageResource(R.drawable.debt);
