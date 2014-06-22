@@ -31,7 +31,7 @@ public class DetailActivity extends Activity {
 		save.setOnClickListener(onSave);
 
 		//setContentView(R.layout.detail);
-		recordId = getIntent().getStringExtra(MainActivity.ID_EXTRA);
+		recordId = getIntent().getStringExtra(MenuActivity.ID_EXTRA);
 		if (recordId != null) {
 			load();
 		}
