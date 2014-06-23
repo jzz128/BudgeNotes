@@ -1,0 +1,19 @@
+package com.example.budgetnotebook;
+
+import android.test.ActivityInstrumentationTestCase2;
+//import junit.framework.TestCase;
+
+public class MainMenuValidation extends ActivityInstrumentationTestCase2<MainMenu> {
+	//MainMenu activity;
+	//boolean j = true;
+	private MainMenu MainMenuActivity;
+   // private TextView mFirstTestText;
+    
+	public MainMenuValidation() {
+		super(MainMenu.class);
+		//super("src.com.example.budgetnotebook.MainMenu");
+		//setName(name);
+		//assert j = true;
+	}
+
+}

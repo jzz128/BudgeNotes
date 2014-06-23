@@ -1,0 +1,36 @@
+package com.example.budgetnotebook;
+
+import android.test.ActivityInstrumentationTestCase2;
+import android.text.Layout;
+import android.view.View;
+//import junit.framework.TestCase;
+import android.widget.TextView;
+
+public class MainMenuValidation extends ActivityInstrumentationTestCase2<MainMenu> {
+	//MainMenu activity;
+	//boolean j = true;
+	private MainMenu MainMenuActivity;
+    private View MainMenuView;
+    
+	public MainMenuValidation() {
+		super(MainMenu.class);
+		//super("src.com.example.budgetnotebook.MainMenu");
+		//setName(name);
+		//assert j = true;
+	}
+	
+	@Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        MainMenuActivity = getActivity();
+        MainMenuView = (View) MainMenuActivity.findViewById(R.layout.main_menu);
+	}
+	
+	public void testMyFirstTestTextView_labelText() {
+	    final String expected =
+	            mFirstTestActivity.getString(R.string.my_first_test);
+	    final String actual = mFirstTestText.getText().toString();
+	    assertEquals(expected, actual);
+	}
+
+}

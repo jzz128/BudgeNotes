@@ -1,0 +1,14 @@
+package com.example.budgetnotebook;
+
+import junit.framework.TestCase;
+
+public class MainMenuValidation extends TestCase {
+	//MainMenu activity;
+	boolean j = true;
+	public MainMenuValidation(String name) {
+		super("src.com.example.budgetnotebook.MainMenu");
+		setName(name);
+		assert j = true;
+	}
+
+}
