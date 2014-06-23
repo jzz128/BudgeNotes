@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4px"
+    android:stretchColumns="1" 
+    >
+
+    <TableRow>
+
+        <TextView
+            android:paddingRight="2px"
+            android:text="Account Name:" />
+
+        <EditText
+            android:id="@+id/a_name"
+            android:maxWidth="140sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:paddingLeft="2px"
+            android:paddingRight="2px"
+            android:text="Account Number:" />
+
+        <EditText
+            android:id="@+id/a_number"
+            android:digits="0123456789."
+            android:inputType="numberDecimal" />
+    </TableRow>
+
+    
+    <TableRow>
+
+        <TextView android:text="Notes:" />
+
+        <EditText
+            android:id="@+id/a_notes"
+            android:gravity="top"
+            android:lines="1"
+            android:maxLines="2"
+            android:maxWidth="200sp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/a_save"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+</TableLayout>

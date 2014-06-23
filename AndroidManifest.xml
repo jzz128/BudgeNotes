@@ -24,8 +24,15 @@
         </activity>
         <activity android:name="com.example.budgetnotebook.DetailActivity" >
         </activity>
+        <activity android:name="com.example.budgetnotebook.MenuActivity" >
+        </activity>
         <activity
-            android:name="com.example.budgetnotebook.MenuActivity" >
+            android:name="com.example.budgetnotebook.AccountActivity"
+            android:label="@string/title_activity_account" >
+        </activity>
+        <activity
+            android:name="com.example.budgetnotebook.GoalActivity"
+            android:label="@string/title_activity_goal" >
         </activity>
     </application>
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4px"
+    android:stretchColumns="1" >
+
+    <TableRow>
+
+        <TextView
+            android:paddingRight="2px"
+            android:text="Goal Name:" />
+
+        <EditText
+            android:id="@+id/g_name"
+            android:maxWidth="140sp" />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:paddingLeft="2px"
+            android:paddingRight="2px"
+            android:text="Goal Amount:" />
+
+        <EditText
+            android:id="@+id/g_amount"
+            android:digits="0123456789."
+            android:inputType="numberDecimal" />
+    </TableRow>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2px"
+                android:paddingRight="2px"
+                android:text="Goal Date:"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <EditText
+                android:id="@+id/g_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="date" >
+
+                <requestFocus />
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/g_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/calendar_icon" />
+
+        </LinearLayout>
+
+
+    <TableRow>
+
+        <TextView android:text="Notes:" />
+
+        <EditText
+            android:id="@+id/g_notes"
+            android:gravity="top"
+            android:lines="1"
+            android:maxLines="2"
+            android:maxWidth="200sp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/g_save"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+</TableLayout>
