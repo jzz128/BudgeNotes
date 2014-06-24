@@ -25,15 +25,15 @@ class GoalHelper extends SQLiteOpenHelper {
 		getWritableDatabase().insert("goals", "g_name", cv);
 	}
 
-	public void update(String id, String goal_name, String goal_amount, String goal_date,
+	public void update(String goal_name, String goal_amount, String goal_date,
 			String notes) {
 		ContentValues cv = new ContentValues();
-		String[] args = { id };
+		String[] args = { goal_name };
 		cv.put("g_name", goal_name);
 		cv.put("g_amount", goal_amount);
 		cv.put("g_date", goal_date);
 		cv.put("g_notes", notes);
-		getWritableDatabase().update("goals", cv, "_ID=?", args);
+		getWritableDatabase().update("goals", cv, "G_NAME=?", args);
 	}
 
 	public Cursor getAll() {
@@ -73,7 +73,7 @@ class GoalHelper extends SQLiteOpenHelper {
 		String[] args = { id };
 		return (getReadableDatabase()
 				.rawQuery(
-						"SELECT _id, g_name,g_amount, g_date, g_notes FROM goals WHERE _ID=?",
+						"SELECT _id, g_name,g_amount, g_date, g_notes FROM goals WHERE G_NAME=?",
 						args));
 	}
 

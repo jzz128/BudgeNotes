@@ -1,14 +1,17 @@
 package com.example.budgetnotebook;
 
+import java.text.DateFormat.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.budgetnotebook.MenuActivity.RecordAdapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -24,11 +27,12 @@ import android.widget.Spinner;
 public class MainActivity extends Activity implements OnItemSelectedListener {
 	Button alert_button, recommends_buttton;
 	Button userinfo_button;
-	Spinner account_sp, goal_sp;
+	NewSpinner account_sp, goal_sp;
 	public final static String ID_EXTRA = "apt.tutorial.ACCOUNT_ID";
 	private boolean account_sp_started, goal_sp_started;
 	Cursor model = null;
 	AccountHelper a_helper = null;
+	GoalHelper g_helper = null;
 	public static boolean account_updated = false;
 	public static boolean goal_updated = false;
 
@@ -37,19 +41,22 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu);
 
-		account_sp = (Spinner) findViewById(R.id.account_sp);
-		goal_sp = (Spinner) findViewById(R.id.goal_sp);
+		account_sp = (NewSpinner) findViewById(R.id.account_sp);
+		goal_sp = (NewSpinner) findViewById(R.id.goal_sp);
 		// account_add_button = (Button) findViewById(R.id.account_add_b);
 		// goal_add_button = (Button) findViewById(R.id.goal_add_b);
 		userinfo_button = (Button) findViewById(R.id.ui_b);
 		recommends_buttton = (Button) findViewById(R.id.rec_b);
 		alert_button = (Button) findViewById(R.id.alert_b);
 		a_helper = new AccountHelper(this);
+		g_helper = new GoalHelper(this);
 
 		populateItemOnAccounts();
 		populateItemOnGoals();
 		account_sp.setOnItemSelectedListener(this);
+		account_sp.setOnItemSelectedEvenIfUnchangedListener(this);
 		goal_sp.setOnItemSelectedListener(this);
+		goal_sp.setOnItemSelectedEvenIfUnchangedListener(this);
 		registerForContextMenu(account_sp);
 		registerForContextMenu(goal_sp);
 
@@ -98,11 +105,16 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void populateItemOnGoals() {
-
+		model = g_helper.getAll();
+		startManagingCursor(model);
 		List<String> list = new ArrayList<String>();
-		list.add("Goal 1");
-		list.add("Goal 2");
-		list.add("Goal 3");
+		while (model.moveToNext()) {
+			list.add(g_helper.getGoalName(model));
+		}
+		// List<String> list = new ArrayList<String>();
+		// list.add("Goal 1");
+		// list.add("Goal 2");
+		// list.add("Goal 3");
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
 		dataAdapter
@@ -185,4 +197,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			goal_updated = false;
 		}
 	}
+
+
 }

@@ -46,6 +46,7 @@ public class GoalActivity extends Activity {
 		save.setOnClickListener(onSave);
 
 		goalId = getIntent().getStringExtra(MainActivity.ID_EXTRA);
+		Log.v("GoalActivity", "goalId = " +goalId);
 		if (goalId != null) {
 			load();
 		}
@@ -60,13 +61,20 @@ public class GoalActivity extends Activity {
 
 	private View.OnClickListener onSave = new View.OnClickListener() {
 		public void onClick(View v) {
+			if (goalId ==null) {
 			helper.insert(g_name.getText().toString(), g_amount.getText()
 					.toString(), g_date.getText().toString(), g_notes.getText()
 					.toString());
-			finish();
 			MainActivity.goal_updated = true;
+			} else {
+				helper.update(g_name.getText().toString(), g_amount.getText()
+						.toString(), g_date.getText().toString(), g_notes.getText()
+						.toString());
+			}
+			finish();
 		}
 	};
+
 
 	private View.OnClickListener onDate = new View.OnClickListener() {
 		public void onClick(View v) {

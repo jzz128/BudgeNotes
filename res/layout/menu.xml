@@ -27,7 +27,7 @@
             android:text="ACCOUNT"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <Spinner
+        <com.example.budgetnotebook.NewSpinner
             android:id="@+id/account_sp"
             android:layout_width="match_parent"
             android:layout_height="40dp" />
@@ -57,7 +57,7 @@
             android:text="   GOALS   "
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <Spinner
+        <com.example.budgetnotebook.NewSpinner
             android:id="@+id/goal_sp"
             android:layout_width="match_parent"
             android:layout_height="40dp" />
