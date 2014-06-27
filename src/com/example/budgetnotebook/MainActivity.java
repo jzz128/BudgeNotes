@@ -22,10 +22,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity implements OnItemSelectedListener {
-	Button alert_button, recommends_buttton;
+	ImageButton alert_button;
+	Button recommends_buttton;
 	Button userinfo_button;
 	NewSpinner account_sp, goal_sp;
 	public final static String ID_EXTRA = "apt.tutorial.ACCOUNT_ID";
@@ -47,7 +49,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		// goal_add_button = (Button) findViewById(R.id.goal_add_b);
 		userinfo_button = (Button) findViewById(R.id.ui_b);
 		recommends_buttton = (Button) findViewById(R.id.rec_b);
-		alert_button = (Button) findViewById(R.id.alert_b);
+		alert_button = (ImageButton) findViewById(R.id.alert_b);
 		a_helper = new AccountHelper(this);
 		g_helper = new GoalHelper(this);
 
@@ -81,6 +83,19 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				// Do something in response to button click
 			}
 		});
+		
+		alert_button.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				// Do something in response to button click
+			//	Intent intent = new Intent(MainActivity.this,NextActivity.class);
+	         //    startActivity(intent, 0);
+
+			}
+		});
+		
+		alert_button.setClickable(false);
+		alert_button.setEnabled(false);
+		alert_button.setImageResource(R.drawable.alert_off);
 	}
 
 	// add items into spinner dynamically

@@ -98,22 +98,19 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ALERT LEVEL"
+            android:layout_marginTop="30px"
+         
+            android:text="ALERT MESSAGE"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <Button
+
+        <ImageButton
             android:id="@+id/alert_b"
+            android:src="@drawable/alert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
             android:text="SHOW THE ALERTS" />
-
     </LinearLayout>
-
-    <RatingBar
-        android:id="@+id/ratingBar1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:isIndicator="true"
-        android:numStars="5" />
 
 </TableLayout>
