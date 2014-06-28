@@ -1,14 +1,10 @@
 package com.example.budgetnotebook;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
 public class MainMenu extends Activity {
 	boolean profile_exists = true; // This is being used temporarily until the profile functionality is created
@@ -23,6 +19,7 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		// Display the Main Menu if a profile exists
 		if (profile_exists) {
 			setContentView(R.layout.main_menu);
@@ -31,6 +28,34 @@ public class MainMenu extends Activity {
 		else {
 			setContentView(R.layout.create_profile);	
 		}
+		
+		// ---------------------------------------------------------------------------------------------------
+		// Testing the Goal Database -------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------------
+		
+		DBHelper db = new DBHelper(this);
+		/**
+		 * CRUD Operations
+		 * */
+		
+		// Add Goal
+		db.addGoal(new Goal("Goal1", "This is a goal", "Purchase", "500", "200", "One Week"));
+		db.addGoal(new Goal("Goal2", "This is another goal", "Purchase", "700", "200", "Two Weeks"));
+		db.addGoal(new Goal("Goal3", "This is another goal", "Purchase", "700", "200", "Two Weeks"));
+		
+		// Get All Goals
+		//List<Goal> list = db.getAllGoals();
+		db.toastGoal(getBaseContext());
+		
+		// Delete one Goal
+		//db.deleteGoal(list.get(0));
+		
+		// Get all Goals
+		db.getAllGoals();
+				
+		// ---------------------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------------
+		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {

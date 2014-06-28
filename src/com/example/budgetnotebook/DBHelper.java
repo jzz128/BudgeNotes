@@ -10,10 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
-	public static final String DATABASE_NAME = "budget_notebook";
+	public static final String DATABASE_NAME = "BudgetNotebook.db";
 	public static final int VERSION = 1;
 	
 	//Fields associated with the Profile Table.
@@ -57,6 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
 
+	/**
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "create table if not exists " + PROFILE_TABLE + " ( "
 			+ P_ID + "integer primary key autoincrement, "
@@ -86,25 +88,15 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ TRANSACTION_TYPE + "text, "
 			+ TRANSACTION_INTERVAL + "text, "
 			+ TRANSACTION_DESCRIPTION + "text);";
+	**/
 	
 	//SQL Statement for creating the Goal Table.
-	private final String createGoal = "create table if not exists " + GOAL_TABLE + " ( "
-			+ G_ID + "integer primary key autoincrement, "
-			+ G_A_ID + "text, "
-			+ GOAL_NAME + "text, "
-			+ GOAL_DESCRIPTION + "text, "
-			+ GOAL_TYPE + "text, "
-			+ GOAL_START_AMOUNT + "text, "
-			+ GOAL_DELTA_AMOUNT + "text, "
-			+ GOAL_END_DATE + "text);";
+	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
 	
-	//SQL Statement for creating the application database.
-	public final String createDB = createProfile + " "
-			+ createAccount + " "
-			+ createTransaction + " "
-			+ createGoal;
+	//SQL Statement for creating the application database. REMOVED ALL TABLES BUT GOAL FOR TESTING!!! -----------------------------------------------
+	public final String createDB = createGoal;
 	
-	public DBHelper(Context context, String name, CursorFactory factory, int version) {
+	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
 	}
 
@@ -114,10 +106,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createDB);
 	}
 
-	//Tells the system to do nothing when the DB is updated.
+	//Tells the system what to do when the DB is updated.
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion) {
-		//Do Nothing.
+		// Drop older goal_table table if existed
+        db.execSQL("DROP TABLE IF EXISTS goal_table");
+ 
+        // create fresh goal_table table
+        this.onCreate(db);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -148,7 +144,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		
 		Cursor cursor =
-				db.query(GOAL_TABLE, new String[] {GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+				db.query(GOAL_TABLE, new String[] {GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 		
 		if (cursor != null)
 	        cursor.moveToFirst();
@@ -158,6 +154,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		 goal.setName(cursor.getString(1));
 		 goal.setDescription(cursor.getString(2));
 		 goal.setType(cursor.getString(3));
+		 goal.setStartAmount(cursor.getString(4));
+		 goal.setDeltaAmount(cursor.getString(5));
+		 goal.setEndDate(cursor.getString(6));
 		 
 		 Log.d("getGoal("+id+")", goal.toString());
 		 
@@ -178,13 +177,13 @@ public class DBHelper extends SQLiteOpenHelper {
 			do {
 				goal = new Goal();
 				goal.setId(Integer.parseInt(cursor.getString(0)));
-				goal.setAId(Integer.parseInt(cursor.getString(1)));
-				goal.setName(cursor.getString(2));
-				goal.setDescription(cursor.getString(3));
-				goal.setType(cursor.getString(4));
-				goal.setStartAmount(cursor.getString(5));
-				goal.setDeltaAmount(cursor.getString(6));
-				goal.setEndDate(cursor.getString(7));
+				//goal.setAId(Integer.parseInt(cursor.getString(1)));
+				goal.setName(cursor.getString(1));
+				goal.setDescription(cursor.getString(2));
+				goal.setType(cursor.getString(3));
+				goal.setStartAmount(cursor.getString(4));
+				goal.setDeltaAmount(cursor.getString(5));
+				goal.setEndDate(cursor.getString(6));
 				
 				goals.add(goal);
 			} while (cursor.moveToNext());
@@ -195,15 +194,35 @@ public class DBHelper extends SQLiteOpenHelper {
 		return goals;
 	}
 	
+	// Toast all Goals
+	public void toastGoal(Context context){
+		String query = "SELECT * FROM " + GOAL_TABLE;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+		
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(1), Toast.LENGTH_SHORT).show();		
+				
+			} while (cursor.moveToNext());
+		}
+		else {
+			Toast.makeText(context, "No records yet!", Toast.LENGTH_SHORT).show();
+		}
+	}
 	// Update a single Goal.
 	public int updateGoal(Goal goal) {
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put("name", goal.getName());
-		values.put("description", goal.getDescription());
-		values.put("type", goal.getType());
+		values.put(GOAL_NAME, goal.getName());
+		values.put(GOAL_DESCRIPTION, goal.getDescription());
+		values.put(GOAL_TYPE, goal.getType());
+		values.put(GOAL_START_AMOUNT, goal.getStartAmount());
+		values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
+		values.put(GOAL_END_DATE, goal.getEndDate());
 		
 		int i = db.update(GOAL_TABLE, values, G_ID + " = ?", new String[] { String.valueOf(goal.getId()) });
 		
@@ -222,7 +241,6 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.close();
 		
 	}
-
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Other methods ----------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
