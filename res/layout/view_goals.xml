@@ -12,7 +12,7 @@
                     android:id="@+id/view_account"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text= "VIEW GOALS" />
+                    android:text="VIEW GOALS" />
                 
                
     </LinearLayout>
