@@ -29,7 +29,9 @@ public class MainMenu extends Activity {
 		}
 		// Display the Create Profile page if a profile does not exist
 		else {
-			setContentView(R.layout.create_profile);	
+			//setContentView(R.layout.create_profile);
+			//Intent openNewProfileActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+			//startActivity(openNewProfileActivity);
 		}
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
@@ -70,7 +72,6 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				//setContentView(R.layout.view_profile);
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.Profile");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
@@ -132,6 +133,3 @@ public class MainMenu extends Activity {
 		});	
 	}
 }
-
-
-

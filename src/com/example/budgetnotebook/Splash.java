@@ -7,21 +7,30 @@ import android.os.Bundle;
 // This method displays the splash screen briefly and then starts the main program
 
 public class Splash extends Activity {
+	boolean profile_exists = true; // This is being used temporarily until the profile functionality is created
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.splash);
+		// Display splash view then wait 1 second
+		setContentView(R.layout.splash);		
 		Thread timer = new Thread(){
 			public void run() {
 				try {
-					sleep(500);
+					sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally {
-					Intent openMainActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+					// Display main menu if a profile exists. Otherwise prompt user to create a profile
+					Intent openMainActivity;
+					if (profile_exists) {
+						openMainActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+						
+					} else {
+						openMainActivity = new Intent("com.example.budgetnotebook.PROFILE");
+					}
 					startActivity(openMainActivity);
+					
 				}
 			}
 		};
@@ -30,7 +39,7 @@ public class Splash extends Activity {
 
 	@Override
 	protected void onPause() {
-		// Kill splash activity so it cannot be accessed via back button
+		// Kill splash activity once complete
 		super.onPause();
 		finish();
 	}

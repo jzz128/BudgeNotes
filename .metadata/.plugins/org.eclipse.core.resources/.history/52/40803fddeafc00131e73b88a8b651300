@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.budgetnotebook"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.budgetnotebook.Splash"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.MainMenu"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.MAINMENU" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.Account"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.ACCOUNT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.Transaction"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.TRANSACTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.Profile"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.PROFILE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.Goal"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.GOAL" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.example.budgetnotebook.Recommendation"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.budgetnotebook.RECOMMENDATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        
+        
+    </application>
+
+</manifest>

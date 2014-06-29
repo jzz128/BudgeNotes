@@ -8,11 +8,90 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-                <Button
-                    android:id="@+id/view_account"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text= "CREATE PROFILE" />
+                  <TableLayout
+                	android:id="@+id/details"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content"
+                	android:paddingTop="4px"
+                	android:stretchColumns="1" >
+
+                	<TableRow>
+						<TextView
+                        	android:paddingRight="2px"
+                        	android:text="First Name:" />
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"
+                			android:id="@+id/profileFirstName"
+                			android:maxWidth="140sp" />
+                	</TableRow>
+                	<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="Last Name.:" />
+                		<EditText
+		                    android:layout_height="wrap_content"
+		                    android:layout_width="fill_parent"
+		                	android:id="@+id/profileLastName"
+		                	android:maxWidth="140sp" />
+		           	</TableRow>
+					<TableRow>
+                    	<TextView
+                        	android:paddingRight="2px"
+                        	android:text="Gender:" />							           	
+						<RadioGroup
+                        	android:id="@+id/profileGender"
+                        	android:orientation="horizontal"
+                        	android:layout_span="2"
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                        
+                        	android:scaleType="fitXY" >
+                        	<RadioButton
+                            	android:id="@+id/profileMale"
+                            	android:text="MALE"
+                            	android:scaleX="0.666" />
+                        	<RadioButton
+                            	android:id="@+id/profileFemale"
+                            	android:text="FEMALE" 
+                            	android:scaleX="0.666" />
+                    	</RadioGroup>
+                	</TableRow>	
+					<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="Birthday (MM/DD/YYYY):" />					
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                
+                			android:id="@+id/profileBirthday"
+                			android:maxWidth="140sp" />
+                	</TableRow>		
+                	<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="City:" />					
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                
+                			android:id="@+id/profileCity"
+                			android:maxWidth="140sp" />
+                	</TableRow>		 
+                	<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="E-Mail:" />					
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                
+                			android:id="@+id/profileEmail"
+                			android:maxWidth="140sp" />
+                	</TableRow>		                 
+                	<Button
+                    	android:id="@+id/save_profile"
+                    	android:layout_width="fill_parent"
+                    	android:layout_height="wrap_content"
+                    	android:text= "SAVE" />
+        	</TableLayout>  
                 
                
     </LinearLayout>

@@ -1,0 +1,63 @@
+package com.example.budgetnotebook;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
+// This method displays the splash screen briefly and then starts the main program
+
+public class Splash extends Activity {
+	boolean profile_exists = true; // This is being used temporarily until the profile functionality is created
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// 
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.splash);
+		if (profile_exists) {
+			public Intent openMainActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+			//startActivity(openMainActivity);
+		}
+		// Display the Create Profile page if a profile does not exist
+		else {
+			public Intent openCreateProfileActivity = new Intent("com.example.budgetnotebook.PROFILE");
+			//startActivity(openCreateProfileActivity);
+			}
+		Thread timer = new Thread(){
+			public void run() {
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} finally {
+					if (profile_exists)
+						startActivity(openMainActivity);
+					
+					
+			}
+		};
+		timer.start();
+		/*Thread timer = new Thread(){
+			public void run() {
+				try {
+					sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} finally {
+					Intent openMainActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+					startActivity(openMainActivity);
+				}
+			}
+		};
+		timer.start();*/
+	}
+
+	@Override
+	protected void onPause() {
+		// Kill splash activity so it cannot be accessed via back button
+		super.onPause();
+		finish();
+	}
+	
+
+}

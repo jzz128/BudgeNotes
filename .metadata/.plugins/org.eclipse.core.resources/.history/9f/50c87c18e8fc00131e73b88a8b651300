@@ -1,0 +1,44 @@
+package com.example.budgetnotebook;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+
+public class Profile extends Activity {
+	Button save_profile;
+	boolean profile_exists = false; // This is being used temporarily until the profile functionality is created
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (profile_exists) {
+			// Go to main menu
+		}
+		// Display the Create Profile page if a profile does not exist
+		else {
+		//setContentView(R.layout.view_profile);
+		setContentView(R.layout.create_profile);
+		}
+		
+		// Set the SAVE commit to the database and then display the main menu when clicked
+				save_profile = (Button) findViewById(R.id.save_profile);
+				save_profile.setOnClickListener(new View.OnClickListener() {
+							
+					
+					@Override
+					public void onClick(View v) {
+						try{
+							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+							Intent newIntent = new Intent(MainMenu.this, clickedClass);
+							startActivity(newIntent);
+							} catch(ClassNotFoundException e) {
+								e.printStackTrace();
+							}
+					}				
+				});
+		
+	}
+}
