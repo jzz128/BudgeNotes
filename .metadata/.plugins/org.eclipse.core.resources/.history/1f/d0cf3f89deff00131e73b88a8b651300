@@ -23,6 +23,16 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Display the Main Menu if a profile exists
+		if (profile_exists) {
+			setContentView(R.layout.main_menu);
+		}
+		// Display the Create Profile page if a profile does not exist
+		else {
+			//setContentView(R.layout.create_profile);
+			//Intent openNewProfileActivity = new Intent("com.example.budgetnotebook.MAINMENU");
+			//startActivity(openNewProfileActivity);
+		}
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {

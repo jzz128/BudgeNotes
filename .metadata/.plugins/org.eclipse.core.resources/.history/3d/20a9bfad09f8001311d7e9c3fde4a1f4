@@ -1,7 +1,0 @@
-package com.example.budgetnotebook;
-
-import junit.framework.TestCase;
-
-public class MainMenuValidation extends TestCase {
-
-}

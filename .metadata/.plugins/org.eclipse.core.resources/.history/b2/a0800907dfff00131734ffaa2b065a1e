@@ -14,7 +14,23 @@ public class Profile extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		/*if (profile_exists) {
+			// Go to main menu
+				try {
+					Class mainClass = Class.forName("com.example.budgetnotebook.MainMenu");
+					Intent newIntent = new Intent(Profile.this, mainClass);
+					startActivity(newIntent);
+					finish();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				
+				
+		}
+		// Display the Create Profile page if a profile does not exist
+		else {
+			setContentView(R.layout.create_profile);
+		}*/
 		setContentView(R.layout.create_profile);
 		
 		// Set the SAVE commit to the database and then display the main menu when clicked
