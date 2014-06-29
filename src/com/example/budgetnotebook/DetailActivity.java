@@ -27,11 +27,12 @@ public class DetailActivity extends Activity {
 		notes = (EditText) findViewById(R.id.notes);
 		types = (RadioGroup) findViewById(R.id.types);
 		Button save = (Button) findViewById(R.id.save);
-		Log.d("DetailActivity","Button save=" + save);
+		
 		save.setOnClickListener(onSave);
 
 		//setContentView(R.layout.detail);
 		recordId = getIntent().getStringExtra(MenuActivity.ID_EXTRA);
+		Log.d("DetailActivity","recordId=" + recordId);
 		if (recordId != null) {
 			load();
 		}

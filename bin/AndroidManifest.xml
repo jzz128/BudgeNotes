@@ -34,6 +34,18 @@
             android:name="com.example.budgetnotebook.GoalActivity"
             android:label="@string/title_activity_goal" >
         </activity>
+        <activity
+            android:name="com.example.budgetnotebook.ProfileActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
+            android:name="com.example.budgetnotebook.RecommendActivity"
+            android:label="@string/title_activity_recommend" >
+        </activity>
+        <activity
+            android:name="com.example.budgetnotebook.AlertActivity"
+            android:label="@string/title_activity_alert" >
+        </activity>
     </application>
 
 </manifest>

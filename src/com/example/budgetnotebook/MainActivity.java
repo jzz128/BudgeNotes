@@ -37,6 +37,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	GoalHelper g_helper = null;
 	public static boolean account_updated = false;
 	public static boolean goal_updated = false;
+	boolean bAlert = false;
+	public static AlertHelper alert_helper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 		account_sp = (NewSpinner) findViewById(R.id.account_sp);
 		goal_sp = (NewSpinner) findViewById(R.id.goal_sp);
-		// account_add_button = (Button) findViewById(R.id.account_add_b);
-		// goal_add_button = (Button) findViewById(R.id.goal_add_b);
+
 		userinfo_button = (Button) findViewById(R.id.ui_b);
 		recommends_buttton = (Button) findViewById(R.id.rec_b);
 		alert_button = (ImageButton) findViewById(R.id.alert_b);
@@ -62,37 +63,59 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		registerForContextMenu(account_sp);
 		registerForContextMenu(goal_sp);
 
-		// account_add_button.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View v) {
-		// Do something in response to button click
-		// }
-		// });
 
-		// goal_add_button.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View v) {
-		// Do something in response to button click
-		// }
-		// });
 		userinfo_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Do something in response to button click
+				Intent intent = new Intent(MainActivity.this,
+						ProfileActivity.class);
+				startActivity(intent);
 			}
 		});
+
 		recommends_buttton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Do something in response to button click
+				Intent intent = new Intent(MainActivity.this,
+						RecommendActivity.class);
+				startActivity(intent);
 			}
 		});
-		
+
 		alert_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Do something in response to button click
-			//	Intent intent = new Intent(MainActivity.this,NextActivity.class);
-	         //    startActivity(intent, 0);
+				Intent intent = new Intent(MainActivity.this,
+						AlertActivity.class);
+				startActivity(intent);
 
 			}
 		});
-		
+
+		alert_helper = new AlertHelper(this);
+
+		Cursor c = alert_helper.getById();
+
+		if (c.moveToFirst()) {
+			alert_button.setClickable(true);
+			alert_button.setEnabled(true);
+			alert_button.setImageResource(R.drawable.alert);
+			bAlert = true;
+			Log.d("AlertActivity", "bAlert=true");
+		} else {
+			alert_button.setClickable(false);
+			alert_button.setEnabled(false);
+			alert_button.setImageResource(R.drawable.alert_off);
+			bAlert = false;
+			Log.d("MainActivity", "bAlert=false");
+			/*
+			 * temporally add sample entry for testing, remove the following
+			 * later
+			 */
+			alert_helper.insert("Sample Alerts!!!");
+			/* done */
+		}
+		c.close();
 		alert_button.setClickable(false);
 		alert_button.setEnabled(false);
 		alert_button.setImageResource(R.drawable.alert_off);
@@ -107,10 +130,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			list.add(a_helper.getAccountName(model));
 		}
 
-		// List<String> list = new ArrayList<String>();
-		// list.add("Account 1");
-		// list.add("Account 2");
-		// list.add("Account 3");
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
 		dataAdapter
@@ -126,10 +145,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		while (model.moveToNext()) {
 			list.add(g_helper.getGoalName(model));
 		}
-		// List<String> list = new ArrayList<String>();
-		// list.add("Goal 1");
-		// list.add("Goal 2");
-		// list.add("Goal 3");
+
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
 		dataAdapter
@@ -146,7 +162,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				account_sp_started = true;
 				return;
 			}
-			// startActivity(new Intent(MainActivity.this, MenuActivity.class));
+
 			Intent i = new Intent(MainActivity.this, MenuActivity.class);
 			i.putExtra(ID_EXTRA, String.valueOf(parent.getItemAtPosition(pos)));
 			startActivity(i);
@@ -155,13 +171,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				goal_sp_started = true;
 				return;
 			}
-			// startActivity(new Intent(MainActivity.this, MenuActivity.class));
+
 			Intent i = new Intent(MainActivity.this, GoalActivity.class);
 			i.putExtra(ID_EXTRA, String.valueOf(parent.getItemAtPosition(pos)));
 			startActivity(i);
 		}
-		// An item was selected. You can retrieve the selected item using
-		// parent.getItemAtPosition(pos);
+
 	}
 
 	@Override
@@ -211,7 +226,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			populateItemOnGoals();
 			goal_updated = false;
 		}
+		if (bAlert){
+			alert_button.setClickable(true);
+			alert_button.setEnabled(true);
+			alert_button.setImageResource(R.drawable.alert);
+		}
 	}
-
 
 }

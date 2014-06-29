@@ -9,11 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <android.support.v7.widget.Space
-            android:id="@+id/space2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </TableRow>
 
     <LinearLayout
@@ -38,11 +33,6 @@
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-
-        <android.support.v7.widget.Space
-            android:id="@+id/space1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
     </TableRow>
 

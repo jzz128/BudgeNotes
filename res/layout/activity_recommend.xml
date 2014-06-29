@@ -1,0 +1,26 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TableRow>
+
+        <TextView android:text="RECOMMENDS:" />
+    </TableRow>
+
+    <TableRow>
+
+        <EditText
+            android:id="@+id/re_notes"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:ems="10"
+            android:gravity="top"
+            android:lines="10"
+            android:maxLines="10"
+            android:maxWidth="100sp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+    </TableRow>
+
+</TableLayout>
