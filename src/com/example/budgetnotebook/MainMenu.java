@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class MainMenu extends Activity {
-	boolean profile_exists = true; // This is being used temporarily until the profile functionality is created
 	Button view_account;
 	Button add_transaction;
 	Button view_profile;
@@ -23,6 +22,7 @@ public class MainMenu extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main_menu);
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +68,7 @@ public class MainMenu extends Activity {
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
-					}
-						
+					}		
 			}
 		});
 		
