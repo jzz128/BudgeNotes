@@ -58,17 +58,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
 
-	/**
-	//SQL Statement for creating the Profile Table.
-	private final String createProfile = "create table if not exists " + PROFILE_TABLE + " ( "
-			+ P_ID + "integer primary key autoincrement, "
-			+ FIRST_NAME + "text, "
-			+ LAST_NAME + "text, "
-			+ GENDER + "text, "
-			+ BIRTHDAY + "text, "
-			+ CITY + "text, "
-			+ EMAIL + "text);";
 	
+	//SQL Statement for creating the Profile Table.
+	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
+	
+	/**
 	//SQL Statement for creating the Account Table.
 	private final String createAccount = "create table if not exists " + ACCOUNT_TABLE + " ( "
 			+ A_ID + "integer primary key autoincrement, "
@@ -94,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
 	
 	//SQL Statement for creating the application database. REMOVED ALL TABLES BUT GOAL FOR TESTING!!! -----------------------------------------------
-	public final String createDB = createGoal;
+	//public final String createDB = createGoal;
 	
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
@@ -103,7 +97,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	//Creates the database using the SQL statement in createDB string.
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(createDB);
+		db.execSQL(createGoal);
+		db.execSQL(createProfile);
 	}
 
 	//Tells the system what to do when the DB is updated.
@@ -208,7 +203,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		else {
-			Toast.makeText(context, "No records yet!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Goals yet!", Toast.LENGTH_SHORT).show();
 		}
 	}
 	// Update a single Goal.
@@ -241,8 +236,104 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.close();
 		
 	}
+	
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Other methods ----------------------------------------------------------------------------------------------------------------------------------------------------
+	// Profile methods ----------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	// Add the Profile.
+		public void addProfile(Profile profile){
+			Log.d("addProfile", profile.toString());
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(FIRST_NAME, profile.getFirstName());
+			values.put(LAST_NAME, profile.getLastName());
+			values.put(GENDER, profile.getGender());
+			values.put(BIRTHDAY, profile.getBirthday());
+			values.put(CITY, profile.getCity());
+			values.put(EMAIL, profile.getEmail());
+			
+			db.insert(PROFILE_TABLE, null, values);
+			
+			db.close();
+		}
+		
+		// Get the Profile.
+		public Profile getProfile(int id){
+			SQLiteDatabase db = this.getReadableDatabase();
+			
+			Cursor cursor =
+					db.query(PROFILE_TABLE, new String[] {FIRST_NAME, LAST_NAME, GENDER, BIRTHDAY, CITY, EMAIL}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+			if (cursor != null)
+		        cursor.moveToFirst();
+			
+			Profile profile = new Profile();
+			profile.setId(Integer.parseInt(cursor.getString(0)));
+			profile.setFirstName(cursor.getString(1));
+			profile.setLastName(cursor.getString(2));
+			profile.setGender(cursor.getString(3));
+			profile.setBirthday(cursor.getString(4));
+			profile.setCity(cursor.getString(5));
+			profile.setEmail(cursor.getString(6));
+			 
+			 Log.d("getProfile("+id+")", profile.toString());
+			 
+			 return profile;
+		}
+				
+		// Toast profile
+		public void toastProfile(Context context){
+			String query = "SELECT * FROM " + PROFILE_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					Toast.makeText(context, cursor.getString(1), Toast.LENGTH_SHORT).show();		
+					
+				} while (cursor.moveToNext());
+			}
+			else {
+				Toast.makeText(context, "No Profile yet!", Toast.LENGTH_SHORT).show();
+			}
+		}
+		
+		// Update the Profile.
+		public int updateProfile(Profile profile) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(FIRST_NAME, profile.getFirstName());
+			values.put(LAST_NAME, profile.getLastName());
+			values.put(GENDER, profile.getGender());
+			values.put(BIRTHDAY, profile.getBirthday());
+			values.put(CITY, profile.getCity());
+			values.put(EMAIL, profile.getEmail());
+			
+			int i = db.update(PROFILE_TABLE, values, P_ID + " = ?", new String[] { String.valueOf(profile.getId()) });
+			
+			db.close();
+			
+			return i;
+		}
+		
+		// Delete the Profile.
+		public void deleteProfile(Profile profile) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			db.delete(PROFILE_TABLE, P_ID+"= ?", new String[] { String.valueOf(profile.getId()) });
+			
+			db.close();		
+		}
+		
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		// Other methods ----------------------------------------------------------------------------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 }
