@@ -85,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	**/
 	
 	//SQL Statement for creating the Goal Table.
-	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
+	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
 	
 	//SQL Statement for creating the application database. REMOVED ALL TABLES BUT GOAL FOR TESTING!!! -----------------------------------------------
 	//public final String createDB = createGoal;
@@ -104,9 +104,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	//Tells the system what to do when the DB is updated.
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion) {
-		// Drop older goal_table table if existed
-        db.execSQL("DROP TABLE IF EXISTS goal_table");
- 
+		// Drop older tables if they exist
+        db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
+        
         // create fresh goal_table table
         this.onCreate(db);
 	}
@@ -122,6 +123,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
+		values.put(G_A_ID, goal.getAId());
 		values.put(GOAL_NAME, goal.getName());
 		values.put(GOAL_DESCRIPTION, goal.getDescription());
 		values.put(GOAL_TYPE, goal.getType());
@@ -139,19 +141,20 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		
 		Cursor cursor =
-				db.query(GOAL_TABLE, new String[] {GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+				db.query(GOAL_TABLE, new String[] {G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 		
 		if (cursor != null)
 	        cursor.moveToFirst();
 		
 		Goal goal = new Goal();
 		 goal.setId(Integer.parseInt(cursor.getString(0)));
-		 goal.setName(cursor.getString(1));
-		 goal.setDescription(cursor.getString(2));
-		 goal.setType(cursor.getString(3));
-		 goal.setStartAmount(cursor.getString(4));
-		 goal.setDeltaAmount(cursor.getString(5));
-		 goal.setEndDate(cursor.getString(6));
+		 goal.setAId(Integer.parseInt(cursor.getString(1)));
+		 goal.setName(cursor.getString(2));
+		 goal.setDescription(cursor.getString(3));
+		 goal.setType(cursor.getString(4));
+		 goal.setStartAmount(cursor.getString(5));
+		 goal.setDeltaAmount(cursor.getString(6));
+		 goal.setEndDate(cursor.getString(7));
 		 
 		 Log.d("getGoal("+id+")", goal.toString());
 		 
@@ -172,13 +175,13 @@ public class DBHelper extends SQLiteOpenHelper {
 			do {
 				goal = new Goal();
 				goal.setId(Integer.parseInt(cursor.getString(0)));
-				//goal.setAId(Integer.parseInt(cursor.getString(1)));
-				goal.setName(cursor.getString(1));
-				goal.setDescription(cursor.getString(2));
-				goal.setType(cursor.getString(3));
-				goal.setStartAmount(cursor.getString(4));
-				goal.setDeltaAmount(cursor.getString(5));
-				goal.setEndDate(cursor.getString(6));
+				goal.setAId(Integer.parseInt(cursor.getString(1)));
+				goal.setName(cursor.getString(2));
+				goal.setDescription(cursor.getString(3));
+				goal.setType(cursor.getString(4));
+				goal.setStartAmount(cursor.getString(5));
+				goal.setDeltaAmount(cursor.getString(6));
+				goal.setEndDate(cursor.getString(7));
 				
 				goals.add(goal);
 			} while (cursor.moveToNext());
@@ -198,7 +201,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		if (cursor.moveToFirst()) {
 			do {
-				Toast.makeText(context, cursor.getString(1), Toast.LENGTH_SHORT).show();		
+				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_SHORT).show();		
 				
 			} while (cursor.moveToNext());
 		}
@@ -212,6 +215,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
+		values.put(G_A_ID,  goal.getAId());
 		values.put(GOAL_NAME, goal.getName());
 		values.put(GOAL_DESCRIPTION, goal.getDescription());
 		values.put(GOAL_TYPE, goal.getType());

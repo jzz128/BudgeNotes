@@ -12,7 +12,7 @@ public class Goal extends Activity{
 	}
 	
 	private int _id;
-	//private int a_id;
+	private int a_id;
 	private String goal_name;
 	private String goal_description;
 	private String goal_type;
@@ -22,8 +22,9 @@ public class Goal extends Activity{
 	
 	public Goal(){}
 	
-	public Goal(String name, String description, String type, String start_amount, String delta_amount, String end_date) {
+	public Goal(int a_id, String name, String description, String type, String start_amount, String delta_amount, String end_date) {
 		super();
+		this.a_id = a_id;
 		this.goal_name = name;
 		this.goal_description = description;
 		this.goal_type = type;
@@ -34,7 +35,7 @@ public class Goal extends Activity{
 	
 	@Override
 	public String toString() {
-		return "Goal [id=" + _id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"]";
+		return "Goal [id=" + _id + ", a_id=" + a_id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"]";
 	}
 	
 	//Getters --------------------------------------------------------------------
@@ -42,9 +43,9 @@ public class Goal extends Activity{
 		return _id;
 	}
 	
-//	public int getAId(){
-//		return a_id;
-//	}
+	public int getAId(){
+		return a_id;
+	}
 	
 	public String getName(){
 		return goal_name;
@@ -75,9 +76,9 @@ public class Goal extends Activity{
 		this._id = id;
 	}
 	
-//	public void setAId(int a_id){
-//		this.a_id = a_id;
-//	}
+	public void setAId(int a_id){
+		this.a_id = a_id;
+	}
 	
 	public void setName(String name){
 		this.goal_name = name;
