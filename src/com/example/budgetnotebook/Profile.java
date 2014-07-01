@@ -11,11 +11,26 @@ import android.widget.Button;
 public class Profile extends Activity {
 	Button save_profile;
 	boolean profile_exists = false; // This is being used temporarily until the profile functionality is created
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.create_profile);
+		
+		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		
+		//Create Database instance
+			DBHelper db = new DBHelper(getBaseContext());
+						
+		// Testing Goal with Toast
+		db.toastProfile(getBaseContext());
+						
+		// Close db
+		db.close();
+		
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------------------------------------------------------------
 		
 		// Set the SAVE commit to the database and then display the main menu when clicked
 				save_profile = (Button) findViewById(R.id.save_profile);

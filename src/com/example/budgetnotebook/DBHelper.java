@@ -62,15 +62,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
 	
-	/**
-	//SQL Statement for creating the Account Table.
-	private final String createAccount = "create table if not exists " + ACCOUNT_TABLE + " ( "
-			+ A_ID + "integer primary key autoincrement, "
-			+ ACCOUNT_NAME + "text, "
-			+ ACCOUNT_NUMBER + "text, "
-			+ ACCOUNT_TYPE + "text, "
-			+ BALANCE + "text);";
 	
+	//SQL Statement for creating the Account Table.
+	private final String createAccount = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_TABLE + " ( " + A_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNT_NAME + " TEXT, " + ACCOUNT_NUMBER + " TEXT, " + ACCOUNT_TYPE + " TEXT, " + BALANCE + " TEXT);";
+	
+	/**
 	//SQL Statement for creating the Transaction Table.
 	private final String createTransaction = "create table if not exists " + TRANSACTION_TABLE + " ( "
 			+ T_ID + "integer primary key autoincrement, "
@@ -87,7 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
 	
-	//SQL Statement for creating the application database. REMOVED ALL TABLES BUT GOAL FOR TESTING!!! -----------------------------------------------
+	//SQL Statement for creating the application database. -----------------------------------------------
 	//public final String createDB = createGoal;
 	
 	public DBHelper(Context context) {
@@ -99,6 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(createGoal);
 		db.execSQL(createProfile);
+		db.execSQL(createAccount);
 	}
 
 	//Tells the system what to do when the DB is updated.
@@ -107,13 +104,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		// Drop older tables if they exist
         db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
         
         // create fresh goal_table table
         this.onCreate(db);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Goal methods ----------------------------------------------------------------------------------------------------------------------------------------------------
+	// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	// Add a single Goal.
@@ -201,14 +199,15 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		if (cursor.moveToFirst()) {
 			do {
-				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_SHORT).show();		
+				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
 				
 			} while (cursor.moveToNext());
 		}
 		else {
-			Toast.makeText(context, "No Goals yet!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "No Goals yet!", Toast.LENGTH_LONG).show();
 		}
 	}
+	
 	// Update a single Goal.
 	public int updateGoal(Goal goal) {
 		
@@ -242,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Profile methods ----------------------------------------------------------------------------------------------------------------------------------------------------
+	// Profile methods ------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	// Add the Profile.
@@ -297,12 +296,12 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			if (cursor.moveToFirst()) {
 				do {
-					Toast.makeText(context, cursor.getString(1), Toast.LENGTH_SHORT).show();		
+					Toast.makeText(context, cursor.getString(1), Toast.LENGTH_LONG).show();		
 					
 				} while (cursor.moveToNext());
 			}
 			else {
-				Toast.makeText(context, "No Profile yet!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "No Profile yet!", Toast.LENGTH_LONG).show();
 			}
 		}
 		
@@ -335,9 +334,127 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			db.close();		
 		}
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		// Account methods ------------------------------------------------------------------------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		// Add a single Account.
+		public void addAccount(Account account){
+			Log.d("addAccount", account.toString());
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(ACCOUNT_NAME, account.getName());
+			values.put(ACCOUNT_NUMBER, account.getNumber());
+			values.put(ACCOUNT_TYPE, account.getType());
+			values.put(BALANCE, account.getBalance());
+			
+			db.insert(ACCOUNT_TABLE, null, values);
+			
+			db.close();
+		}
+		
+		// Get a single Account.
+		public Account getAccount(int id){
+			SQLiteDatabase db = this.getReadableDatabase();
+			
+			Cursor cursor =
+					db.query(ACCOUNT_TABLE, new String[] {ACCOUNT_NAME, ACCOUNT_NUMBER, ACCOUNT_TYPE, BALANCE}, " id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+			if (cursor != null)
+		        cursor.moveToFirst();
+			
+			Account account = new Account();
+			account.setId(Integer.parseInt(cursor.getString(0)));
+			account.setName(cursor.getString(1));
+			account.setNumber(cursor.getString(2));
+			account.setType(cursor.getString(3));
+			account.setBalance(cursor.getString(4));
+
+			 
+			 Log.d("getAccount("+id+")", account.toString());
+			 
+			 return account;
+		}
+		
+		// Get a list of all Accounts.
+		public List<Account> getAllAccounts() {
+			List<Account> accounts = new LinkedList<Account>();
+			
+			String query = "SELECT * FROM " + ACCOUNT_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			Account account = null;
+			if (cursor.moveToFirst()) {
+				do {
+					account = new Account();
+					account.setId(Integer.parseInt(cursor.getString(0)));
+					account.setName(cursor.getString(1));
+					account.setNumber(cursor.getString(2));
+					account.setType(cursor.getString(3));
+					account.setBalance(cursor.getString(4));
+					
+					accounts.add(account);
+				} while (cursor.moveToNext());
+			}
+			
+			Log.d("getAllAccounts()", accounts.toString());
+			
+			return accounts;
+		}
+		
+		// Toast all Accounts
+		public void toastAccount(Context context){
+			String query = "SELECT * FROM " + ACCOUNT_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
+					
+				} while (cursor.moveToNext());
+			}
+			else {
+				Toast.makeText(context, "No Accounts yet!", Toast.LENGTH_LONG).show();
+			}
+		}
+		
+		// Update a single Account.
+		public int updateAccount(Account account) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(ACCOUNT_NAME, account.getName());
+			values.put(ACCOUNT_NUMBER, account.getNumber());
+			values.put(ACCOUNT_TYPE, account.getType());
+			values.put(BALANCE, account.getBalance());
+			
+			int i = db.update(ACCOUNT_TABLE, values, A_ID + " = ?", new String[] { String.valueOf(account.getId()) });
+			
+			db.close();
+			
+			return i;
+		}
+		
+		// Delete a single Account.
+		public void deleteAccount(Account account) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			db.delete(ACCOUNT_TABLE, A_ID+"= ?", new String[] { String.valueOf(account.getId()) });
+			
+			db.close();
+			
+		}
 		
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Other methods ----------------------------------------------------------------------------------------------------------------------------------------------------
+		// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 }

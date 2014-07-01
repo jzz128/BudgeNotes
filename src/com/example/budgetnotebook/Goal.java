@@ -9,6 +9,21 @@ public class Goal extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_goals);
+		
+		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		
+		//Create Database instance
+		DBHelper db = new DBHelper(getBaseContext());
+				
+		// Testing Goal with Toast
+		db.toastGoal(getBaseContext());
+				
+		// Close db
+		db.close();
+		
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------------------------------------------------------------
 	}
 	
 	private int _id;
