@@ -35,7 +35,7 @@ public final class R {
     public static final class id {
         public static final int accountName=0x7f08001e;
         public static final int accountNumber=0x7f08001f;
-        public static final int action_settings=0x7f080021;
+        public static final int action_settings=0x7f080022;
         public static final int add_transaction=0x7f080015;
         public static final int amount=0x7f080003;
         public static final int beginningBalance=0x7f080020;
@@ -58,17 +58,18 @@ public final class R {
         public static final int profileMale=0x7f08000f;
         public static final int record1s=0x7f08001a;
         public static final int records=0x7f080000;
-        public static final int run=0x7f080023;
+        public static final int run=0x7f080024;
         public static final int save=0x7f08000a;
         public static final int save_profile=0x7f080014;
         public static final int spend=0x7f080006;
         public static final int title=0x7f08001c;
-        public static final int toast=0x7f080022;
+        public static final int toast=0x7f080023;
         public static final int types=0x7f080004;
         public static final int view_account=0x7f08000b;
         public static final int view_goals=0x7f080017;
         public static final int view_profile=0x7f080016;
         public static final int view_recommendations=0x7f080018;
+        public static final int view_transaction=0x7f080021;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -82,6 +83,7 @@ public final class R {
         public static final int view_goals=0x7f030008;
         public static final int view_profile=0x7f030009;
         public static final int view_recommendations=0x7f03000a;
+        public static final int view_transaction=0x7f03000b;
     }
     public static final class menu {
         public static final int main=0x7f070000;
