@@ -58,6 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
 
+	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE};
 	
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
@@ -152,7 +153,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		
 		// Get a list of all Goals.
-		public List<Goal> getAllGoals() {
+		public List<Goal> getListAllGoals() {
 			List<Goal> goals = new LinkedList<Goal>();
 			
 			String query = "SELECT * FROM " + GOAL_TABLE;
@@ -180,6 +181,20 @@ public class DBHelper extends SQLiteOpenHelper {
 			Log.d("getAllGoals()", goals.toString());
 			
 			return goals;
+		}
+		
+		// For List population of Goal
+		public Cursor gatAllGoals() {
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			String where = null;
+			Cursor cursor = db.query(true, GOAL_TABLE, GOAL_FIELDS,  where,  null, null,  null, null, null);
+			
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+			
+			return cursor;
 		}
 		
 		// Toast all Goals

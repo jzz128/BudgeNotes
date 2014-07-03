@@ -1,20 +1,19 @@
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/listViewGoals"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:layout_height="0dp"
+        android:layout_weight="0.33" >
+    </ListView>
 
-                <Button
-                    android:id="@+id/view_account"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="VIEW GOALS" />
-                
-               
-    </LinearLayout>
+    <Button
+        android:id="@+id/view_account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD GOAL" />
 
-</TabHost>
+</LinearLayout>

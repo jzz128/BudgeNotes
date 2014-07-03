@@ -1,10 +1,15 @@
 package com.example.budgetnotebook;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.widget.ListView;
 
 public class Goal extends Activity{
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -16,16 +21,49 @@ public class Goal extends Activity{
 		//Create Database instance
 		DBHelper db = new DBHelper(getBaseContext());
 				
-		// Testing Goal with Toast
-		db.toastGoal(getBaseContext());
-				
+		// Testing Goal listViewGoals
+		//db.toastGoal(getBaseContext());
+		
+		// Add Goals to table
+		db.addGoal(new Goal(1, "Goal 1", "This is the first goal.", "Save", "$500", "$200", "1 Jan 2015"));
+		db.addGoal(new Goal(1, "Goal 2", "This is the second goal.", "Save", "$500", "$200", "1 Jan 2015"));
+		db.addGoal(new Goal(1, "Goal 3", "This is the third goal.", "Save", "$500", "$200", "1 Jan 2015"));
+			
 		// Close db
 		db.close();
+		
+		// Populate the ListView
+		populateListViewGoals();	
 		
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
 	}
 	
+	@SuppressWarnings("deprecation")
+	private void populateListViewGoals() {
+		DBHelper db = new DBHelper(getBaseContext());
+		
+		Cursor cursor = db.gatAllGoals();
+		
+		startManagingCursor(cursor);
+		
+		String[] goalFieldNames = new String[] {db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
+		
+		int[] toViewIDs = new int[] {R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
+	
+		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+				this,
+				R.layout.template_list_goal,
+				cursor,
+				goalFieldNames,
+				toViewIDs
+				);
+		ListView goalList = (ListView) findViewById(R.id.listViewGoals);
+		goalList.setAdapter(myCursorAdapter);
+		
+		db.close();
+	}
+		
 	private int _id;
 	private int a_id;
 	private String goal_name;
