@@ -26,6 +26,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String BIRTHDAY = "birthday";
 	public static final String CITY = "city";
 	public static final String EMAIL = "email";
+	// String for all PROFIL_TABLE field names.
+	public static final String[] PROFILE_FIELDS= new String[] {P_ID, FIRST_NAME, LAST_NAME, GENDER, BIRTHDAY, CITY, EMAIL};
 	
 	//Fields associated with the Account Table.
 	public static final String ACCOUNT_TABLE = "account_table";
@@ -34,6 +36,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String ACCOUNT_NUMBER = "account_number";
 	public static final String ACCOUNT_TYPE = "account_type";
 	public static final String BALANCE = "balance";
+	// String for all ACCOUNT_TABLE field names.
+	public static final String[] ACCOUNT_FIELDS = new String[] {A_ID, ACCOUNT_NAME, ACCOUNT_NUMBER, ACCOUNT_TYPE, BALANCE};
 
 	//Fields associated with the Transaction Table.
 	public static final String TRANSACTION_TABLE = "transaction_table";
@@ -46,6 +50,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TRANSACTION_TYPE = "transaction_type";
 	public static final String TRANSACTION_INTERVAL = "transaction_interval";
 	public static final String TRANSACTION_DESCRIPTION = "transaction_description";
+	// String for all TRANSACTION_TABLE field names.
+	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION};
 	
 	//Fields associated with the Goal Table.
 	public static final String GOAL_TABLE = "goal_table";
@@ -57,12 +63,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_START_AMOUNT = "goal_start_amount";
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
-	// A string that hold all GOAL_TABLE field names.
+	// String for all GOAL_TABLE field names.
 	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE};
 	
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
-	
 	
 	//SQL Statement for creating the Account Table.
 	private final String createAccount = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_TABLE + " ( " + A_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNT_NAME + " TEXT, " + ACCOUNT_NUMBER + " TEXT, " + ACCOUNT_TYPE + " TEXT, " + BALANCE + " TEXT);";
@@ -70,18 +75,14 @@ public class DBHelper extends SQLiteOpenHelper {
 	//SQL Statement for creating the Transaction Table.
 	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT);";
 	
-	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
-	
-	//SQL Statement for creating the application database. -----------------------------------------------
-	//public final String createDB = createGoal;
-	
+		
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
 	}
 
-	//Creates the database using the SQL statement in createDB string.
+	//Creates the database using the SQL statements.
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(createGoal);
@@ -132,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getReadableDatabase();
 			
 			Cursor cursor =
-					db.query(GOAL_TABLE, new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE}, " _id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+					db.query(GOAL_TABLE, GOAL_FIELDS, G_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
 			if (cursor != null)
 		        cursor.moveToFirst();
@@ -197,7 +198,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor;
 		}
 		
-		// Toast all Goals
+		// Toast all Goals -- REMOVE AFTER TESTING --
 		public void toastGoal(Context context){
 			String query = "SELECT * FROM " + GOAL_TABLE;
 			
@@ -275,7 +276,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getReadableDatabase();
 			
 			Cursor cursor =
-					db.query(PROFILE_TABLE, new String[] {P_ID, FIRST_NAME, LAST_NAME, GENDER, BIRTHDAY, CITY, EMAIL}, " _id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+					db.query(PROFILE_TABLE, PROFILE_FIELDS, P_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
 			if (cursor != null)
 		        cursor.moveToFirst();
@@ -293,8 +294,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			 
 			 return profile;
 		}
-				
-		// Toast profile
+		
+		// Toast profile  -- REMOVE AFTER TESTING --
 		public void toastProfile(Context context){
 			String query = "SELECT * FROM " + PROFILE_TABLE;
 			
@@ -368,7 +369,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getReadableDatabase();
 			
 			Cursor cursor =
-					db.query(ACCOUNT_TABLE, new String[] {A_ID, ACCOUNT_NAME, ACCOUNT_NUMBER, ACCOUNT_TYPE, BALANCE}, " _id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+					db.query(ACCOUNT_TABLE, ACCOUNT_FIELDS, A_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
 			if (cursor != null)
 		        cursor.moveToFirst();
@@ -491,7 +492,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getReadableDatabase();
 					
 			Cursor cursor =
-					db.query(TRANSACTION_TABLE, new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION}, " _id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+					db.query(TRANSACTION_TABLE, TRANSACTION_FIELDS, T_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
 			if (cursor != null)
 		        cursor.moveToFirst();
