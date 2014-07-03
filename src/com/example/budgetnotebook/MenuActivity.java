@@ -38,57 +38,64 @@ public class MenuActivity extends ListActivity {
 	EditText item = null;
 	EditText amount = null;
 	EditText notes = null;
+	EditText interval = null;
+	EditText date = null;
 	RadioGroup types = null;
-	Record current = null;
 	RecordHelper helper = null;
 	AtomicBoolean isActive = new AtomicBoolean(true);
 	int progress = 0;
-	public final static String ID_EXTRA="apt.tutorial._ID";
-	String account_id=null;
-
-	
+	public final static String ID_EXTRA = "apt.tutorial._ID";
+	String account_id = null;
+	boolean finalDB = true;
+	List<Transaction> list = null;
+	ListAdapter TransAdapter = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_PROGRESS);
+		// requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.activity_main);
 
 		helper = new RecordHelper(this);
 		item = (EditText) findViewById(R.id.item);
 		amount = (EditText) findViewById(R.id.amount);
 		notes = (EditText) findViewById(R.id.notes);
+		date = (EditText) findViewById(R.id.t_date);
+		interval = (EditText) findViewById(R.id.interval);
 		types = (RadioGroup) findViewById(R.id.types);
 
-		//Button save = (Button) findViewById(R.id.save);
-		//save.setOnClickListener(onSave);
+		// Button save = (Button) findViewById(R.id.save);
+		// save.setOnClickListener(onSave);
 
-		//ListView list = (ListView) findViewById(R.id.records);
+		// ListView list = (ListView) findViewById(R.id.records);
 		// list.setOnItemClickListener(onListClick);
-		
-		
+
 		account_id = getIntent().getStringExtra(MainActivity.ID_EXTRA);
 		if (account_id != null) {
-			model = helper.getAll();
-			startManagingCursor(model);
-			adapter = new RecordAdapter(model);
-			setListAdapter(adapter);
+			if (!finalDB) {
+				model = helper.getAll();
+				startManagingCursor(model);
+				adapter = new RecordAdapter(model);
+				setListAdapter(adapter);
+			} else {
+				list = MainActivity.db_helper.getAllTransactions();
+			//	startManagingCursor(model);
+				TransAdapter = new ListAdapter();
+				setListAdapter(TransAdapter);
+			}
 		}
 
-		//model = helper.getAll();
-		//startManagingCursor(model);
-		//adapter = new RecordAdapter(model);
-		//setListAdapter(adapter);
+		// model = helper.getAll();
+		// startManagingCursor(model);
+		// adapter = new RecordAdapter(model);
+		// setListAdapter(adapter);
 
 	}
 
-
-	
-	public void onListItemClick(ListView list, View view,
-			int position, long id) {
-			Intent i=new Intent(MenuActivity.this, DetailActivity.class);
-			i.putExtra(ID_EXTRA, String.valueOf(id));
-			startActivity(i);
+	public void onListItemClick(ListView list, View view, int position, long id) {
+		Intent i = new Intent(MenuActivity.this, DetailActivity.class);
+		i.putExtra(ID_EXTRA, String.valueOf(id));
+		startActivity(i);
 	}
 
 	@Override
@@ -101,7 +108,7 @@ public class MenuActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.add) {
 			startActivity(new Intent(MenuActivity.this, DetailActivity.class));
-			return(true);
+			return (true);
 		} else if (item.getItemId() == R.id.run) {
 			startWork();
 			setProgressBarVisibility(true);
@@ -205,4 +212,54 @@ public class MenuActivity extends ListActivity {
 		}
 	}
 
+	class ListAdapter extends ArrayAdapter<Transaction> {
+		ListAdapter() {
+			super(MenuActivity.this, R.layout.row, list);
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+			TransactionHolder holder = null;
+			if (row == null) {
+				LayoutInflater inflater = getLayoutInflater();
+				row = inflater.inflate(R.layout.row, parent, false);
+				holder = new TransactionHolder(row);
+				row.setTag(holder);
+			} else {
+				holder = (TransactionHolder) row.getTag();
+			}
+			holder.populateFrom(list.get(position));
+			return (row);
+		}
+
+	}
+
+	static class TransactionHolder {
+		private TextView name = null;
+		private TextView amount = null;
+		private ImageView icon = null;
+		private View row = null;
+
+		TransactionHolder(View row) {
+			this.row = row;
+			name = (TextView) row.findViewById(R.id.title);
+			amount = (TextView) row.findViewById(R.id.number);
+			icon = (ImageView) row.findViewById(R.id.icon);
+		}
+
+		void populateFrom(Transaction t) {
+			name.setText(t.getName());
+			amount.setText(t.getAmount());
+
+			if (t.getType().equals("Income")) {
+				icon.setImageResource(R.drawable.income);
+			} else if (t.getType().equals("Spend")) {
+				icon.setImageResource(R.drawable.spend);
+			} else if (t.getType().equals("Credit")) {
+				icon.setImageResource(R.drawable.credit);
+			} else {
+				icon.setImageResource(R.drawable.debt);
+			}
+		}
+	}
 }

@@ -39,6 +39,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	public static boolean goal_updated = false;
 	boolean bAlert = false;
 	public static AlertHelper alert_helper;
+	public static DBHelper db_helper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		alert_button = (ImageButton) findViewById(R.id.alert_b);
 		a_helper = new AccountHelper(this);
 		g_helper = new GoalHelper(this);
+		db_helper = new DBHelper(this);
 
 		populateItemOnAccounts();
 		populateItemOnGoals();
@@ -156,7 +158,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,
 			long id) {
-		Log.v("TEST", "onItemSelected parent = " + parent.getId());
+		Log.d("TEST", "onItemSelected parent = " + parent.getId());
 		if (parent.getId() == R.id.account_sp) {
 			if (account_sp_started == false) {
 				account_sp_started = true;
@@ -205,6 +207,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		} else if (item.getItemId() == R.id.goal_add) {
 			// startWork();
 			// setProgressBarVisibility(true);
+			startActivity(new Intent(MainActivity.this, GoalActivity.class));
+			return (true);
 		}
 		return (super.onOptionsItemSelected(item));
 	}
