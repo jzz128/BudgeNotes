@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/goalAccountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Set Goal for Account"
+        android:inputType="number"
+        android:textSize="10dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/goalNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Goal Name"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/goalTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Goal Type"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/goalEndLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Date"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Target Goal End Date"
+        android:inputType="date"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/goalDeltaLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delta Amount"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditDelta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="What is the Goal Value?"
+        android:inputType="numberDecimal"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/goalStartLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Amount"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/goalEditStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="&lt;Will Show Current Account Balance>"
+        android:inputType="numberDecimal"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/goalDescriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Describe The Goal."
+        android:inputType="textMultiLine"
+        android:textSize="10dp" />
+
+    <Button
+        android:id="@+id/goalButtonSave"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Save"
+        android:textSize="10dp" />
+
+    <Button
+        android:id="@+id/goalButtonClear"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Clear"
+        android:textSize="10dp" />
+
+</LinearLayout>

@@ -11,7 +11,7 @@
     </ListView>
 
     <Button
-        android:id="@+id/view_account"
+        android:id="@+id/addGoal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="ADD GOAL" />

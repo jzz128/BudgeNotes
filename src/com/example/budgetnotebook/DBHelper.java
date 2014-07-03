@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_START_AMOUNT = "goal_start_amount";
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
-
+	// A string that hold all GOAL_TABLE field names.
 	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE};
 	
 	//SQL Statement for creating the Profile Table.
@@ -152,7 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			 return goal;
 		}
 		
-		// Get a list of all Goals.
+		// Get a list of all Goals. 
 		public List<Goal> getListAllGoals() {
 			List<Goal> goals = new LinkedList<Goal>();
 			

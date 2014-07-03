@@ -3,12 +3,17 @@ package com.example.budgetnotebook;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class Goal extends Activity{
+	
+	Button addGoal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +29,7 @@ public class Goal extends Activity{
 		// Testing Goal listViewGoals
 		//db.toastGoal(getBaseContext());
 		
-		// Add Goals to table
+		// Add Goals to table *** CAUTION *** THIS ADDS THESE THREE GOALS EVERYTIME THIS ACTIVITY RUNS!
 		db.addGoal(new Goal(1, "Goal 1", "This is the first goal.", "Save", "$500", "$200", "1 Jan 2015"));
 		db.addGoal(new Goal(1, "Goal 2", "This is the second goal.", "Save", "$500", "$200", "1 Jan 2015"));
 		db.addGoal(new Goal(1, "Goal 3", "This is the third goal.", "Save", "$500", "$200", "1 Jan 2015"));
@@ -37,20 +42,41 @@ public class Goal extends Activity{
 		
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
+		
+		// Set the ADD GOAL button to display the ADD Goal form when clicked
+		addGoal = (Button) findViewById(R.id.addGoal);
+		addGoal.setOnClickListener(new View.OnClickListener() {		
+						
+		@Override
+			public void onClick(View v) {
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
+					Intent newIntent = new Intent(Goal.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			}				
+		});
 	}
 	
+	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
 	@SuppressWarnings("deprecation")
 	private void populateListViewGoals() {
+		// Create instance of DBHelper
 		DBHelper db = new DBHelper(getBaseContext());
 		
+		// Set a cursor with all the Goals
 		Cursor cursor = db.gatAllGoals();
 		
+		// Manage the cursor...I believe this closes the cursor eventually.
 		startManagingCursor(cursor);
 		
+		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
 		String[] goalFieldNames = new String[] {db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
-		
 		int[] toViewIDs = new int[] {R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
 	
+		// Fills the ListView with all the Goals in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
 				this,
 				R.layout.template_list_goal,
@@ -61,6 +87,7 @@ public class Goal extends Activity{
 		ListView goalList = (ListView) findViewById(R.id.listViewGoals);
 		goalList.setAdapter(myCursorAdapter);
 		
+		// Close the DBHelper.
 		db.close();
 	}
 		
