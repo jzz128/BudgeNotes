@@ -388,7 +388,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		
 		// Get a list of all Accounts.
-		public List<Account> getAllAccounts() {
+		public List<Account> getListAllAccounts() {
 			List<Account> accounts = new LinkedList<Account>();
 			
 			String query = "SELECT * FROM " + ACCOUNT_TABLE;
@@ -410,9 +410,23 @@ public class DBHelper extends SQLiteOpenHelper {
 				} while (cursor.moveToNext());
 			}
 			
-			Log.d("getAllAccounts()", accounts.toString());
+			Log.d("getListAllAccounts()", accounts.toString());
 			
 			return accounts;
+		}
+		
+		// For List population of Account ListView
+		public Cursor getAllAccounts() {
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			String where = null;
+			Cursor cursor = db.query(true, ACCOUNT_TABLE, ACCOUNT_FIELDS,  where,  null, null,  null, null, null);
+			
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+			
+			return cursor;
 		}
 		
 		// Toast all Accounts

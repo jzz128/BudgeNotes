@@ -1,94 +1,19 @@
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <LinearLayout
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/listViewAccounts"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="0.33" >
+    </ListView>
 
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/addAccount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD ACCOUNT" />
 
-	       <FrameLayout
-    	        android:id="@android:id/tabcontent"
-        	    android:layout_width="fill_parent"
-            	android:layout_height="fill_parent" >
-        
-	            <TableLayout
-                	android:id="@+id/details"
-                	android:layout_width="fill_parent"
-                	android:layout_height="wrap_content"
-                	android:paddingTop="4px"
-                	android:stretchColumns="1" >
-
-                	<TableRow>
-						<TextView
-                        	android:paddingRight="2px"
-                        	android:text="Account Name:" />
-                		<EditText
-                    		android:layout_height="wrap_content"
-                    		android:layout_width="fill_parent"
-                			android:id="@+id/accountName"
-                			android:maxWidth="140sp" />
-                	</TableRow>
-                	<TableRow>
-                	    <TextView
-                        	android:paddingRight="2px"
-                        	android:text="Account No.:" />
-                		<EditText
-		                    android:layout_height="wrap_content"
-		                    android:layout_width="fill_parent"
-		                	android:id="@+id/accountNumber"
-		                	android:maxWidth="140sp" />
-		           	</TableRow>
-					<TableRow>
-                    	<TextView
-                        	android:paddingRight="2px"
-                        	android:text="Account Type:" />							           	
-						<RadioGroup
-                        	android:id="@+id/types"
-                        	android:orientation="horizontal"
-                        	android:layout_span="2"
-                    		android:layout_height="wrap_content"
-                    		android:layout_width="fill_parent"                        
-                        	android:scaleType="fitXY" >
-                        	<RadioButton
-                            	android:id="@+id/income"
-                            	android:text="IN"
-                            	android:scaleX="0.666" />
-                        	<RadioButton
-                            	android:id="@+id/spend"
-                            	android:text="SP" 
-                            	android:scaleX="0.666" />
-                        	<RadioButton
-                            	android:id="@+id/credit"
-                            	android:text="CR" 
-                            	android:scaleX="0.666" />
-                        	<RadioButton
-                            	android:id="@+id/debt"
-                            	android:text="DE" 
-                            	android:scaleX="0.666" />
-                    	</RadioGroup>
-                	</TableRow>	
-					<TableRow>
-                	    <TextView
-                        	android:paddingRight="2px"
-                        	android:text="Beginning Balance:" />					
-                		<EditText
-                    		android:layout_height="wrap_content"
-                    		android:layout_width="fill_parent"                
-                			android:id="@+id/beginningBalance"
-                			android:maxWidth="140sp" />
-                	</TableRow>		                
-                	<Button
-                    	android:id="@+id/save"
-                    	android:layout_width="fill_parent"
-                    	android:layout_height="wrap_content"
-                    	android:text= "SAVE" />
-        	</TableLayout>                           
-    	</FrameLayout>
-    </LinearLayout>
-</TabHost>
+</LinearLayout>

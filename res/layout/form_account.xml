@@ -1,0 +1,84 @@
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+	       <FrameLayout
+    	        android:id="@android:id/tabcontent"
+        	    android:layout_width="fill_parent"
+            	android:layout_height="fill_parent" >
+        
+	            <TableLayout
+                	android:id="@+id/details"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content"
+                	android:paddingTop="4px"
+                	android:stretchColumns="1" >
+
+                	<TableRow>
+						<TextView
+                        	android:paddingRight="2px"
+                        	android:text="Account Name:" />
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"
+                			android:id="@+id/accountEditName"
+                			android:maxWidth="140sp" />
+                	</TableRow>
+                	<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="Account No.:" />
+                		<EditText
+		                    android:layout_height="wrap_content"
+		                    android:layout_width="fill_parent"
+		                	android:id="@+id/accountEditNumber"
+		                	android:maxWidth="140sp" />
+		           	</TableRow>
+					<TableRow>
+                    	<TextView
+                        	android:paddingRight="2px"
+                        	android:text="Account Type:" />							           	
+						<RadioGroup
+                        	android:id="@+id/accountEditType"
+                        	android:orientation="horizontal"
+                        	android:layout_span="2"
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                        
+                        	android:scaleType="fitXY" >
+                        	<RadioButton
+                            	android:id="@+id/accountTypeChecking"
+                            	android:text="CHK"
+                            	android:scaleX="0.666" />
+                        	<RadioButton
+                            	android:id="@+id/accountTypeSavings"
+                            	android:text="SAV" 
+                            	android:scaleX="0.666" />
+                        	<RadioButton
+                            	android:id="@+id/accountTypeCredit"
+                            	android:text="CR" 
+                            	android:scaleX="0.666" />
+                        	<RadioButton
+                            	android:id="@+id/accountTypeOther"
+                            	android:text="OT" 
+                            	android:scaleX="0.666" />
+                    	</RadioGroup>
+                	</TableRow>	
+					<TableRow>
+                	    <TextView
+                        	android:paddingRight="2px"
+                        	android:text="Beginning Balance:" />					
+                		<EditText
+                    		android:layout_height="wrap_content"
+                    		android:layout_width="fill_parent"                
+                			android:id="@+id/accountEditBalance"
+                			android:maxWidth="140sp" />
+                	</TableRow>		                
+                	<Button
+                    	android:id="@+id/accountButtonSave"
+                    	android:layout_width="fill_parent"
+                    	android:layout_height="wrap_content"
+                    	android:text= "SAVE" />
+        	</TableLayout>                           
+    	</FrameLayout>
+    </LinearLayout>

@@ -2,11 +2,15 @@ package com.example.budgetnotebook;
 
 import android.app.Activity;
 import android.app.TabActivity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -16,47 +20,73 @@ import android.widget.TextView;
  */
 
 public class Account extends Activity {
-		
-	private EditText accountName;
-	private EditText accountNumber;
-	private RadioGroup accountTypes;
-	private EditText beginningBalance;
-	Button save = null;
+	Button addAccount;	
+	DBHelper db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_account);
-		
-		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		//Create Database instance
-		DBHelper db = new DBHelper(getBaseContext());
+		db = new DBHelper(getBaseContext());
 						
-		// Testing Account with Toast
-		db.toastAccount(getBaseContext());
+		// Populate the ListView
+		populateListViewAccounts();	
+		
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		
+		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
+		addAccount = (Button) findViewById(R.id.addAccount);
+		addAccount.setOnClickListener(new View.OnClickListener() {		
 						
-		// Close db
+		@Override
+			public void onClick(View v) {
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+					Intent newIntent = new Intent(Account.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			}				
+		});
+	};
+	
+	// Close the Database on destroy.
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		db.close();
+	};
+	
+	// This method uses the Cursor getAllAccounts and populates the ListView on the view_account layout with a list of template_list_accounts (layouts)
+	@SuppressWarnings("deprecation")
+	private void populateListViewAccounts() {
+	
+		// Set a cursor with all the Accounts
+		Cursor cursor = db.getAllAccounts();
 		
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
+		startManagingCursor(cursor);
 		
-		accountName = (EditText)findViewById(R.id.accountName);
-		accountNumber = (EditText)findViewById(R.id.accountNumber);
-		accountTypes = (RadioGroup)findViewById(R.id.types);
-		beginningBalance = (EditText)findViewById(R.id.beginningBalance);
-		
-		save = (Button)findViewById(R.id.save);
-		save.setOnClickListener(onSave);
+		// Map the ACCOUNT_TABLE fields to the TextViews on the template_list_account layout.
+		String[] accountFieldNames = new String[] {db.ACCOUNT_NAME, db.BALANCE};
+		int[] toViewIDs = new int[] {R.id.accountName, R.id.accountBalance};
+	
+		// Fills the ListView with all the Goals in the Table.
+		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+				this,
+				R.layout.template_list_account,
+				cursor,
+				accountFieldNames,
+				toViewIDs
+				);
+		ListView goalList = (ListView) findViewById(R.id.listViewAccounts);
+		goalList.setAdapter(myCursorAdapter);
+
 	}
 	
-	private View.OnClickListener onSave = new View.OnClickListener() {
-		public void onClick(View v) {
-			// TODO commit to db
-		}
-	};
 	
 	private int _id;
 	private String account_name;
