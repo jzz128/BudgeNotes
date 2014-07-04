@@ -34,7 +34,7 @@ public class AccountActivity extends Activity {
 		Log.d("AccountActivity", "Button save=" + save);
 		save.setOnClickListener(onSave);
 
-		accountId = getIntent().getStringExtra(MainActivity.ID_EXTRA);
+		accountId = getIntent().getStringExtra(MenuActivity.ID_EXTRA);
 		Log.v("AccountActivity", "accountId = " + accountId);
 		if (accountId != null) {
 			load();
@@ -84,7 +84,7 @@ public class AccountActivity extends Activity {
 		if (finalDB) {
 
 			Account a = MainActivity.db_helper.getAccount(Integer
-					.valueOf(accountId) + 1);
+					.valueOf(accountId));
 			a_name.setText(a.getName());
 			a_number.setText(a.getNumber());
 			a_balance.setText(a.getBalance());

@@ -176,6 +176,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					goals.add(goal);
 				} while (cursor.moveToNext());
 			}
+			else
+				return null;
 			
 			Log.d("getAllGoals()", goals.toString());
 			
@@ -393,6 +395,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					accounts.add(account);
 				} while (cursor.moveToNext());
 			}
+			else 
+				return null;
 			
 			Log.d("getAllAccounts()", accounts.toString());
 			

@@ -128,7 +128,7 @@ public class GoalActivity extends Activity {
 		if (finalDB) {
 
 			Goal g = MainActivity.db_helper
-					.getGoal(Integer.valueOf(goalId) + 1);
+					.getGoal(Integer.valueOf(goalId)+1);
 			g_name.setText(g.getName());
 			g_amount.setText(g.getStartAmount());
 			g_notes.setText(g.getDescription());
@@ -156,7 +156,7 @@ public class GoalActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (finalDB)
+		if (!finalDB)
 			helper.close();
 	}
 

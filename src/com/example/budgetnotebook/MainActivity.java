@@ -163,6 +163,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			Goal g = null;
 			List<Goal> g_list;
 			g_list = db_helper.getAllGoals();
+			if(g_list == null)
+				return;
 			count = g_list.size();
 			while (i < count) {
 				g = g_list.get(i);
@@ -204,7 +206,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			}
 
 			Intent i = new Intent(MainActivity.this, GoalActivity.class);
-			i.putExtra(ID_EXTRA, String.valueOf(parent.getItemAtPosition(pos)));
+			i.putExtra(ID_EXTRA, String.valueOf(pos));
 			startActivity(i);
 		}
 

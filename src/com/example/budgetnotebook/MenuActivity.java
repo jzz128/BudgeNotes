@@ -112,6 +112,11 @@ public class MenuActivity extends ListActivity {
 		} else if (item.getItemId() == R.id.run) {
 			startWork();
 			setProgressBarVisibility(true);
+		} else if (item.getItemId() == R.id.account_info){
+			Intent i = new Intent(MenuActivity.this, AccountActivity.class);
+			i.putExtra(ID_EXTRA, String.valueOf(1)); //TODO: replace with the accountId in future.
+			startActivity(i);
+			return (true);
 		}
 		return (super.onOptionsItemSelected(item));
 	}
