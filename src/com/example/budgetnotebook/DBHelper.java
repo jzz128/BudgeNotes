@@ -176,6 +176,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					goals.add(goal);
 				} while (cursor.moveToNext());
 			}
+			else
+				return null;
 			
 			Log.d("getAllGoals()", goals.toString());
 			
@@ -262,8 +264,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			Cursor cursor =
 					db.query(PROFILE_TABLE, new String[] {P_ID, FIRST_NAME, LAST_NAME, GENDER, BIRTHDAY, CITY, EMAIL}, " _id = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
-			if (cursor != null)
-		        cursor.moveToFirst();
+			if (!cursor.moveToFirst())
+				return null;
 			
 			Profile profile = new Profile();
 			profile.setId(Integer.parseInt(cursor.getString(0)));
@@ -393,6 +395,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					accounts.add(account);
 				} while (cursor.moveToNext());
 			}
+			else 
+				return null;
 			
 			Log.d("getAllAccounts()", accounts.toString());
 			

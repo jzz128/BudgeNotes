@@ -28,7 +28,19 @@
             android:digits="0123456789."
             android:inputType="numberDecimal" />
     </TableRow>
+    <TableRow>
 
+        <TextView android:text="Notes:" />
+
+        <EditText
+            android:id="@+id/g_notes"
+            android:gravity="top"
+            android:lines="1"
+            android:maxLines="2"
+            android:maxWidth="200sp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+    </TableRow>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,20 +75,37 @@
         </LinearLayout>
 
 
+    <TextView android:text="Type:" />
+
     <TableRow>
 
-        <TextView android:text="Notes:" />
+        <RadioGroup
+            android:id="@+id/g_types"
+            android:layout_span="2"
+            android:orientation="horizontal"
+            android:scaleType="fitXY" >
 
-        <EditText
-            android:id="@+id/g_notes"
-            android:gravity="top"
-            android:lines="1"
-            android:maxLines="2"
-            android:maxWidth="200sp"
-            android:scrollHorizontally="false"
-            android:singleLine="false" />
+            <RadioButton
+                android:id="@+id/g_income"
+                android:scaleX="0.666"
+                android:text="IN" />
+
+            <RadioButton
+                android:id="@+id/g_spend"
+                android:scaleX="0.666"
+                android:text="SP" />
+
+            <RadioButton
+                android:id="@+id/g_credit"
+                android:scaleX="0.666"
+                android:text="CR" />
+
+            <RadioButton
+                android:id="@+id/g_debt"
+                android:scaleX="0.666"
+                android:text="DE" />
+        </RadioGroup>
     </TableRow>
-
     <Button
         android:id="@+id/g_save"
         android:layout_width="fill_parent"

@@ -40,6 +40,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	boolean bAlert = false;
 	public static AlertHelper alert_helper;
 	public static DBHelper db_helper;
+	boolean finalDB = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		userinfo_button = (Button) findViewById(R.id.ui_b);
 		recommends_buttton = (Button) findViewById(R.id.rec_b);
 		alert_button = (ImageButton) findViewById(R.id.alert_b);
-		a_helper = new AccountHelper(this);
-		g_helper = new GoalHelper(this);
-		db_helper = new DBHelper(this);
+		if (!finalDB) {
+			a_helper = new AccountHelper(this);
+			g_helper = new GoalHelper(this);
+		} else {
+			db_helper = new DBHelper(this);
+		}
 
 		populateItemOnAccounts();
 		populateItemOnGoals();
@@ -64,7 +68,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		goal_sp.setOnItemSelectedEvenIfUnchangedListener(this);
 		registerForContextMenu(account_sp);
 		registerForContextMenu(goal_sp);
-
 
 		userinfo_button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -125,11 +128,24 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 
 	// add items into spinner dynamically
 	public void populateItemOnAccounts() {
-		model = a_helper.getAll();
-		startManagingCursor(model);
 		List<String> list = new ArrayList<String>();
-		while (model.moveToNext()) {
-			list.add(a_helper.getAccountName(model));
+		if (finalDB) {
+			int count, i = 0;
+			Account a = null;
+			List<Account> a_list = db_helper.getAllAccounts();
+			count = a_list.size();
+			while (i < count) {
+				a = a_list.get(i);
+				list.add(a.getName());
+				i++;
+			}
+		} else {
+
+			model = a_helper.getAll();
+			startManagingCursor(model);
+			while (model.moveToNext()) {
+				list.add(a_helper.getAccountName(model));
+			}
 		}
 
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
@@ -141,11 +157,26 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	}
 
 	public void populateItemOnGoals() {
-		model = g_helper.getAll();
-		startManagingCursor(model);
 		List<String> list = new ArrayList<String>();
-		while (model.moveToNext()) {
-			list.add(g_helper.getGoalName(model));
+		if (finalDB) {
+			int count, i = 0;
+			Goal g = null;
+			List<Goal> g_list;
+			g_list = db_helper.getAllGoals();
+			if(g_list == null)
+				return;
+			count = g_list.size();
+			while (i < count) {
+				g = g_list.get(i);
+				list.add(g.getName());
+				i++;
+			}
+		} else {
+			model = g_helper.getAll();
+			startManagingCursor(model);
+			while (model.moveToNext()) {
+				list.add(g_helper.getGoalName(model));
+			}
 		}
 
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
@@ -175,7 +206,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			}
 
 			Intent i = new Intent(MainActivity.this, GoalActivity.class);
-			i.putExtra(ID_EXTRA, String.valueOf(parent.getItemAtPosition(pos)));
+			i.putExtra(ID_EXTRA, String.valueOf(pos));
 			startActivity(i);
 		}
 
@@ -230,7 +261,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			populateItemOnGoals();
 			goal_updated = false;
 		}
-		if (bAlert){
+		if (bAlert) {
 			alert_button.setClickable(true);
 			alert_button.setEnabled(true);
 			alert_button.setImageResource(R.drawable.alert);

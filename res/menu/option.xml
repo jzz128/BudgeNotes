@@ -5,8 +5,12 @@
         android:icon="@drawable/ic_menu_add"
         android:title="Add"/>
     <item
+        android:id="@+id/account_info"
+        android:icon="@drawable/ic_account"
+        android:title="Account Info"/>
+    <item
         android:id="@+id/run"
         android:icon="@drawable/run"
-        android:title="Run Long Task"/>
+        android:title="Run Task"/>
 
 </menu>

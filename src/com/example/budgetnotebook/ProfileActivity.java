@@ -28,12 +28,14 @@ public class ProfileActivity extends Activity {
 	private int month;
 	private int year;
 	private String id;
+	boolean finalDB = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
-		helper = new ProfileHelper(this);
+		if (!finalDB)
+			helper = new ProfileHelper(this);
 		p_firstname = (EditText) findViewById(R.id.first_name);
 		p_lastname = (EditText) findViewById(R.id.last_name);
 		p_gender = (EditText) findViewById(R.id.gender);
@@ -57,17 +59,33 @@ public class ProfileActivity extends Activity {
 
 	private View.OnClickListener onSave = new View.OnClickListener() {
 		public void onClick(View v) {
-			if (bFilled == false) {
-				helper.insert(p_firstname.getText().toString(), p_lastname
-						.getText().toString(), p_gender.getText().toString(),
+			if (finalDB) {
+				Profile p = new Profile(p_firstname.getText().toString(),
+						p_lastname.getText().toString(), p_gender.getText()
+								.toString(), p_birthday.getText().toString(),
 						p_city.getText().toString(), p_email.getText()
-								.toString(), p_birthday.getText().toString());
+								.toString());
 
+				if (bFilled == false) {
+					MainActivity.db_helper.addProfile(p);
+				} else {
+					MainActivity.db_helper.updateProfile(p);
+				}
 			} else {
-				helper.update("1", p_firstname.getText().toString(), p_lastname
-						.getText().toString(), p_gender.getText().toString(),
-						p_city.getText().toString(), p_email.getText()
-								.toString(), p_birthday.getText().toString());
+				if (bFilled == false) {
+					helper.insert(p_firstname.getText().toString(), p_lastname
+							.getText().toString(), p_gender.getText()
+							.toString(), p_city.getText().toString(), p_email
+							.getText().toString(), p_birthday.getText()
+							.toString());
+
+				} else {
+					helper.update("1", p_firstname.getText().toString(),
+							p_lastname.getText().toString(), p_gender.getText()
+									.toString(), p_city.getText().toString(),
+							p_email.getText().toString(), p_birthday.getText()
+									.toString());
+				}
 			}
 			finish();
 		}
@@ -80,27 +98,46 @@ public class ProfileActivity extends Activity {
 	};
 
 	private void load() {
-		Cursor c = helper.getById();
-		if (c.moveToFirst()) {
-			p_firstname.setText(helper.getFirstName(c));
-			p_lastname.setText(helper.getLastName(c));
-			p_gender.setText(helper.getGender(c));
-			p_city.setText(helper.getCity(c));
-			p_email.setText(helper.getEmail(c));
-			p_birthday.setText(helper.getBirthday(c));
-			bFilled = true;
-			Log.d("ProfileActivity", "bFilled=true");
+		if (finalDB) {
+			Profile p = MainActivity.db_helper.getProfile(1);
+			if (p != null) {
+				p_firstname.setText(p.getFirstName());
+				p_lastname.setText(p.getLastName());
+				p_gender.setText(p.getGender());
+				p_city.setText(p.getCity());
+				p_email.setText(p.getEmail());
+				p_birthday.setText(p.getBirthday());
+				bFilled = true;
+				Log.d("ProfileActivity", "bFilled=true");
+			} else {
+				bFilled = false;
+				Log.d("ProfileActivity", "bFilled=false");
+			}
+
 		} else {
-			bFilled = false;
-			Log.d("ProfileActivity", "bFilled=false");
+			Cursor c = helper.getById();
+			if (c.moveToFirst()) {
+				p_firstname.setText(helper.getFirstName(c));
+				p_lastname.setText(helper.getLastName(c));
+				p_gender.setText(helper.getGender(c));
+				p_city.setText(helper.getCity(c));
+				p_email.setText(helper.getEmail(c));
+				p_birthday.setText(helper.getBirthday(c));
+				bFilled = true;
+				Log.d("ProfileActivity", "bFilled=true");
+			} else {
+				bFilled = false;
+				Log.d("ProfileActivity", "bFilled=false");
+			}
+			c.close();
 		}
-		c.close();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		helper.close();
+		if (!finalDB)
+			helper.close();
 	}
 
 	@Override
