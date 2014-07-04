@@ -49,63 +49,81 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int list=0x7f020009;
         public static final int run=0x7f02000a;
         public static final int spend=0x7f02000b;
-        public static final int toast=0x7f02000c;
+        public static final int splash=0x7f02000c;
+        public static final int toast=0x7f02000d;
     }
     public static final class id {
         public static final int a_name=0x7f090000;
         public static final int a_notes=0x7f090002;
         public static final int a_number=0x7f090001;
         public static final int a_save=0x7f090003;
-        public static final int account_add=0x7f090031;
-        public static final int account_sp=0x7f09001c;
-        public static final int action_settings=0x7f090034;
-        public static final int add=0x7f090035;
+        public static final int account_add=0x7f090042;
+        public static final int account_sp=0x7f09002d;
+        public static final int action_settings=0x7f090044;
+        public static final int add=0x7f090046;
+        public static final int add_transaction=0x7f090027;
         public static final int al_notes=0x7f090004;
-        public static final int alert_b=0x7f090023;
+        public static final int alert_b=0x7f090034;
         public static final int amount=0x7f09000f;
-        public static final int b_date=0x7f090029;
-        public static final int button1=0x7f090030;
-        public static final int city=0x7f090026;
-        public static final int container=0x7f09000c;
-        public static final int credit=0x7f090015;
-        public static final int debt=0x7f090016;
-        public static final int email=0x7f090028;
-        public static final int first_name=0x7f090024;
+        public static final int b_date=0x7f09003a;
+        public static final int button1=0x7f090041;
+        public static final int city=0x7f090037;
+        public static final int container=0x7f090017;
+        public static final int credit=0x7f090013;
+        public static final int debt=0x7f090014;
+        public static final int details=0x7f09000d;
+        public static final int email=0x7f090039;
+        public static final int exit=0x7f09002b;
+        public static final int first_name=0x7f090035;
         public static final int g_amount=0x7f090006;
         public static final int g_calendar=0x7f090009;
         public static final int g_date=0x7f090008;
         public static final int g_name=0x7f090005;
         public static final int g_notes=0x7f09000a;
         public static final int g_save=0x7f09000b;
-        public static final int gender=0x7f090027;
-        public static final int goal_add=0x7f090033;
-        public static final int goal_sp=0x7f09001f;
-        public static final int icon=0x7f09002c;
-        public static final int income=0x7f090013;
-        public static final int interval=0x7f090010;
+        public static final int gender=0x7f090038;
+        public static final int goal_add=0x7f090045;
+        public static final int goal_sp=0x7f090030;
+        public static final int icon=0x7f09003d;
+        public static final int income=0x7f090011;
+        public static final int interval=0x7f090022;
         public static final int item=0x7f09000e;
-        public static final int last_name=0x7f090025;
-        public static final int notes=0x7f090011;
-        public static final int number=0x7f09002e;
-        public static final int p_calendar=0x7f09002a;
-        public static final int p_save=0x7f09002b;
-        public static final int re_notes=0x7f09000d;
-        public static final int rec_b=0x7f090021;
-        public static final int run=0x7f090032;
-        public static final int save=0x7f09001a;
-        public static final int spend=0x7f090014;
-        public static final int t_calendar=0x7f090019;
-        public static final int t_date=0x7f090018;
-        public static final int tableRow1=0x7f09001d;
-        public static final int tableRow2=0x7f09001b;
+        public static final int last_name=0x7f090036;
+        public static final int notes=0x7f090015;
+        public static final int number=0x7f09003f;
+        public static final int p_calendar=0x7f09003b;
+        public static final int p_save=0x7f09003c;
+        public static final int profileBirthday=0x7f09001e;
+        public static final int profileCity=0x7f09001f;
+        public static final int profileEmail=0x7f090020;
+        public static final int profileFemale=0x7f09001d;
+        public static final int profileFirstName=0x7f090019;
+        public static final int profileGender=0x7f09001b;
+        public static final int profileLastName=0x7f09001a;
+        public static final int profileMale=0x7f09001c;
+        public static final int re_notes=0x7f090018;
+        public static final int rec_b=0x7f090032;
+        public static final int records=0x7f09000c;
+        public static final int run=0x7f090043;
+        public static final int save=0x7f090016;
+        public static final int save_profile=0x7f090021;
+        public static final int spend=0x7f090012;
+        public static final int t_calendar=0x7f090025;
+        public static final int t_date=0x7f090024;
+        public static final int tableRow1=0x7f09002e;
+        public static final int tableRow2=0x7f09002c;
         public static final int textView1=0x7f090007;
-        public static final int textView10=0x7f090017;
-        public static final int textView2=0x7f09001e;
-        public static final int textView3=0x7f090022;
-        public static final int title=0x7f09002d;
-        public static final int toggleButton1=0x7f09002f;
-        public static final int types=0x7f090012;
-        public static final int ui_b=0x7f090020;
+        public static final int textView10=0x7f090023;
+        public static final int textView2=0x7f09002f;
+        public static final int textView3=0x7f090033;
+        public static final int title=0x7f09003e;
+        public static final int toggleButton1=0x7f090040;
+        public static final int types=0x7f090010;
+        public static final int ui_b=0x7f090031;
+        public static final int view_account=0x7f090026;
+        public static final int view_goals=0x7f090029;
+        public static final int view_profile=0x7f090028;
+        public static final int view_recommendations=0x7f09002a;
     }
     public static final class layout {
         public static final int account_detail=0x7f030000;
@@ -114,23 +132,30 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_main=0x7f030003;
         public static final int activity_profile=0x7f030004;
         public static final int activity_recommend=0x7f030005;
-        public static final int detail=0x7f030006;
-        public static final int menu=0x7f030007;
-        public static final int profile=0x7f030008;
-        public static final int row=0x7f030009;
-        public static final int test=0x7f03000a;
+        public static final int create_profile=0x7f030006;
+        public static final int detail=0x7f030007;
+        public static final int main_menu=0x7f030008;
+        public static final int menu=0x7f030009;
+        public static final int profile=0x7f03000a;
+        public static final int row=0x7f03000b;
+        public static final int splash=0x7f03000c;
+        public static final int test=0x7f03000d;
     }
     public static final class menu {
         public static final int account_spinner_option=0x7f080000;
-        public static final int goal_spinner_option=0x7f080001;
-        public static final int main=0x7f080002;
-        public static final int option=0x7f080003;
+        public static final int alert=0x7f080001;
+        public static final int goal_spinner_option=0x7f080002;
+        public static final int main=0x7f080003;
+        public static final int option=0x7f080004;
+        public static final int profile=0x7f080005;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
+        public static final int add_transaction=0x7f06000d;
         public static final int app_name=0x7f060000;
         public static final int dummy_button=0x7f060003;
         public static final int dummy_content=0x7f060004;
+        public static final int exit=0x7f060011;
         public static final int hello_world=0x7f060002;
         public static final int title_activity_account=0x7f060006;
         public static final int title_activity_alert=0x7f06000a;
@@ -138,6 +163,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int title_activity_menu=0x7f060005;
         public static final int title_activity_profile=0x7f060008;
         public static final int title_activity_recommend=0x7f060009;
+        public static final int title_transaction=0x7f06000b;
+        public static final int view_account=0x7f06000c;
+        public static final int view_goals=0x7f06000f;
+        public static final int view_profile=0x7f06000e;
+        public static final int view_recommendations=0x7f060010;
     }
     public static final class style {
         /** 
@@ -151,6 +181,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
             backward-compatibility can go here.
 
         
+
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 

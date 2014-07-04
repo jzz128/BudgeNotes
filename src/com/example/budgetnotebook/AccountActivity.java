@@ -1,5 +1,5 @@
 package com.example.budgetnotebook;
-
+//
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ public class AccountActivity extends Activity {
 		Button save = (Button) findViewById(R.id.a_save);
 		Log.d("AccountActivity","Button save=" + save);
 		save.setOnClickListener(onSave);
-
+//
 		accountId = getIntent().getStringExtra(MainActivity.ID_EXTRA);
 		Log.v("AccountActivity", "accountId = " +accountId);
 		if (accountId != null) {
