@@ -14,6 +14,7 @@ import android.widget.ListView;
 public class Goal extends Activity{
 	
 	Button addGoal;
+	DBHelper db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +25,18 @@ public class Goal extends Activity{
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		
 		//Create Database instance
-		DBHelper db = new DBHelper(getBaseContext());
+		db = new DBHelper(getBaseContext());
 				
 		// Testing Goal listViewGoals
 		//db.toastGoal(getBaseContext());
 		
 		// Add Goals to table *** CAUTION *** THIS ADDS THESE THREE GOALS EVERYTIME THIS ACTIVITY RUNS!
-		db.addGoal(new Goal(1, "Goal 1", "This is the first goal.", "Save", "$500", "$200", "1 Jan 2015"));
-		db.addGoal(new Goal(1, "Goal 2", "This is the second goal.", "Save", "$500", "$200", "1 Jan 2015"));
-		db.addGoal(new Goal(1, "Goal 3", "This is the third goal.", "Save", "$500", "$200", "1 Jan 2015"));
+		//db.addGoal(new Goal(1, "Goal 1", "This is the first goal.", "Save", "$500", "$200", "1 Jan 2015"));
+		//db.addGoal(new Goal(1, "Goal 2", "This is the second goal.", "Save", "$500", "$200", "1 Jan 2015"));
+		//db.addGoal(new Goal(1, "Goal 3", "This is the third goal.", "Save", "$500", "$200", "1 Jan 2015"));
 			
 		// Close db
-		db.close();
+		//db.close();
 		
 		// Populate the ListView
 		populateListViewGoals();	
@@ -58,18 +59,22 @@ public class Goal extends Activity{
 					}
 			}				
 		});
-	}
+	};
+	
+	// Close the Database on destroy.
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.close();
+	};
 	
 	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
 	@SuppressWarnings("deprecation")
 	private void populateListViewGoals() {
-		// Create instance of DBHelper
-		DBHelper db = new DBHelper(getBaseContext());
-		
+	
 		// Set a cursor with all the Goals
 		Cursor cursor = db.gatAllGoals();
 		
-		// Manage the cursor...I believe this closes the cursor eventually.
 		startManagingCursor(cursor);
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
@@ -86,9 +91,7 @@ public class Goal extends Activity{
 				);
 		ListView goalList = (ListView) findViewById(R.id.listViewGoals);
 		goalList.setAdapter(myCursorAdapter);
-		
-		// Close the DBHelper.
-		db.close();
+
 	}
 		
 	private int _id;
