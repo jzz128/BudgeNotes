@@ -23,8 +23,9 @@ public class GoalForm extends Activity{
 	Button saveGoal;
 	DBHelper db;
 	Spinner goalAccount;
+	String[] seperated;
 	EditText goalName;
-	EditText goalType;
+	Spinner goalType;
 	EditText goalEnd;
 	EditText goalStart;
 	EditText goalDelta;
@@ -46,15 +47,46 @@ public class GoalForm extends Activity{
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 		
-		// Initialize the Spinner.
+		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
+		goalType = (Spinner) findViewById(R.id.goalEditTypeSpinner);
 		
-		// Add the accounts to the spinner.
+		// Associate fields in the Goal form (form_goal.xml) to our variables.
+		goalName = (EditText) findViewById(R.id.goalEditName);
+		goalEnd = (EditText) findViewById(R.id.goalEditEnd);
+		goalStart = (EditText) findViewById(R.id.goalEditStart);
+		goalDelta = (EditText) findViewById(R.id.goalEditDelta);
+		goalDescription = (EditText) findViewById(R.id.goalEditDescription);
+		
+		// Add data to the spinners.
 		loadAccountSpinnerData();
+		loadTypeSpinnerData();
 		
-		// Set a listener for the spinner selection.
+		// Set a listener for the Account spinner selection.
 		goalAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
 			
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				//Get the Account spinner data and put it in a string array.
+				seperated = goalAccount.getSelectedItem().toString().split(" ");
+					
+				// Create an account object with account data of selected account.
+				Account account = db.getAccount(Integer.parseInt(seperated[0]));
+				
+				// Populate the current amount with the account balance
+				goalStart.setText(account.getBalance());
+										
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub		
+			}
+		});
+		
+		// Set a listener for the Type spinner selection.
+		goalType.setOnItemSelectedListener(new OnItemSelectedListener() {
+					
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				// TODO Auto-generated method stub
@@ -62,8 +94,7 @@ public class GoalForm extends Activity{
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
+				// TODO Auto-generated method stub			
 			}
 		});
 						
@@ -74,21 +105,11 @@ public class GoalForm extends Activity{
 			@Override
 			public void onClick(View v) {
 				try{
-					
-					//Save the values entered in the Goal form (form_goal.xml).
-					goalName = (EditText) findViewById(R.id.goalEditName);
-					goalType = (EditText) findViewById(R.id.goalEditType);
-					goalEnd = (EditText) findViewById(R.id.goalEditEnd);
-					goalStart = (EditText) findViewById(R.id.goalEditStart);
-					goalDelta = (EditText) findViewById(R.id.goalEditDelta);
-					goalDescription = (EditText) findViewById(R.id.goalEditDescription);
-					
-					String[] seperated = goalAccount.getSelectedItem().toString().split(" ");
-					
+															
 					// Transfer edit text to GOAL_TABLE attribute types.
 					goalAccountI = Integer.parseInt(seperated[0]);
 					goalNameS = goalName.getText().toString().trim();
-					goalTypeS = goalType.getText().toString().trim();
+					goalTypeS = goalType.getSelectedItem().toString().trim();
 					goalEndS = goalEnd.getText().toString().trim();
 					goalStartS = goalStart.getText().toString().trim();
 					goalDeltaS = goalDelta.getText().toString().trim();
@@ -121,6 +142,12 @@ public class GoalForm extends Activity{
         dataAdapter.setDropDownViewResource
                      (android.R.layout.simple_spinner_dropdown_item);
 		 goalAccount.setAdapter(dataAdapter);
+	}
+	
+	private void loadTypeSpinnerData() {
+		ArrayAdapter dataAdapter = ArrayAdapter.createFromResource(this, R.array.goalTypeArray, android.R.layout.simple_spinner_item);
+                      
+		goalType.setAdapter(dataAdapter);
 	}
 	
 }

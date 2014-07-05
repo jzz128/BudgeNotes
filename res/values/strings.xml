@@ -10,4 +10,9 @@
     <string name="view_goals">VIEW GOALS</string>
     <string name="view_recommendations">VIEW RECOMMENDATIONS</string><string name="exit">EXIT</string>
 
+    <string-array name ="goalTypeArray">
+        <item>Save DELTA Amount.</item>
+        <item>Pay off DELTA Amount.</item>
+        <item>Dont Spend more than DELTA.</item>
+    </string-array>
 </resources>

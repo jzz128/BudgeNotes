@@ -9,7 +9,7 @@ package com.example.budgetnotebook;
 
 public final class R {
     public static final class array {
-        public static final int accountArray=0x7f060000;
+        public static final int goalTypeArray=0x7f060000;
     }
     public static final class attr {
     }
@@ -57,12 +57,12 @@ public final class R {
         public static final int debt=0x7f090008;
         public static final int details=0x7f090001;
         public static final int exit=0x7f090032;
-        public static final int goalAccount=0x7f09003c;
+        public static final int goalAccount=0x7f09003f;
         public static final int goalAccountLabel=0x7f09001e;
         public static final int goalButtonClear=0x7f09002d;
         public static final int goalButtonSave=0x7f09002c;
         public static final int goalDeltaLabel=0x7f090026;
-        public static final int goalDescription=0x7f09003e;
+        public static final int goalDescription=0x7f09003d;
         public static final int goalDescriptionLabel=0x7f09002a;
         public static final int goalEditAccountSpinner=0x7f09001f;
         public static final int goalEditDelta=0x7f090027;
@@ -70,14 +70,14 @@ public final class R {
         public static final int goalEditEnd=0x7f090025;
         public static final int goalEditName=0x7f090021;
         public static final int goalEditStart=0x7f090029;
-        public static final int goalEditType=0x7f090023;
-        public static final int goalEnd=0x7f09003d;
+        public static final int goalEditTypeSpinner=0x7f090023;
+        public static final int goalEnd=0x7f09003b;
         public static final int goalEndLabel=0x7f090024;
         public static final int goalIcon=0x7f09003a;
-        public static final int goalName=0x7f09003b;
+        public static final int goalName=0x7f09003e;
         public static final int goalNameLabel=0x7f090020;
         public static final int goalStartLabel=0x7f090028;
-        public static final int goalType=0x7f09003f;
+        public static final int goalType=0x7f09003c;
         public static final int goalTypeLabel=0x7f090022;
         public static final int icon=0x7f090034;
         public static final int income=0x7f090005;

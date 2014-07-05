@@ -12,29 +12,11 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
-        android:id="@+id/goalName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="GoalName!"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/goalAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/goalName"
-        android:layout_centerHorizontal="true"
-        android:text="GoalAccount!"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
         android:id="@+id/goalEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/goalAccount"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/goalType"
         android:text="GoalEndDate!"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -47,6 +29,15 @@
         android:text="GoalDescription!" />
 
     <TextView
+        android:id="@+id/goalName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/goalIcon"
+        android:text="GoalName!"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/goalType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,5 +45,14 @@
         android:layout_alignParentTop="true"
         android:text="GoalType!"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/goalAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/goalName"
+        android:layout_toRightOf="@+id/goalIcon"
+        android:text="GoalAccount!"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
