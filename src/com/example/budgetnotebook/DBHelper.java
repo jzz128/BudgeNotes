@@ -1,5 +1,6 @@
 package com.example.budgetnotebook;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT);";
 	
 	//SQL Statement for creating the Goal Table.
-	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT);";
+	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
 		
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
@@ -95,9 +96,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldversion, int newversion) {
 		// Drop older tables if they exist
+		db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE); // Must be created before GOAL_TABLE for foreign key purposes.
         db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TRANSACTION_TABLE);
         
         // create fresh database table
@@ -414,6 +415,31 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			return accounts;
 		}
+		
+		// 
+		public List<String> getAllStringAccounts(){
+	        List<String> accounts = new ArrayList<String>();
+	         
+	        // Select All Query
+	        String selectQuery = "SELECT  * FROM " + ACCOUNT_TABLE;
+	      
+	        SQLiteDatabase db = this.getReadableDatabase();
+	        Cursor cursor = db.rawQuery(selectQuery, null);
+	      
+	        // looping through all rows and adding to list
+	        if (cursor.moveToFirst()) {
+	            do {
+	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1));
+	            } while (cursor.moveToNext());
+	        }
+	         
+	        // closing connection
+	        cursor.close();
+	        db.close();
+	         
+	        // returning accounts
+	        return accounts;
+	    }
 		
 		// For List population of Account ListView
 		public Cursor getAllAccounts() {

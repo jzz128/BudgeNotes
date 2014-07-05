@@ -14,15 +14,10 @@
         android:text="Account"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <EditText
-        android:id="@+id/goalEditAccount"
+    <Spinner
+        android:id="@+id/goalEditAccountSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Set Goal for Account"
-        android:inputType="number">
-
-        <requestFocus />
-    </EditText>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/goalNameLabel"

@@ -24,13 +24,6 @@ public class MainMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		
-		// ---------------------------------------------------------------------------------------
-		// Database testing ----------------------------------------------------------------------
-		// ---------------------------------------------------------------------------------------
-				
-		// ---------------------------------------------------------------------------------------
-		// ---------------------------------------------------------------------------------------
-		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
