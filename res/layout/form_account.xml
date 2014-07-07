@@ -68,11 +68,14 @@
                 	    <TextView
                         	android:paddingRight="2px"
                         	android:text="Beginning Balance:" />					
+
                 		<EditText
-                    		android:layout_height="wrap_content"
-                    		android:layout_width="fill_parent"                
-                			android:id="@+id/accountEditBalance"
-                			android:maxWidth="140sp" />
+                		    android:id="@+id/accountEditBalance"
+                		    android:layout_width="fill_parent"
+                		    android:layout_height="wrap_content"
+                		    android:inputType="numberDecimal"
+                		    android:maxWidth="140sp" />
+
                 	</TableRow>		                
                 	<Button
                     	android:id="@+id/accountButtonSave"

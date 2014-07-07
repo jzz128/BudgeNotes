@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-public class AccountForm extends Activity {
+public class AccountForm extends Activity implements InputValidator{
 	Button saveAccount = null;
 	DBHelper db;
 	
@@ -32,6 +32,8 @@ public class AccountForm extends Activity {
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 		
+		// TODO Set the default selecte value on the radio button group		
+		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveAccount = (Button) findViewById(R.id.accountButtonSave);
 		saveAccount.setOnClickListener(new View.OnClickListener() {		
@@ -44,6 +46,7 @@ public class AccountForm extends Activity {
 					accountName = (EditText)findViewById(R.id.accountEditName);
 					accountNumber = (EditText)findViewById(R.id.accountEditNumber);
 					accountType = (RadioGroup)findViewById(R.id.accountEditType);
+					
 					accountTypeSelection = (RadioButton)findViewById(accountType.getCheckedRadioButtonId());
 					accountBalance = (EditText)findViewById(R.id.accountEditBalance);
 					
@@ -53,12 +56,14 @@ public class AccountForm extends Activity {
 					accountTypeS = accountTypeSelection.getText().toString().trim();
 					accountBalanceS = accountBalance.getText().toString().trim();
 					
-					// Call the add goal method to add the goal to the database!
-					addAccount();
+					if(inputsValid()){
+						// Call the add goal method to add the goal to the database!
+						addAccount();
 					
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
-					Intent newIntent = new Intent(AccountForm.this, clickedClass);
-					startActivity(newIntent);
+						Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
+						Intent newIntent = new Intent(AccountForm.this, clickedClass);
+						startActivity(newIntent);
+					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -69,6 +74,37 @@ public class AccountForm extends Activity {
 	
 	private void addAccount() {
 		db.addAccount(new Account(accountNameS, accountNumberS, accountTypeS, accountBalanceS));
+	}
+
+	@Override
+	public boolean inputsValid() {
+		boolean valid = true;
+		
+		// Account name is not empty
+		if(accountNameS.length() == 0){
+			accountName.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// Account number is not empty
+		if(accountNumberS.length() == 0){
+			accountNumber.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// Account type has been selected
+		if(accountTypeS.length() == 0){
+			accountTypeSelection.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// Beginning balance is not empty
+		if(accountBalanceS.length() == 0){
+			accountBalance.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		return valid;
 	};	
 
 }

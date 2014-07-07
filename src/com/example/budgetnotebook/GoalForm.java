@@ -18,7 +18,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class GoalForm extends Activity{
+public class GoalForm extends Activity implements InputValidator{
 	// Eventually these will map to the TextViews on form_goal layout to create a new goal record.
 	Button saveGoal;
 	DBHelper db;
@@ -115,13 +115,15 @@ public class GoalForm extends Activity{
 					goalDeltaS = goalDelta.getText().toString().trim();
 					goalDescriptionS = goalDescription.getText().toString().trim();
 					
-					// Call the add goal method to add the goal to the database!
-					addGoal();
-					
-					
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
-					Intent newIntent = new Intent(GoalForm.this, clickedClass);
-					startActivity(newIntent);
+					// Validate inputs
+					if(inputsValid()){
+						// Call the add goal method to add the goal to the database!
+						addGoal();
+												
+						Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+						Intent newIntent = new Intent(GoalForm.this, clickedClass);
+						startActivity(newIntent);						
+					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -129,6 +131,39 @@ public class GoalForm extends Activity{
 		});
 		
 	};
+	
+	public boolean inputsValid(){
+		boolean valid = true;
+		
+		// Goal name not empty
+		if(goalNameS.length() == 0){
+			goalName.setError("Input is required.");
+			valid = false;
+		}
+		
+		// Target goal end date not empty and valid date
+		if(goalEndS.length() == 0){
+			goalEnd.setError("Input is required.");
+			valid = false;
+		}
+		else{
+			// TODO validate to an agreed upon format 	 	
+		}
+		
+		// Delta Amount not empty		
+		if(goalDeltaS.length() == 0){
+			goalDelta.setError("Input is required.");
+			valid = false;
+		}
+		
+		// Description not empty
+		if(goalDescriptionS.length() == 0){
+			goalDescription.setError("Input is required");
+			valid = false;
+		}
+		
+		return valid;
+	}
 	
 	private void addGoal() {
 		db.addGoal(new Goal(goalAccountI, goalNameS, goalDescriptionS, goalTypeS, goalStartS, goalDeltaS, goalEndS));
