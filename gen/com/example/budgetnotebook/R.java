@@ -33,7 +33,8 @@ public final class R {
         public static final int run=0x7f020006;
         public static final int spend=0x7f020007;
         public static final int splash=0x7f020008;
-        public static final int toast=0x7f020009;
+        public static final int styledbutton=0x7f020009;
+        public static final int toast=0x7f02000a;
     }
     public static final class id {
         public static final int accountBalance=0x7f090038;
@@ -168,5 +169,6 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
+        public static final int button_text=0x7f070002;
     }
 }
