@@ -48,7 +48,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {

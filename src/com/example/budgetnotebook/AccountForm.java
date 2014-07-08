@@ -30,9 +30,7 @@ public class AccountForm extends Activity implements InputValidator{
 		setContentView(R.layout.form_account);
 		
 		// Access the database.
-		db = new DBHelper(getBaseContext());
-		
-		// TODO Set the default selecte value on the radio button group		
+		db = new DBHelper(getBaseContext());	
 		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveAccount = (Button) findViewById(R.id.accountButtonSave);

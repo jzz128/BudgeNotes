@@ -19,7 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class GoalForm extends Activity implements InputValidator{
-	// Eventually these will map to the TextViews on form_goal layout to create a new goal record.
+
 	Button saveGoal;
 	DBHelper db;
 	Spinner goalAccount;
@@ -31,13 +31,13 @@ public class GoalForm extends Activity implements InputValidator{
 	EditText goalDelta;
 	EditText goalDescription;
 	
-	int goalAccountI;
-	String goalNameS;
-	String goalTypeS;
-	String goalEndS;
-	String goalStartS;
-	String goalDeltaS;
-	String goalDescriptionS;
+	private int goalAccountI;
+	private String goalNameS;
+	private String goalTypeS;
+	private String goalEndS;
+	private String goalStartS;
+	private String goalDeltaS;
+	private String goalDescriptionS;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

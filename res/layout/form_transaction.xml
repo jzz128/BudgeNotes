@@ -10,8 +10,8 @@
             android:paddingRight="2px"
             android:text="Account:" />
 
-        <EditText
-            android:id="@+id/transEditAccount"
+        <Spinner
+            android:id="@+id/transSpinnerAccount"
             android:maxWidth="140sp" />
     </TableRow>
 
@@ -50,7 +50,7 @@
         </EditText>
 
         <ImageButton
-            android:id="@+id/t_calendar"
+            android:id="@+id/transButtonCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/calendar_icon" />
@@ -112,7 +112,7 @@
             android:text="Interval(days):" />
 
         <Spinner
-            android:id="@+id/transEditInterval"
+            android:id="@+id/transSpinnerInterval"
             android:digits="0123456789."
             android:inputType="numberDecimal" />
     </TableRow>

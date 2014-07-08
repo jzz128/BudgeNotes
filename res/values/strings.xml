@@ -15,4 +15,30 @@
         <item>Pay off DELTA Amount.</item>
         <item>Dont Spend more than DELTA.</item>
     </string-array>
+    
+    <string-array name ="transIntArray">
+        <item>Every Week</item>
+        <item>Every Two Weeks</item>
+        <item>Every Month</item>
+        <item>Every Six Months</item>
+        <item>Every Year</item>
+    </string-array>
+    
+    <string-array name ="transCatArray">
+        <item>Income - Wages</item>
+        <item>Income - Interest / Dividends</item>
+        <item>Income - Other</item>
+        <item>Expense - Home</item>
+        <item>Expense - Daily Living</item>
+        <item>Expense - Transportation</item>
+        <item>Expense - Entertainment</item>
+        <item>Expense - Health</item>
+        <item>Expense - Vacation</item>
+        <item>Expense - Recreation</item>
+        <item>Expense - Dues / Subscriptions</item>
+        <item>Expense - Personal</item>
+        <item>Expense - Obligation</item>
+        <item>Expense - Other</item>
+    </string-array>
+    
 </resources>
