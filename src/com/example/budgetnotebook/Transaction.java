@@ -33,91 +33,15 @@ import android.widget.Toast;
 
 public class Transaction extends Activity {
 
-	// I commented out what was in here because I just wanted to be consistent with what everything else looks like.  Also some of the methods and Types are deprecated. - DJM
 	
-	/** 
-	Cursor model = null;
-	RecordAdapter adapter = null;
-	EditText item = null;
-	EditText amount = null;
-	EditText notes = null;
-	RadioGroup types = null;
-	Record current = null;
-	RecordHelper helper = null;
-	AtomicBoolean isActive = new AtomicBoolean(true);
-	int progress = 0;
-	 **/
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.view_transaction);
 
-		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-				
-		//Create Database instance
-		DBHelper db = new DBHelper(getBaseContext());
-						
-		// Testing Transaction with Toast 
-		db.toastTransaction(getBaseContext());
-		
-		// Add a Transaction -- Test Success
-		db.addTransaction(new Transaction(1, "Trans 1", "7-1-2014", "$500", "Rent", "Debit", "Monthly", "Made my rent payment."));
-	
-		// Testing Transaction with Toast
-		db.toastTransaction(getBaseContext());
-		
-		// Delete Transaction -- Test Success
-		db.deleteTransaction(db.getTransaction(1));
-		
-		// Testing Transaction with Toast
-		db.toastTransaction(getBaseContext());
-		
-		// Close db
-		db.close();
-				
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
-		
-		
-		/**
-		helper = new RecordHelper(this);
-		item = (EditText) findViewById(R.id.item);
-		amount = (EditText) findViewById(R.id.amount);
-		notes = (EditText) findViewById(R.id.notes);
-		types = (RadioGroup) findViewById(R.id.types);
-		
-		
-		
-		Button save = (Button) findViewById(R.id.save);
-		save.setOnClickListener(onSave);
-		 
-		ListView list = (ListView) findViewById(R.id.records);
-		// list.setOnItemClickListener(onListClick);
+		setContentView(R.layout.form_transaction);
 
 		
-		model = helper.getAll();
-		startManagingCursor(model);
-		adapter = new RecordAdapter(model);
-		list.setAdapter(adapter);
-
-		TabHost.TabSpec spec = getTabHost().newTabSpec("tag1");
-		spec.setContent(R.id.records);
-		spec.setIndicator("List", getResources().getDrawable(R.drawable.list));
-		getTabHost().addTab(spec);
-
-		spec = getTabHost().newTabSpec("tag2");
-		spec.setContent(R.id.details);
-		spec.setIndicator("Details",
-				getResources().getDrawable(R.drawable.details));
-		getTabHost().addTab(spec);
-
-		getTabHost().setCurrentTab(1);
-		list.setOnItemClickListener(onListClick);
-		**/
 	}
 	
 	private int _id;
