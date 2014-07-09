@@ -1,15 +1,43 @@
 package com.example.budgetnotebook;
 
+import android.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class Transaction extends Activity {
+	
+	Button addTransaction;
+	DBHelper db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_transaction);
 		
+		//Create Database instance
+		db = new DBHelper(getBaseContext());
+		
+		// Populate the ListView
+		populateListViewTransactions();
+		
+		// Set the ADD GOAL button to display the ADD Goal form when clicked
+		addTransaction = (Button) findViewByI(R.id.addTransaction);
+		addTransaction.setOnClickListener(new View.OnClickListener() {		
+								
+		@Override
+			public void onClick(View v) {
+				try{
+					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+					Intent newIntent = new Intent(Transaction.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			}				
+		});
 	}
 	
 	private int _id;
