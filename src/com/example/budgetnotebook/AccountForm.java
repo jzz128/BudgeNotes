@@ -48,14 +48,14 @@ public class AccountForm extends Activity implements InputValidator{
 					accountTypeSelection = (RadioButton)findViewById(accountType.getCheckedRadioButtonId());
 					accountBalance = (EditText)findViewById(R.id.accountEditBalance);
 					
-					// Transfer edit text to GOAL_TABLE attribute types.
+					// Transfer edit text to ACCOUNT_TABLE attribute types.
 					accountNameS = accountName.getText().toString().trim();
 					accountNumberS = accountNumber.getText().toString().trim();
 					accountTypeS = accountTypeSelection.getText().toString().trim();
 					accountBalanceS = accountBalance.getText().toString().trim();
 					
 					if(inputsValid()){
-						// Call the add goal method to add the goal to the database!
+						// Call the add account method to add the account to the database!
 						addAccount();
 					
 						Class clickedClass = Class.forName("com.example.budgetnotebook.Account");

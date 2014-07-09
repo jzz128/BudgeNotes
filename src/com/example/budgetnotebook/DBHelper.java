@@ -186,7 +186,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		
 		// For List population of Goal
-		public Cursor gatAllGoals() {
+		public Cursor getAllGoals() {
 			SQLiteDatabase db = this.getWritableDatabase();
 			
 			String where = null;
@@ -279,7 +279,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			Cursor cursor =
 					db.query(PROFILE_TABLE, PROFILE_FIELDS, P_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
 			
-			if (cursor != null)
+			if (cursor != null) {
 		        cursor.moveToFirst();
 			
 			Profile profile = new Profile();
@@ -294,6 +294,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			 Log.d("getProfile("+id+")", profile.toString());
 			 
 			 return profile;
+			} else {
+				return null;
+			}
 		}
 		
 		// Toast profile  -- REMOVE AFTER TESTING --

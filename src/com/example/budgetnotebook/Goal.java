@@ -73,7 +73,7 @@ public class Goal extends Activity{
 	private void populateListViewGoals() {
 	
 		// Set a cursor with all the Goals
-		Cursor cursor = db.gatAllGoals();
+		Cursor cursor = db.getAllGoals();
 		
 		startManagingCursor(cursor);
 		

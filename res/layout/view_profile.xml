@@ -1,22 +1,22 @@
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+     >
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/listViewAccounts"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:layout_height="0dp"
+        android:layout_weight="0.33">
+    </ListView>
 
-                <Button
-                    android:id="@+id/view_account"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text= "VIEW PROFILE"
-                    android:background="@drawable/styledbutton"
-        			style="@style/button_text" />
-                
-               
-    </LinearLayout>
+    <Button
+        android:id="@+id/editProfile"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="EDIT ACCOUNT"
+        android:background="@drawable/styledbutton"
+        style="@style/button_text" />
 
-</TabHost>
+</LinearLayout>

@@ -6,3 +6,7 @@ bin/classes/com/example/budgetnotebook/R$style.class
 .metadata/.log
 *.class
 *.class
+*.class
+*.apk
+*.dex
+*.class

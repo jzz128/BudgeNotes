@@ -8,8 +8,7 @@
         android:id="@+id/listViewAccounts"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.33"
-        android:textColor="#fff000" >
+        android:layout_weight="0.33" >
     </ListView>
 
     <Button

@@ -7,14 +7,14 @@ import android.view.View;
 import android.widget.Button;
 
 public class Profile extends Activity {
-	Button save_profile;
-	boolean profile_exists = false; // This is being used temporarily until the profile functionality is created
+	Button edit_profile;
+	DBHelper db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.create_profile);
-		
+		setContentView(R.layout.view_profile);
+		/*
 		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		
@@ -25,19 +25,19 @@ public class Profile extends Activity {
 		db.toastProfile(getBaseContext());
 						
 		// Close db
-		db.close();
+		db.close();*/
 		
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		
-		// Set the SAVE commit to the database and then display the main menu when clicked
-				save_profile = (Button) findViewById(R.id.save_profile);
-				save_profile.setOnClickListener(new View.OnClickListener() {			
+		// Set the EDIT BUTTON to display the profile form when clicked
+				edit_profile = (Button) findViewById(R.id.editProfile);
+				edit_profile.setOnClickListener(new View.OnClickListener() {			
 					
 					@Override
 					public void onClick(View v) {
 						try{
-							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+							Class clickedClass = Class.forName("com.example.budgetnotebook.FORMPROFILE");
 							Intent newIntent = new Intent(Profile.this, clickedClass);
 							startActivity(newIntent);
 							} catch(ClassNotFoundException e) {
