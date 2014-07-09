@@ -68,7 +68,7 @@
                 	    <TextView
                         	android:paddingRight="2px"
                         	android:text="Beginning Balance:" />					
-
+test
                 		<EditText
                 		    android:id="@+id/accountEditBalance"
                 		    android:layout_width="fill_parent"
@@ -81,7 +81,9 @@
                     	android:id="@+id/accountButtonSave"
                     	android:layout_width="fill_parent"
                     	android:layout_height="wrap_content"
-                    	android:text= "SAVE" />
+                    	android:text= "SAVE"
+                    	android:background="@drawable/styledbutton"
+        				style="@style/button_text"  />
         	</TableLayout>                           
     	</FrameLayout>
     </LinearLayout>

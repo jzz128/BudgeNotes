@@ -4,11 +4,13 @@
     <string name="app_name">Budget Notebook</string>
     <string name="action_settings">Settings</string>
     
-    <string name="view_account">VIEW ACCOUNT</string>
+    <string name="view_account">VIEW ACCOUNTS</string>
     <string name="add_transaction">ADD TRANSACTION</string>
-    <string name="view_profile">VIEW PROFILE</string>
+    <string name="view_profile">MY PROFILE</string>
     <string name="view_goals">VIEW GOALS</string>
-    <string name="view_recommendations">VIEW RECOMMENDATIONS</string><string name="exit">EXIT</string>
+    <string name="view_recommendations">VIEW RECOMMENDATIONS</string>
+    <string name="exit">EXIT</string>
+     <string name="add_account">ADD ACCOUNT</string>
 
     <string-array name ="goalTypeArray">
         <item>Save DELTA Amount.</item>

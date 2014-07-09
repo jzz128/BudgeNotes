@@ -102,17 +102,21 @@
 
     <Button
         android:id="@+id/goalButtonSave"
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save"/>
+        android:text="Save"
+        android:background="@drawable/styledbutton"
+        style="@style/button_text"
+        />
 
     <Button
         android:id="@+id/goalButtonClear"
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clear"/>
+        android:text="Clear"
+        android:background="@drawable/styledbutton"
+        style="@style/button_text"
+        />
 
 </LinearLayout>
 </ScrollView>

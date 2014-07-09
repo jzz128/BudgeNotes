@@ -135,6 +135,8 @@
         android:id="@+id/transButtonSave"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="Save"
+        android:background="@drawable/styledbutton"
+        style="@style/button_text" />
 
 </TableLayout>

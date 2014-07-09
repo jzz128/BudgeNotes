@@ -4,3 +4,5 @@ gen/com/example/budgetnotebook/R.java
 bin/resources.ap_
 bin/classes/com/example/budgetnotebook/R$style.class
 .metadata/.log
+*.class
+*.class

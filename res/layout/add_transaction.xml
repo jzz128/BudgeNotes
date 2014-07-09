@@ -12,7 +12,9 @@
                     android:id="@+id/view_account"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text= "ADD TRANSACTION" />
+                    android:text= "ADD TRANSACTION"
+                    android:background="@drawable/styledbutton"
+        			style="@style/button_text" />
                 
                
     </LinearLayout>

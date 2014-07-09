@@ -12,7 +12,9 @@
                     android:id="@+id/view_account"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text= "VIEW RECOMMENDATIONS" />
+                    android:text= "VIEW RECOMMENDATIONS"
+                    android:background="@drawable/styledbutton"
+        			style="@style/button_text" />
                 
                
     </LinearLayout>

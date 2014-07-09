@@ -1,19 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+     >
 
     <ListView
         android:id="@+id/listViewAccounts"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.33" >
+        android:layout_weight="0.33"
+        android:textColor="#fff000" >
     </ListView>
 
     <Button
         android:id="@+id/addAccount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="ADD ACCOUNT" />
+        android:text="@string/add_account"
+        android:background="@drawable/styledbutton"
+        style="@style/button_text" />
 
 </LinearLayout>
