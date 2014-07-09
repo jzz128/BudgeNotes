@@ -235,11 +235,26 @@ public class TransactionForm extends Activity {
 		int accountId = transAccountI;
 		Account account;
 		int oldBalance;
-		int changeAmount = 0;
+		int changeAmount;
 		int newBalance;
 		
-		if (transCategoryVal != "Income") {
-			changeAmount -= Integer.parseInt(transAmountS);
+		changeAmount = Integer.parseInt(transAmountS);
+		
+		Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
+		
+		switch (transType.getCheckedRadioButtonId()) {
+		case R.id.transTypeCredit:
+			// Type is a Credit to the account
+			changeAmount = changeAmount;
+			Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+			break;
+			
+		case R.id.transTypeDebit:
+			// Type is a Credit to the account
+			changeAmount = -changeAmount;
+			Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+			break;
 		}
 		
 		// Update the value of the Account.
