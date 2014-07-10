@@ -185,4 +185,10 @@ public class GoalForm extends Activity implements InputValidator{
 		goalType.setAdapter(dataAdapter);
 	}
 	
+	@Override
+	protected void onPause() {
+		// Kill activity once complete
+		super.onPause();
+		finish();
+	}
 }

@@ -49,6 +49,7 @@ public class ProfileForm extends Activity implements InputValidator {
 					@Override
 					public void onClick(View v) {
 						try{
+							DBHelper db1 = new DBHelper(getBaseContext());
 							//Save the values entered in the Profile form (form_profile.xml).
 							profileFirstName = (EditText)findViewById(R.id.profileFirstName);
 							profileLastName = (EditText)findViewById(R.id.profileLastName);
@@ -60,7 +61,7 @@ public class ProfileForm extends Activity implements InputValidator {
 							profileCity = (EditText)findViewById(R.id.profileCity);
 							profileEmail = (EditText)findViewById(R.id.profileEmail);
 							
-							// Transfer edit text to GOAL_TABLE attribute types.							
+							// Transfer edit text to PROFILE_TABLE attribute types.							
 							profileFirstNameString = profileFirstName.getText().toString().trim();
 							profileLastNameString = profileLastName.getText().toString().trim();
 							profileGenderString = profileGenderSelection.getText().toString().trim();;
@@ -68,9 +69,22 @@ public class ProfileForm extends Activity implements InputValidator {
 							profileCityString = profileCity.getText().toString().trim();;
 							profileEmailString = profileEmail.getText().toString().trim();;
 							
+							// Create new profile object using converted strings
+							Profile newProfile = new Profile();
+							newProfile.setId(1);
+							newProfile.setFirstName(profileFirstNameString);
+							newProfile.setLastName(profileLastNameString);
+							newProfile.setGender(profileGenderString);
+							newProfile.setBirthday(profileBirthdayString);
+							newProfile.setCity(profileCityString);
+							newProfile.setEmail(profileEmailString);
+							
+							// Write profile to database
+							db1.addProfile(newProfile);
+														
 							if(inputsValid()){
 								// Call the add profile method to add the profile to the database!
-								addProfile();
+								db1.addProfile(newProfile);
 							}
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
 							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
@@ -128,6 +142,13 @@ public class ProfileForm extends Activity implements InputValidator {
 		}
 		
 		return valid;
+	}
+	
+	@Override
+	protected void onPause() {
+		// Kill activity once complete
+		super.onPause();
+		finish();
 	}
 
 }

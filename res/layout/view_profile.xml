@@ -1,22 +1,82 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-     >
+    android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/listViewAccounts"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.33">
-    </ListView>
+              <TableLayout
+            	android:id="@+id/details"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:paddingTop="4px"
+            	android:stretchColumns="1" >
 
-    <Button
+            	<TableRow>
+		<TextView
+                    	android:paddingRight="2px"
+                    	android:text="First Name:" />
+            		<TextView
+                		android:layout_height="wrap_content"
+                		android:layout_width="fill_parent"
+            			android:id="@+id/profileFirstName"
+            			android:maxWidth="140sp" />
+            	</TableRow>
+            	<TableRow>
+            	    <TextView
+                    	android:paddingRight="2px"
+                    	android:text="Last Name.:" />
+            		<TextView
+                  android:layout_height="wrap_content"
+                  android:layout_width="fill_parent"
+              	android:id="@+id/profileLastName"
+              	android:maxWidth="140sp" />
+         	</TableRow>
+	<TableRow>
+                	<TextView
+                    	android:paddingRight="2px"
+                    	android:text="Gender:" />							           	
+				<TextView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+              	android:id="@+id/profileGender"
+              	android:maxWidth="140sp" />
+            	</TableRow>	
+	<TableRow>
+            	    <TextView
+                    	android:paddingRight="2px"
+                    	android:text="Birthday (MM/DD/YYYY):" />					
+            		<TextView
+                		android:layout_height="wrap_content"
+                		android:layout_width="fill_parent"                
+            			android:id="@+id/profileBirthday"
+            			android:maxWidth="140sp" />
+            	</TableRow>		
+            	<TableRow>
+            	    <TextView
+                    	android:paddingRight="2px"
+                    	android:text="City:" />					
+            		<TextView
+                		android:layout_height="wrap_content"
+                		android:layout_width="fill_parent"                
+            			android:id="@+id/profileCity"
+            			android:maxWidth="140sp" />
+            	</TableRow>		 
+            	<TableRow>
+            	    <TextView
+                    	android:paddingRight="2px"
+                    	android:text="E-Mail:" />					
+            		<TextView
+                		android:layout_height="wrap_content"
+                		android:layout_width="fill_parent"                
+            			android:id="@+id/profileEmail"
+            			android:maxWidth="140sp" />
+            	</TableRow>		
+               
+            	<Button
         android:id="@+id/editProfile"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="EDIT ACCOUNT"
         android:background="@drawable/styledbutton"
         style="@style/button_text" />
-
+    	</TableLayout>             
 </LinearLayout>

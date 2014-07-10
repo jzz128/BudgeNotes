@@ -75,7 +75,7 @@ public class Account extends Activity {
 		String[] accountFieldNames = new String[] {db.ACCOUNT_NAME, db.BALANCE};
 		int[] toViewIDs = new int[] {R.id.accountName, R.id.accountBalance};
 	
-		// Fills the ListView with all the Goals in the Table.
+		// Fills the ListView with all the Accounts in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
 				this,
 				R.layout.template_list_account,
@@ -83,8 +83,8 @@ public class Account extends Activity {
 				accountFieldNames,
 				toViewIDs
 				);
-		ListView goalList = (ListView) findViewById(R.id.listViewAccounts);
-		goalList.setAdapter(myCursorAdapter);
+		ListView accountList = (ListView) findViewById(R.id.listViewAccounts);
+		accountList.setAdapter(myCursorAdapter);
 
 	}
 	

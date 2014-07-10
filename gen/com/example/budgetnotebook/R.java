@@ -52,9 +52,10 @@ public final class R {
         public static final int accountTypeCredit=0x7f090011;
         public static final int accountTypeOther=0x7f090012;
         public static final int accountTypeSavings=0x7f090010;
-        public static final int action_settings=0x7f090053;
+        public static final int action_settings=0x7f090054;
         public static final int addAccount=0x7f09004e;
         public static final int addGoal=0x7f090050;
+        public static final int addTransaction=0x7f090053;
         public static final int add_transaction=0x7f09003b;
         public static final int amount=0x7f090003;
         public static final int credit=0x7f090007;
@@ -89,6 +90,7 @@ public final class R {
         public static final int item=0x7f090002;
         public static final int listViewAccounts=0x7f09004d;
         public static final int listViewGoals=0x7f09004f;
+        public static final int listViewTrans=0x7f090052;
         public static final int notes=0x7f090009;
         public static final int number=0x7f090043;
         public static final int profileBirthday=0x7f09002a;
@@ -101,13 +103,13 @@ public final class R {
         public static final int profileMale=0x7f090028;
         public static final int record1s=0x7f090040;
         public static final int records=0x7f090000;
-        public static final int run=0x7f090055;
+        public static final int run=0x7f090056;
         public static final int save=0x7f09000a;
         public static final int save_profile=0x7f09002d;
         public static final int spend=0x7f090006;
         public static final int textView10=0x7f090030;
         public static final int title=0x7f090042;
-        public static final int toast=0x7f090054;
+        public static final int toast=0x7f090055;
         public static final int transButtonCalendar=0x7f090032;
         public static final int transButtonSave=0x7f09003a;
         public static final int transEditAmount=0x7f090033;
@@ -125,7 +127,6 @@ public final class R {
         public static final int view_goals=0x7f09003d;
         public static final int view_profile=0x7f09003c;
         public static final int view_recommendations=0x7f09003e;
-        public static final int view_transaction=0x7f090052;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

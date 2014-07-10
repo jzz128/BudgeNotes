@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Profile extends Activity {
 	Button edit_profile;
@@ -29,6 +30,41 @@ public class Profile extends Activity {
 		
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
+		//Display Profile Information - Need to get from Database
+		/*String first_name = "Ryan";
+		String last_name = "Donovan";
+		String gender = "M";
+		String birthday = "01/18/1984";
+		String city = "Philadelphia";
+		String email = "rmd259@psu.edu";*/
+		
+		Profile profileInfo = db.getProfile(1);
+		String first_name_db = profileInfo.getFirstName();
+		String last_name = profileInfo.getLastName();
+		String gender = profileInfo.getGender();
+		String birthday = profileInfo.getBirthday();
+		String city = profileInfo.getCity();
+		String email = profileInfo.getEmail();
+		
+		// Set First Name
+		TextView tv_first_name = (TextView)findViewById(R.id.profileFirstName);
+		tv_first_name.setText(first_name);
+		// Set Last Name
+		TextView tv_last_name = (TextView)findViewById(R.id.profileLastName);
+		tv_last_name.setText(last_name);
+		// Set Gender
+		TextView tv_gender = (TextView)findViewById(R.id.profileGender);
+		tv_gender.setText(gender);
+		// Set Birthday
+		TextView tv_birthday = (TextView)findViewById(R.id.profileBirthday);
+		tv_birthday.setText(birthday);
+		// Set City
+		TextView tv_city = (TextView)findViewById(R.id.profileCity);
+		tv_city.setText(city);
+		// Set Email
+		TextView tv_email = (TextView)findViewById(R.id.profileEmail);
+		tv_email.setText(email);
+		
 		
 		// Set the EDIT BUTTON to display the profile form when clicked
 				edit_profile = (Button) findViewById(R.id.editProfile);

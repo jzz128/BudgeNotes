@@ -15,7 +15,7 @@
     <string-array name ="goalTypeArray">
         <item>Save DELTA Amount.</item>
         <item>Pay off DELTA Amount.</item>
-        <item>Don't Spend more than DELTA.</item>
+        <item>Do not Spend more than DELTA.</item>
     </string-array>
     
     <string-array name ="transIntArray">

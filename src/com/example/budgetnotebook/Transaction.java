@@ -15,17 +15,17 @@ public class Transaction extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.view_transaction);
+		//setContentView(R.layout.view_transaction);		
 		
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
 		
 		// Populate the ListView
-		populateListViewTransactions();
+		//populateListViewTransactions();
 		
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
-		addTransaction = (Button) findViewByI(R.id.addTransaction);
-		addTransaction.setOnClickListener(new View.OnClickListener() {		
+		//addTransaction = (Button) findViewByI(R.id.addTransaction);
+		/*addTransaction.setOnClickListener(new View.OnClickListener() {		
 								
 		@Override
 			public void onClick(View v) {
@@ -37,7 +37,7 @@ public class Transaction extends Activity {
 						e.printStackTrace();
 					}
 			}				
-		});
+		});*/
 	}
 	
 	private int _id;

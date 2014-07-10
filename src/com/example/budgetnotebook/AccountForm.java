@@ -104,5 +104,12 @@ public class AccountForm extends Activity implements InputValidator{
 		
 		return valid;
 	};	
+	
+	@Override
+	protected void onPause() {
+		// Kill activity once complete
+		super.onPause();
+		finish();
+	}
 
 }
