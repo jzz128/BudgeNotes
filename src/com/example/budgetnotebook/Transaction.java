@@ -23,7 +23,7 @@ public class Transaction extends Activity {
 		// Populate the ListView
 		//populateListViewTransactions();
 		
-		// Set the ADD GOAL button to display the ADD Goal form when clicked
+		// Set the ADD TRANSACTION button to display the ADD Transaction form when clicked
 		//addTransaction = (Button) findViewByI(R.id.addTransaction);
 		/*addTransaction.setOnClickListener(new View.OnClickListener() {		
 								

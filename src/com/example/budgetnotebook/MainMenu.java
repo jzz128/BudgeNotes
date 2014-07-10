@@ -75,15 +75,13 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				//setContentView(R.layout.view_goals);
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
-					}
-						
+					}	
 			}
 		});
 		
@@ -93,7 +91,6 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				//setContentView(R.layout.view_recommendations);
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
@@ -117,5 +114,7 @@ public class MainMenu extends Activity {
 			}
 
 		});	
+		
 	}
+
 }

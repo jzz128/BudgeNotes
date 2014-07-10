@@ -33,15 +33,6 @@ public class ProfileForm extends Activity implements InputValidator {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.form_profile);
 		
-		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
-		//Create Database instance
-		DBHelper db = new DBHelper(getBaseContext());
-		
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
 				save_profile = (Button) findViewById(R.id.save_profile);
 				save_profile.setOnClickListener(new View.OnClickListener() {			
@@ -49,6 +40,7 @@ public class ProfileForm extends Activity implements InputValidator {
 					@Override
 					public void onClick(View v) {
 						try{
+							//Create Database instance
 							DBHelper db1 = new DBHelper(getBaseContext());
 							//Save the values entered in the Profile form (form_profile.xml).
 							profileFirstName = (EditText)findViewById(R.id.profileFirstName);
@@ -70,17 +62,19 @@ public class ProfileForm extends Activity implements InputValidator {
 							profileEmailString = profileEmail.getText().toString().trim();;
 							
 							// Create new profile object using converted strings
-							Profile newProfile = new Profile();
-							newProfile.setId(1);
-							newProfile.setFirstName(profileFirstNameString);
-							newProfile.setLastName(profileLastNameString);
-							newProfile.setGender(profileGenderString);
-							newProfile.setBirthday(profileBirthdayString);
-							newProfile.setCity(profileCityString);
-							newProfile.setEmail(profileEmailString);
+							Profile newProfile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);
 							
 							// Write profile to database
-							db1.addProfile(newProfile);
+							/* if(inputsValid()){
+							 * if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
+							db1.addProfile(newProfile);;
+							// 
+							} else { // Use updateProfile if profile already exists
+							db1.updateProfile(newProfile);
+							}
+							}*/
+							//db1.addProfile(newProfile);
+							
 														
 							if(inputsValid()){
 								// Call the add profile method to add the profile to the database!
