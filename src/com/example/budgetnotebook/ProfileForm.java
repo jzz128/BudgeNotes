@@ -27,6 +27,7 @@ public class ProfileForm extends Activity implements InputValidator {
 	String profileEmailString;
 
 	DBHelper db;
+	boolean profile_exists;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +35,17 @@ public class ProfileForm extends Activity implements InputValidator {
 		setContentView(R.layout.form_profile);
 		
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
-				save_profile = (Button) findViewById(R.id.save_profile);
-				save_profile.setOnClickListener(new View.OnClickListener() {			
-					
+		save_profile = (Button) findViewById(R.id.save_profile);
+		save_profile.setOnClickListener(new View.OnClickListener() {			
+		//Create Database instance
+		DBHelper db1 = new DBHelper(getBaseContext());
+		
+		
+		
 					@Override
 					public void onClick(View v) {
 						try{
-							//Create Database instance
-							DBHelper db1 = new DBHelper(getBaseContext());
+							
 							//Save the values entered in the Profile form (form_profile.xml).
 							profileFirstName = (EditText)findViewById(R.id.profileFirstName);
 							profileLastName = (EditText)findViewById(R.id.profileLastName);
@@ -65,6 +69,13 @@ public class ProfileForm extends Activity implements InputValidator {
 							Profile newProfile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);
 							
 							// Write profile to database
+							if(inputsValid()){
+								// Call the add profile method to add the profile to the database!
+								//db1.addProfile(newProfile);
+								db1.updateProfile(newProfile);
+							}
+							
+							
 							/* if(inputsValid()){
 							 if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
 							db1.addProfile(newProfile);
@@ -81,10 +92,7 @@ public class ProfileForm extends Activity implements InputValidator {
 							
 							
 														
-							if(inputsValid()){
-								// Call the add profile method to add the profile to the database!
-								db1.addProfile(newProfile);
-							}
+							
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
 							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
 							startActivity(newIntent);

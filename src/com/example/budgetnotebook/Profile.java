@@ -31,20 +31,23 @@ public class Profile extends Activity {
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		//Display Profile Information - Need to get from Database
-		String first_name = "Ryan";
+		/*String first_name = "Ryan";
 		String last_name = "Donovan";
 		String gender = "M";
 		String birthday = "01/18/1984";
 		String city = "Philadelphia";
-		String email = "rmd259@psu.edu";
+		String email = "rmd259@psu.edu";*/
 		
-		/*Profile profileInfo = db.getProfile(1);
-		String first_name_db = profileInfo.getFirstName();
+		//Create Database instance
+		DBHelper db = new DBHelper(getBaseContext());
+		//Display Profile Information from Database
+		Profile profileInfo = db.getProfile(1);
+		String first_name = profileInfo.getFirstName();
 		String last_name = profileInfo.getLastName();
 		String gender = profileInfo.getGender();
 		String birthday = profileInfo.getBirthday();
 		String city = profileInfo.getCity();
-		String email = profileInfo.getEmail();*/
+		String email = profileInfo.getEmail();
 		
 		// Set First Name
 		TextView tv_first_name = (TextView)findViewById(R.id.profileFirstName);

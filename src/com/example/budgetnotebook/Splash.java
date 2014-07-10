@@ -19,7 +19,7 @@ public class Splash extends Activity {
 		
 		DBHelper db = new DBHelper(getBaseContext());
 		
-		// Check is a profile exists.
+		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {
 			profile_exists = false;
 		} else {
