@@ -66,14 +66,19 @@ public class ProfileForm extends Activity implements InputValidator {
 							
 							// Write profile to database
 							/* if(inputsValid()){
-							 * if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
-							db1.addProfile(newProfile);;
+							 if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
+							db1.addProfile(newProfile);
+							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+							startActivity(newIntent);
 							// 
 							} else { // Use updateProfile if profile already exists
 							db1.updateProfile(newProfile);
+							// Finish to return to My Profile layer
+							finish();
 							}
 							}*/
-							//db1.addProfile(newProfile);
+							
 							
 														
 							if(inputsValid()){

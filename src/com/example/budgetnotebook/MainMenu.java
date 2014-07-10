@@ -108,7 +108,7 @@ public class MainMenu extends Activity {
 					
 			@Override
 			public void onClick(View v) {
-				finish();
+				//finish();
 	            System.exit(0);
 						
 			}

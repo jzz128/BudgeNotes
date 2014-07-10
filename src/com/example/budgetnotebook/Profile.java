@@ -83,14 +83,6 @@ public class Profile extends Activity {
 				});
 		
 	}
-
-	@Override
-	protected void onPause() {
-		// Kill create profile activity so it cannot be accessed via back button
-		super.onPause();
-		finish();
-	}
-	
 	@Override
 	public String toString() {
 		return "Profile [id=" + _id + ", first_name=" + first_name + ", last_name=" + last_name + ", gender=" + gender + ", birthday=" + birthday + ", city=" + city + ", email=" + email +"]";
