@@ -240,20 +240,20 @@ public class TransactionForm extends Activity {
 		
 		changeAmount = Integer.parseInt(transAmountS);
 		
-		Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
-		Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
 		
 		switch (transType.getCheckedRadioButtonId()) {
 		case R.id.transTypeCredit:
 			// Type is a Credit to the account
 			changeAmount = changeAmount;
-			Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 			break;
 			
 		case R.id.transTypeDebit:
 			// Type is a Credit to the account
 			changeAmount = -changeAmount;
-			Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 			break;
 		}
 		

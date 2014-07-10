@@ -1,11 +1,13 @@
 package com.example.budgetnotebook;
 
-import android.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class Transaction extends Activity {
 	
@@ -15,17 +17,17 @@ public class Transaction extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.view_transaction);		
+		setContentView(R.layout.view_transaction);
 		
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
 		
 		// Populate the ListView
-		//populateListViewTransactions();
+		populateListViewTransactions();
 		
 		// Set the ADD TRANSACTION button to display the ADD Transaction form when clicked
-		//addTransaction = (Button) findViewByI(R.id.addTransaction);
-		/*addTransaction.setOnClickListener(new View.OnClickListener() {		
+		addTransaction = (Button) findViewById(R.id.addTransaction);
+		addTransaction.setOnClickListener(new View.OnClickListener() {		
 								
 		@Override
 			public void onClick(View v) {
@@ -37,7 +39,7 @@ public class Transaction extends Activity {
 						e.printStackTrace();
 					}
 			}				
-		});*/
+		});
 	}
 	
 	private int _id;
@@ -67,6 +69,30 @@ public class Transaction extends Activity {
 	@Override
 	public String toString() {
 		return "Goal [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +"]";
+	}
+	
+	// Fill the ListView with transactions.
+	@SuppressWarnings("deprecation")
+	private void populateListViewTransactions() {
+		// Set a cursor with all the Transactions
+		Cursor cursor = db.getAllTransactions(0);
+				
+		startManagingCursor(cursor);
+				
+		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
+		String[] transactionFieldNames = new String[] {DBHelper.T_A_ID, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT};
+		int[] toViewIDs = new int[] {R.id.transAccount, R.id.transDate, R.id.transAmount};
+			
+		// Fills the ListView with all the Transactions in the Table.
+		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+				this,
+				R.layout.template_list_transaction,
+				cursor,
+				transactionFieldNames,
+				toViewIDs
+				);
+		ListView transactionList = (ListView) findViewById(R.id.listViewTrans);
+		transactionList.setAdapter(myCursorAdapter);
 	}
 	
 	//Getters --------------------------------------------------------------------

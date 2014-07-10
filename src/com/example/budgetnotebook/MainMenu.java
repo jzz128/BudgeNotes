@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainMenu extends Activity {
 	Button view_account;
@@ -14,16 +15,16 @@ public class MainMenu extends Activity {
 	Button view_recommendations;
 	Button exit;
 	Button main_menu;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-		
+				
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
-			
+				
 			@Override
 			public void onClick(View v) {
 				try{
@@ -114,7 +115,7 @@ public class MainMenu extends Activity {
 			}
 
 		});	
-		
+	
 	}
 
 }

@@ -299,6 +299,15 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 		}
 		
+		public int checkProfileExists() {
+			String query = "SELECT * FROM " + PROFILE_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			return cursor.getCount();
+		}
+		
 		// Toast profile  -- REMOVE AFTER TESTING --
 		public void toastProfile(Context context){
 			String query = "SELECT * FROM " + PROFILE_TABLE;
@@ -557,7 +566,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 				
 		// Get a list of all Transactions.
-		public List<Transaction> getAllTransactions() {
+		public List<Transaction> getAllListTransactions() {
 			List<Transaction> transactions = new LinkedList<Transaction>();
 					
 			String query = "SELECT * FROM " + TRANSACTION_TABLE;
@@ -587,7 +596,25 @@ public class DBHelper extends SQLiteOpenHelper {
 					
 			return transactions;
 		}
-				
+		
+		// For List population of Account ListView
+		public Cursor getAllTransactions(int a_id) {
+			SQLiteDatabase db = this.getWritableDatabase();
+					
+			String where = null;
+			String having = null;
+			if(a_id != 0) {
+				having = T_A_ID+"="+a_id;
+			}
+			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, null, null);
+					
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+					
+			return cursor;
+		}
+		
 		// Toast all Transactions
 		public void toastTransaction(Context context){
 			String query = "SELECT * FROM " + TRANSACTION_TABLE;
