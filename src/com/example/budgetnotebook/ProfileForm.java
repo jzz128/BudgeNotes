@@ -102,9 +102,15 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileFirstName.setText(profile.getFirstName());
 		profileLastName.setText(profile.getLastName());
 		
-		//TODO if statement to be male id if Male, female if female.
-		profileGenderSelection = (RadioButton)findViewById(R.id.profileMale);
-		profileGenderSelection.setChecked(true);
+		// Set button to be male id if Male, female if female.
+		if (profile.getGender().equals("F")){
+			profileGenderSelection = (RadioButton)findViewById(R.id.profileFemale);
+			profileGenderSelection.setChecked(true);
+		} else {
+			profileGenderSelection = (RadioButton)findViewById(R.id.profileMale);
+			profileGenderSelection.setChecked(true);
+		}
+	
 		// ---------------------------------------------------------------------
 		
 		profileBirthday.setText(profile.getBirthday());
