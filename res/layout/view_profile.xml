@@ -72,11 +72,12 @@
             	</TableRow>		
                
             	<Button
-        android:id="@+id/editProfile"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="EDIT ACCOUNT"
-        android:background="@drawable/styledbutton"
-        style="@style/button_text" />
+            	    android:id="@+id/editProfile"
+            	    style="@style/button_text"
+            	    android:layout_width="fill_parent"
+            	    android:layout_height="wrap_content"
+            	    android:background="@drawable/styledbutton"
+            	    android:text="EDIT PROFILE" />
+
     	</TableLayout>             
 </LinearLayout>

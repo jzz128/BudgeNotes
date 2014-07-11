@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class ProfileForm extends Activity implements InputValidator {
 	Button save_profile;
@@ -26,72 +27,81 @@ public class ProfileForm extends Activity implements InputValidator {
 	String profileCityString;
 	String profileEmailString;
 
-	DBHelper db;
 	boolean profile_exists;
+	DBHelper db;
+	Profile profile;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.form_profile);
 		
+		//Create Database instance
+		db = new DBHelper(getBaseContext());
+		
+		//Save the values entered in the Profile form (form_profile.xml).
+		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
+		profileLastName = (EditText)findViewById(R.id.profileLastName);
+									
+		profileGender = (RadioGroup)findViewById(R.id.profileGender);
+				
+		profileBirthday = (EditText)findViewById(R.id.profileBirthday);
+		profileCity = (EditText)findViewById(R.id.profileCity);
+		profileEmail = (EditText)findViewById(R.id.profileEmail);
+		
+		// Check if a profile exists.
+		if (db.checkProfileExists() == 0) {
+			profile_exists = false;
+		} else {
+			profile_exists = true;
+			profile = db.getProfile(1);	
+			populateForm();
+		}
+		
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
 		save_profile = (Button) findViewById(R.id.save_profile);
-		save_profile.setOnClickListener(new View.OnClickListener() {			
-		//Create Database instance
-		DBHelper db1 = new DBHelper(getBaseContext());
-		
-		
+		save_profile.setOnClickListener(new View.OnClickListener() {				
 		
 					@Override
 					public void onClick(View v) {
 						try{
-							
-							//Save the values entered in the Profile form (form_profile.xml).
-							profileFirstName = (EditText)findViewById(R.id.profileFirstName);
-							profileLastName = (EditText)findViewById(R.id.profileLastName);
-														
-							profileGender = (RadioGroup)findViewById(R.id.profileGender);
 							profileGenderSelection = (RadioButton)findViewById(profileGender.getCheckedRadioButtonId());
+							fillProfileVariables();
 							
-							profileBirthday = (EditText)findViewById(R.id.profileBirthday);
-							profileCity = (EditText)findViewById(R.id.profileCity);
-							profileEmail = (EditText)findViewById(R.id.profileEmail);
-							
-							// Transfer edit text to PROFILE_TABLE attribute types.							
-							profileFirstNameString = profileFirstName.getText().toString().trim();
-							profileLastNameString = profileLastName.getText().toString().trim();
-							profileGenderString = profileGenderSelection.getText().toString().trim();;
-							profileBirthdayString = profileBirthday.getText().toString().trim();;
-							profileCityString = profileCity.getText().toString().trim();;
-							profileEmailString = profileEmail.getText().toString().trim();;
+							if (profile_exists) {
+								fillProfileObject();
+								db.updateProfile(profile);
+							} else {
+								profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
+								db.addProfile(profile);
+							}
+
 							
 							// Create new profile object using converted strings
-							Profile newProfile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);
+							//Profile profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);
 							
 							// Write profile to database
-							if(inputsValid()){
+							//if(inputsValid()){
 								// Call the add profile method to add the profile to the database!
-								//db1.addProfile(newProfile);
-								db1.updateProfile(newProfile);
-							}
+								//db.addProfile(profile);
+								//db.updateProfile(profile);
+							//}
 							
 							
 							/* if(inputsValid()){
 							 if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
-							db1.addProfile(newProfile);
+							db.addProfile(profile);
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
 							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
 							startActivity(newIntent);
 							// 
 							} else { // Use updateProfile if profile already exists
-							db1.updateProfile(newProfile);
+							db.updateProfile(profile);
 							// Finish to return to My Profile layer
 							finish();
 							}
 							}*/
 							
-							
-														
 							
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
 							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
@@ -104,6 +114,38 @@ public class ProfileForm extends Activity implements InputValidator {
 		
 	}
 	
+	private void fillProfileObject() {
+		profile.setFirstName(profileFirstNameString);
+		profile.setLastName(profileLastNameString);
+		profile.setGender(profileGenderString);
+		profile.setBirthday(profileBirthdayString);
+		profile.setCity(profileCityString);
+		profile.setEmail(profileEmailString);
+	}
+	
+	private void populateForm() {
+		profileFirstName.setText(profile.getFirstName());
+		profileLastName.setText(profile.getLastName());
+		
+		//TODO if statement to be male id if Male, female if female.
+		profileGenderSelection = (RadioButton)findViewById(R.id.profileMale);
+		profileGenderSelection.setChecked(true);
+		// ---------------------------------------------------------------------
+		
+		profileBirthday.setText(profile.getBirthday());
+		profileCity.setText(profile.getCity());
+		profileEmail.setText(profile.getEmail());
+	}
+	
+	private void fillProfileVariables() {		
+		// Transfer edit text to PROFILE_TABLE attribute types.							
+		profileFirstNameString = profileFirstName.getText().toString().trim();
+		profileLastNameString = profileLastName.getText().toString().trim();
+		profileGenderString = profileGenderSelection.getText().toString().trim();
+		profileBirthdayString = profileBirthday.getText().toString().trim();
+		profileCityString = profileCity.getText().toString().trim();
+		profileEmailString = profileEmail.getText().toString().trim();
+	}
 	private void addProfile() {
 		db.addProfile(new Profile(profileFirstNameString, profileLastNameString, profileGenderString, profileBirthdayString, profileCityString, profileEmailString));
 	}
