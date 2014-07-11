@@ -71,41 +71,16 @@ public class ProfileForm extends Activity implements InputValidator {
 							if (profile_exists) {
 								fillProfileObject();
 								db.updateProfile(profile);
+								finish();
 							} else {
 								profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
 								db.addProfile(profile);
+								
 							}
-
-							
-							// Create new profile object using converted strings
-							//Profile profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);
-							
-							// Write profile to database
-							//if(inputsValid()){
-								// Call the add profile method to add the profile to the database!
-								//db.addProfile(profile);
-								//db.updateProfile(profile);
-							//}
-							
-							
-							/* if(inputsValid()){
-							 if (db.getProfile(1) == null) { // Use addProfile if creating profile for the first time
-							db.addProfile(profile);
+							// Display Main Menu after profile is created or edited
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
-							startActivity(newIntent);
-							// 
-							} else { // Use updateProfile if profile already exists
-							db.updateProfile(profile);
-							// Finish to return to My Profile layer
-							finish();
-							}
-							}*/
-							
-							
-							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
-							startActivity(newIntent);
+							//Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+							//startActivity(newIntent);
 							} catch(ClassNotFoundException e) {
 								e.printStackTrace();
 							}

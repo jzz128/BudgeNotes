@@ -76,6 +76,7 @@ public class Profile extends Activity {
 					@Override
 					public void onClick(View v) {
 						try{
+							finish();
 							Class clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
 							Intent newIntent = new Intent(Profile.this, clickedClass);
 							startActivity(newIntent);
