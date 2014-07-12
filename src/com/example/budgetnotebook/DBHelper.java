@@ -441,7 +441,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	        // looping through all rows and adding to list
 	        if (cursor.moveToFirst()) {
 	            do {
-	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1));
+	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1) + " " + cursor.getString(4));
 	            } while (cursor.moveToNext());
 	        }
 	         
@@ -604,7 +604,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			String where = null;
 			String having = null;
 			if(a_id != 0) {
-				having = T_A_ID+"="+a_id;
+				where = T_A_ID+"="+a_id;
 			}
 			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, null, null);
 					

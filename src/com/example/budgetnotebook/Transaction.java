@@ -1,16 +1,27 @@
 package com.example.budgetnotebook;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class Transaction extends Activity {
+	// An id for the account transactions to view.
+	// It must be set by the calling class, or it will show all transactions.
+	int A_ID = 0;
 	
+	Spinner transAccount;
+	String[] seperated;
 	Button addTransaction;
 	DBHelper db;
 	
@@ -22,8 +33,34 @@ public class Transaction extends Activity {
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
 		
+		// Initialize the spinner.
+		transAccount = (Spinner) findViewById(R.id.transAccountSpinner);
+		
+		// Add data to the spinner.
+		loadAccountSpinnerData();
+		
+		// Set a listener for the Account spinner selection.
+		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
+			
+		@Override
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			//Get the Account spinner data and put it in a string array.
+			seperated = transAccount.getSelectedItem().toString().split(" ");
+									
+			// Populate the list view with transactions from specified account.
+			setViewAccount(Integer.parseInt(seperated[0]));
+			populateListViewTransactions(A_ID);
+										
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub		
+			}
+		});
+		
 		// Populate the ListView
-		populateListViewTransactions();
+		populateListViewTransactions(A_ID);
 		
 		// Set the ADD TRANSACTION button to display the ADD Transaction form when clicked
 		addTransaction = (Button) findViewById(R.id.addTransaction);
@@ -71,11 +108,22 @@ public class Transaction extends Activity {
 		return "Goal [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +"]";
 	}
 	
+	// Populate the spinner with account numbers
+	private void loadAccountSpinnerData() {
+		List<String> list = db.getAllStringAccounts();
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                     (this, android.R.layout.simple_spinner_item,list);
+                      
+        dataAdapter.setDropDownViewResource
+                     (android.R.layout.simple_spinner_dropdown_item);
+		 transAccount.setAdapter(dataAdapter);
+	}
+	
 	// Fill the ListView with transactions.
 	@SuppressWarnings("deprecation")
-	private void populateListViewTransactions() {
+	private void populateListViewTransactions(int A_ID) {
 		// Set a cursor with all the Transactions
-		Cursor cursor = db.getAllTransactions(0);
+		Cursor cursor = db.getAllTransactions(A_ID);
 				
 		startManagingCursor(cursor);
 				
@@ -133,6 +181,10 @@ public class Transaction extends Activity {
 	}
 	
 	//Setters --------------------------------------------------------------------
+	public void setViewAccount(int id) {
+		this.A_ID = id;
+	}
+	
 	public void setId(int id){
 		this._id = id;
 	}
