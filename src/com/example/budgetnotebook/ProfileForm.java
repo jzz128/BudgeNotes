@@ -75,12 +75,16 @@ public class ProfileForm extends Activity implements InputValidator {
 							} else {
 								profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
 								db.addProfile(profile);
-								
+								finish();
 							}
 							// Display Main Menu after profile is created or edited
 							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-							//Intent newIntent = new Intent(ProfileForm.this, clickedClass);
-							//startActivity(newIntent);
+							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+							
+							// Brings us back to the root activity, where exit functions properly.
+							// we may want to add this to some of the other views where needed.
+							newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(newIntent);
 							} catch(ClassNotFoundException e) {
 								e.printStackTrace();
 							}
