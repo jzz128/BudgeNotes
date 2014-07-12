@@ -8,25 +8,33 @@
         android:id="@+id/accountIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="iconClickHandler"
         android:src="@drawable/spend" />
 
     <TextView
-        android:id="@+id/accountBalance"
+        android:id="@+id/accountID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/accountIcon"
-        android:layout_marginBottom="14dp"
-        android:layout_toRightOf="@+id/accountIcon"
-        android:text="Account Balance"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignLeft="@+id/accountBalance"
+        android:text="ID"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/accountName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/accountBalance"
-        android:layout_alignLeft="@+id/accountBalance"
+        android:layout_below="@+id/accountID"
+        android:layout_centerHorizontal="true"
         android:text="Account Name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/accountBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accountName"
+        android:layout_centerHorizontal="true"
+        android:text="Account Balance"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -18,7 +18,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class Transaction extends Activity {
 	// An id for the account transactions to view.
 	// It must be set by the calling class, or it will show all transactions.
-	int A_ID = 0;
+	int A_ID;
 	
 	Spinner transAccount;
 	String[] seperated;
@@ -29,7 +29,7 @@ public class Transaction extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_transaction);
-		
+				
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
 		
@@ -39,6 +39,11 @@ public class Transaction extends Activity {
 		// Add data to the spinner.
 		loadAccountSpinnerData();
 		
+		// Get the extras from previous activity.
+		Intent intent = getIntent();
+		A_ID = intent.getIntExtra("A_ID",0);
+		
+		transAccount.setSelection(A_ID-1,false);
 		// Set a listener for the Account spinner selection.
 		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
 			
@@ -58,7 +63,7 @@ public class Transaction extends Activity {
 				// TODO Auto-generated method stub		
 			}
 		});
-		
+				
 		// Populate the ListView
 		populateListViewTransactions(A_ID);
 		

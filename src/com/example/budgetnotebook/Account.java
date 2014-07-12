@@ -11,9 +11,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Added the adapter scaffolding and getters / setters.
@@ -23,6 +27,9 @@ import android.widget.TextView;
 public class Account extends Activity {
 	Button addAccount;	
 	DBHelper db;
+	
+	RelativeLayout vwParentRow;
+	ListView accountList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +79,8 @@ public class Account extends Activity {
 		startManagingCursor(cursor);
 		
 		// Map the ACCOUNT_TABLE fields to the TextViews on the template_list_account layout.
-		String[] accountFieldNames = new String[] {db.ACCOUNT_NAME, db.BALANCE};
-		int[] toViewIDs = new int[] {R.id.accountName, R.id.accountBalance};
+		String[] accountFieldNames = new String[] {db.A_ID, db.ACCOUNT_NAME, db.BALANCE};
+		int[] toViewIDs = new int[] {R.id.accountID, R.id.accountName, R.id.accountBalance};
 	
 		// Fills the ListView with all the Accounts in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
@@ -83,7 +90,7 @@ public class Account extends Activity {
 				accountFieldNames,
 				toViewIDs
 				);
-		ListView accountList = (ListView) findViewById(R.id.listViewAccounts);
+		accountList = (ListView) findViewById(R.id.listViewAccounts);
 		accountList.setAdapter(myCursorAdapter);
 
 	}
@@ -108,6 +115,28 @@ public class Account extends Activity {
 	@Override
 	public String toString() {
 		return "Account [id=" + _id + ", account_name=" + account_name + ", account_number=" + account_number + ", account_type=" + account_type + ", balance=" + balance +"]";
+	}
+	
+	// Set ImageButon click action.
+	public void iconClickHandler(View v) {
+		
+		int a_id;
+		
+		//get the row the clicked button is in
+        vwParentRow = (RelativeLayout)v.getParent();
+        TextView child = (TextView)vwParentRow.getChildAt(1);
+        
+        a_id = Integer.parseInt((child.getText().toString().trim()));
+        
+        try {
+        	Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+        	Intent newIntent = new Intent(Account.this,clickedClass);
+        	newIntent.putExtra("A_ID", a_id);
+        	startActivity(newIntent);
+		
+        } catch(ClassNotFoundException e) {
+        	e.printStackTrace();
+        }
 	}
 	
 	//Getters --------------------------------------------------------------------
