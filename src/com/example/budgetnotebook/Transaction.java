@@ -76,7 +76,7 @@ public class Transaction extends Activity {
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(Transaction.this, clickedClass);
-					//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
