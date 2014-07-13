@@ -73,6 +73,8 @@ public class TransactionForm extends Activity {
 	private String transAmountS;
 	private String transDescriptionS;
 	
+	int A_ID;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +83,10 @@ public class TransactionForm extends Activity {
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 
+		// Get the id of the account from the spinner on the transaction view.
+		Intent intent = getIntent();
+		A_ID = intent.getIntExtra("A_ID",0);
+		
 		// Initialize date field.
 		transDate = (EditText) findViewById(R.id.transEditDate);
 		
@@ -147,6 +153,9 @@ public class TransactionForm extends Activity {
 		calendar = (ImageButton) findViewById(R.id.transButtonCalendar);
 		calendar.setOnClickListener(onDate);
 		
+		// Set the value of the account spinner using what was passed from the transaction view
+		transAccount.setSelection(A_ID-1);
+		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveTransaction = (Button) findViewById(R.id.transButtonSave);
 		saveTransaction.setOnClickListener(new View.OnClickListener() {		
@@ -182,7 +191,6 @@ public class TransactionForm extends Activity {
 					Intent newIntent = new Intent(TransactionForm.this, clickedClass);
 					newIntent.putExtra("A_ID", transAccountI);
 					startActivity(newIntent);
-					
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -217,6 +225,20 @@ public class TransactionForm extends Activity {
 	};
 
 	@Override
+	protected void onPause() {
+		// Kill activity once complete
+		super.onPause();
+		finish();
+	}
+	
+	// Close the Database on destroy.
+		@Override
+		protected void onDestroy() {
+			super.onDestroy();
+			db.close();
+		};
+	
+	@Override
 	@Deprecated
 	protected Dialog onCreateDialog(int id) {
 		return new DatePickerDialog(this, datePickerListener, year, month, day);
@@ -238,6 +260,7 @@ public class TransactionForm extends Activity {
 		int oldBalance;
 		int changeAmount;
 		int newBalance;
+		String accountType;
 		
 		changeAmount = Integer.parseInt(transAmountS);
 		
@@ -260,6 +283,14 @@ public class TransactionForm extends Activity {
 		
 		// Update the value of the Account.
 		account = db.getAccount(accountId);
+				
+		// Reverses amount if this is a credit card.
+		accountType = account.getType();
+		
+		if (new String("CR").equals(accountType)) {
+			changeAmount = -changeAmount;
+		}
+		
 		oldBalance = Integer.parseInt(account.getBalance());
 		newBalance = oldBalance + changeAmount;
 		account.setBalance(String.valueOf(newBalance));

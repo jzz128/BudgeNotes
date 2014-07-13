@@ -76,6 +76,8 @@ public class Transaction extends Activity {
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(Transaction.this, clickedClass);
+					//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					newIntent.putExtra("A_ID", A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
@@ -110,7 +112,7 @@ public class Transaction extends Activity {
 	
 	@Override
 	public String toString() {
-		return "Goal [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +"]";
+		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +"]";
 	}
 	
 	// Populate the spinner with account numbers
@@ -133,8 +135,8 @@ public class Transaction extends Activity {
 		startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
-		String[] transactionFieldNames = new String[] {DBHelper.T_A_ID, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT};
-		int[] toViewIDs = new int[] {R.id.transAccount, R.id.transDate, R.id.transAmount};
+		String[] transactionFieldNames = new String[] {db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT};
+		int[] toViewIDs = new int[] {R.id.transName, R.id.transDate, R.id.transAmount};
 			
 		// Fills the ListView with all the Transactions in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
@@ -147,6 +149,13 @@ public class Transaction extends Activity {
 		ListView transactionList = (ListView) findViewById(R.id.listViewTrans);
 		transactionList.setAdapter(myCursorAdapter);
 	}
+	
+	// Close the Database on destroy.
+		@Override
+		protected void onDestroy() {
+			super.onDestroy();
+			db.close();
+		};
 	
 	//Getters --------------------------------------------------------------------
 	public int getId(){

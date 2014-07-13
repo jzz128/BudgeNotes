@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/accountBalance"
         android:text="ID"
+        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView

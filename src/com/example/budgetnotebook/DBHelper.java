@@ -441,7 +441,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	        // looping through all rows and adding to list
 	        if (cursor.moveToFirst()) {
 	            do {
-	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1) + " " + cursor.getString(4));
+	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1) + " $" + cursor.getString(4));
 	            } while (cursor.moveToNext());
 	        }
 	         

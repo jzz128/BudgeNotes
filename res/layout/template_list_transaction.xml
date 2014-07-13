@@ -12,19 +12,19 @@
         android:src="@drawable/credit" />
 
     <TextView
-        android:id="@+id/transAccount"
+        android:id="@+id/transName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imageButton1"
-        android:text="Account"
+        android:text="Name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/transDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/transAccount"
+        android:layout_below="@+id/transName"
         android:layout_toRightOf="@+id/imageButton1"
         android:text="Date"
         android:textAppearance="?android:attr/textAppearanceMedium" />
