@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -24,6 +25,9 @@ public class Transaction extends Activity {
 	String[] seperated;
 	Button addTransaction;
 	DBHelper db;
+	
+	RelativeLayout vwParentRow;
+	ListView transactionList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,9 @@ public class Transaction extends Activity {
 		// Get the extras from previous activity.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
+        int lowestID;
+        lowestID = db.lowestAccountID();
+        A_ID = A_ID - lowestID + 1 ;
 		
 		transAccount.setSelection(A_ID-1,false);
 		// Set a listener for the Account spinner selection.
@@ -76,7 +83,7 @@ public class Transaction extends Activity {
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(Transaction.this, clickedClass);
-					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -155,6 +162,7 @@ public class Transaction extends Activity {
 		protected void onDestroy() {
 			super.onDestroy();
 			db.close();
+			finish();
 		};
 	
 	//Getters --------------------------------------------------------------------

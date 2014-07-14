@@ -66,6 +66,7 @@ public class Goal extends Activity{
 	protected void onDestroy() {
 		super.onDestroy();
 		db.close();
+		finish();
 	};
 	
 	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)

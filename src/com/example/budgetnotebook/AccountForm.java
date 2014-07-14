@@ -105,11 +105,12 @@ public class AccountForm extends Activity implements InputValidator{
 		return valid;
 	};	
 	
+	// Close the Database on destroy.
 	@Override
-	protected void onPause() {
-		// Kill activity once complete
-		super.onPause();
+	protected void onDestroy() {
+		super.onDestroy();
+		db.close();
 		finish();
-	}
+	};
 
 }

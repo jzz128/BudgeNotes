@@ -93,6 +93,14 @@ public class ProfileForm extends Activity implements InputValidator {
 		
 	}
 	
+	// Close the Database on destroy.
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.close();
+		finish();
+	};
+	
 	private void fillProfileObject() {
 		profile.setFirstName(profileFirstNameString);
 		profile.setLastName(profileLastNameString);
@@ -178,11 +186,4 @@ public class ProfileForm extends Activity implements InputValidator {
 		return valid;
 	}
 	
-	@Override
-	protected void onPause() {
-		// Kill activity once complete
-		super.onPause();
-		finish();
-	}
-
 }

@@ -8,6 +8,7 @@
         android:id="@+id/accountIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:onClick="iconClickHandler"
         android:src="@drawable/spend" />
 
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/accountID"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/accountIcon"
         android:text="Account Name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -34,8 +35,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/accountName"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/accountIcon"
         android:text="Account Balance"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageButton
+        android:id="@+id/accountEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:onClick="editClickHandler"
+        android:src="@drawable/edit1" />
+
+    <ImageButton
+        android:id="@+id/accountDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/accountEditButton"
+        android:padding="5dp"
+        android:onClick="deleteClickHandler"
+        android:src="@drawable/delete1" />
 
 </RelativeLayout>

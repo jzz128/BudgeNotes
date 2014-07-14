@@ -78,7 +78,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
-		
+	
+	// SQL Statement for deleting an account trigger event.
+	private final String deleteAccountTrigger = "CREATE TRIGGER delete_account AFTER DELETE ON " + ACCOUNT_TABLE + " FOR EACH ROW BEGIN"
+			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
+			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
+			+ " END";
+	
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
 	}
@@ -90,6 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createProfile);
 		db.execSQL(createAccount);
 		db.execSQL(createTransaction);
+		db.execSQL(deleteAccountTrigger);
 	}
 
 	//Tells the system what to do when the DB is updated.
@@ -512,6 +519,22 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			db.close();
 			
+		}
+		
+		// Return the lowest id in the table
+		public int lowestAccountID () {
+			String query = "SELECT * FROM " + ACCOUNT_TABLE + " ORDER BY " + A_ID + " ASC LIMIT 1";
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			if (cursor.moveToFirst()) {
+				//Toast.makeText(context, cursor.getString(0), Toast.LENGTH_LONG).show();
+				return Integer.parseInt(cursor.getString(0).trim());
+			}
+			else {
+				return 0;
+			}
 		}
 		
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------

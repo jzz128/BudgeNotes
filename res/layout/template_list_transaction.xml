@@ -4,19 +4,28 @@
     android:layout_height="match_parent" >
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/transcactionButtonIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:padding="5dp"
         android:src="@drawable/credit" />
+    
+    <TextView
+        android:id="@+id/transactionID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/transcactionButtonIcon"
+        android:text="ID"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/transName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/imageButton1"
+        android:layout_toRightOf="@+id/transcactionButtonIcon"
         android:text="Name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -25,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/transName"
-        android:layout_toRightOf="@+id/imageButton1"
+        android:layout_toRightOf="@+id/transcactionButtonIcon"
         android:text="Date"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -33,9 +42,29 @@
         android:id="@+id/transAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageButton1"
-        android:layout_toRightOf="@+id/imageButton1"
+        android:layout_alignBottom="@+id/transcactionButtonIcon"
+        android:layout_toRightOf="@+id/transcactionButtonIcon"
         android:text="Amount"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageButton
+        android:id="@+id/transactionEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:onClick="editClickHandler"
+        android:src="@drawable/edit1" />
+
+    <ImageButton
+        android:id="@+id/transactionDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/transactionEditButton"
+        android:padding="5dp"
+        android:onClick="deleteClickHandler"
+        android:src="@drawable/delete1" />
 
 </RelativeLayout>

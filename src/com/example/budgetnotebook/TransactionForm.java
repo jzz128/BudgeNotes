@@ -86,6 +86,9 @@ public class TransactionForm extends Activity {
 		// Get the id of the account from the spinner on the transaction view.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
+        int lowestID;
+        lowestID = db.lowestAccountID();
+        A_ID = A_ID - lowestID + 1 ;
 		
 		// Initialize date field.
 		transDate = (EditText) findViewById(R.id.transEditDate);
