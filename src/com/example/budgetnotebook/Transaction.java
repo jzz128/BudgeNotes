@@ -3,6 +3,8 @@ package com.example.budgetnotebook;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ public class Transaction extends Activity {
 	// An id for the account transactions to view.
 	// It must be set by the calling class, or it will show all transactions.
 	int A_ID;
+	int S_A_ID;
 	
 	Spinner transAccount;
 	String[] seperated;
@@ -48,9 +51,9 @@ public class Transaction extends Activity {
 		A_ID = intent.getIntExtra("A_ID",0);
         int lowestID;
         lowestID = db.lowestAccountID();
-        A_ID = A_ID - lowestID + 1 ;
+        S_A_ID = A_ID - lowestID + 1 ;
 		
-		transAccount.setSelection(A_ID-1,false);
+		transAccount.setSelection(S_A_ID-1,false);
 		// Set a listener for the Account spinner selection.
 		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
 			
@@ -91,6 +94,36 @@ public class Transaction extends Activity {
 					}
 			}				
 		});
+	}
+	
+	public void iconClickHandler(View v) {
+		//TODO Do Something when Transaction Icon clicked. Or Nothing.
+	}
+	
+	public void editClickHandler(View v) {
+		//TODO Open Transaction Form populated with selected transaction information.
+	}
+	
+	public void deleteClickHandler(View v) {
+		 // Alert dialog to affirm delete.
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Do Nothing.
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //Do Nothing.
+                    break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete transaction?").setPositiveButton("Yes", dialogClickListener)
+            .setNegativeButton("No", dialogClickListener).show();
 	}
 	
 	private int _id;
@@ -139,7 +172,7 @@ public class Transaction extends Activity {
 		// Set a cursor with all the Transactions
 		Cursor cursor = db.getAllTransactions(A_ID);
 				
-		startManagingCursor(cursor);
+		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
 		String[] transactionFieldNames = new String[] {db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT};
@@ -166,6 +199,7 @@ public class Transaction extends Activity {
 			finish();
 		};
 	*/
+	
 	//Getters --------------------------------------------------------------------
 	public int getId(){
 		return _id;

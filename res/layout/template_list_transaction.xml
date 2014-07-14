@@ -10,6 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
+        android:onClick="iconClickHandler"
         android:src="@drawable/credit" />
     
     <TextView

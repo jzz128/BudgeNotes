@@ -74,6 +74,7 @@ public class TransactionForm extends Activity {
 	private String transDescriptionS;
 	
 	int A_ID;
+	int S_A_ID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class TransactionForm extends Activity {
 		A_ID = intent.getIntExtra("A_ID",0);
         int lowestID;
         lowestID = db.lowestAccountID();
-        A_ID = A_ID - lowestID + 1 ;
+        S_A_ID = A_ID - lowestID + 1 ;
 		
 		// Initialize date field.
 		transDate = (EditText) findViewById(R.id.transEditDate);
@@ -157,7 +158,7 @@ public class TransactionForm extends Activity {
 		calendar.setOnClickListener(onDate);
 		
 		// Set the value of the account spinner using what was passed from the transaction view
-		transAccount.setSelection(A_ID-1);
+		transAccount.setSelection(S_A_ID-1);
 		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveTransaction = (Button) findViewById(R.id.transButtonSave);
