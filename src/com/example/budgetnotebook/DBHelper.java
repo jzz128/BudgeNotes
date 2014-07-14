@@ -581,7 +581,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			transaction.setCategory(cursor.getString(5));
 			transaction.setType(cursor.getString(6));
 			transaction.setInterval(cursor.getString(7));
-			transaction.setDescription(cursor.getString(7));
+			transaction.setDescription(cursor.getString(8));
 					 
 			 Log.d("getTransaction("+id+")", transaction.toString());
 					 

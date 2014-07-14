@@ -47,6 +47,7 @@ public class AccountForm extends Activity implements InputValidator{
 		accountType = (RadioGroup)findViewById(R.id.accountEditType);
 		accountBalance = (EditText)findViewById(R.id.accountEditBalance);
 		
+		// Auto fill the form if this is an edit.
 		if (A_EDIT) {
 			account = db.getAccount(A_ID);
 			populateForm();

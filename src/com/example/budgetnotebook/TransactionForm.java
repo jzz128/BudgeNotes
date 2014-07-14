@@ -74,7 +74,10 @@ public class TransactionForm extends Activity {
 	private String transDescriptionS;
 	
 	int A_ID;
+	int T_ID;
 	int S_A_ID;
+	boolean T_EDIT;
+	Transaction transaction;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,9 @@ public class TransactionForm extends Activity {
 		// Get the id of the account from the spinner on the transaction view.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
+		T_ID = intent.getIntExtra("T_ID", 0);
+		T_EDIT = intent.getBooleanExtra("T_EDIT", false);
+		
         int lowestID;
         lowestID = db.lowestAccountID();
         S_A_ID = A_ID - lowestID + 1 ;
@@ -160,6 +166,20 @@ public class TransactionForm extends Activity {
 		// Set the value of the account spinner using what was passed from the transaction view
 		transAccount.setSelection(S_A_ID-1);
 		
+		//Save the values entered in the Transaction form (form_transaction.xml).
+		transName = (EditText)findViewById(R.id.transEditName);
+		transAmount = (EditText) findViewById(R.id.transEditAmount);
+		transDescription = (EditText) findViewById(R.id.transEditDescription);
+		transType = (RadioGroup)findViewById(R.id.transEditType);
+		
+		// Auto fill the form if this is an edit.
+		if (T_EDIT) {
+			transaction = db.getTransaction(A_ID);
+			populateForm();
+		} else {
+			//Do Nothing.
+		}
+		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveTransaction = (Button) findViewById(R.id.transButtonSave);
 		saveTransaction.setOnClickListener(new View.OnClickListener() {		
@@ -168,12 +188,6 @@ public class TransactionForm extends Activity {
 			public void onClick(View v) {
 				try{
 					
-					//Save the values entered in the Transaction form (form_transaction.xml).
-					transName = (EditText)findViewById(R.id.transEditName);
-					transAmount = (EditText) findViewById(R.id.transEditAmount);
-					transDescription = (EditText) findViewById(R.id.transEditDescription);
-					transType = (RadioGroup)findViewById(R.id.transEditType);
-					
 					transTypeSelection = (RadioButton)findViewById(transType.getCheckedRadioButtonId());
 					
 					// Transfer edit text to GOAL_TABLE attribute types.
@@ -181,10 +195,10 @@ public class TransactionForm extends Activity {
 					transNameS = transName.getText().toString().trim();
 					transDateS = transDate.getText().toString().trim();
 					transAmountS = transAmount.getText().toString().trim();
-					transCategoryS = seperatedCategory[1].toString().trim();
+					transCategoryS = String.valueOf(transCategory.getSelectedItemPosition()) + " - " + seperatedCategory[1].toString().trim();
 					transCategoryVal = seperatedCategory[0].toString().trim();
 					transTypeS = transTypeSelection.getText().toString().trim();
-					transIntervalS = transInterval.toString().trim();
+					transIntervalS = String.valueOf(transInterval.getSelectedItemPosition()) + " - " + transInterval.getSelectedItem().toString();
 					transDescriptionS = transDescription.getText().toString().trim();
 					
 					if (transTypeS.equals("CR")) {
@@ -195,9 +209,17 @@ public class TransactionForm extends Activity {
 						transTypeS = String.valueOf(R.drawable.other1);
 					}
 					
-					// Call the add transaction method to add the transaction to the database!
-					addTransaction();
-					updateAccount();
+					if (T_EDIT) {
+						// Update the account balance and then update the transaction record.
+						fillTransObject();
+						reverseTransaction();
+						updateAccount();
+						db.updateTransaction(transaction);
+					} else {
+						// Call the add transaction method to add the transaction to the database and update the account balance!
+						addTransaction();
+						updateAccount();
+					}
 					
 					Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
 					Intent newIntent = new Intent(TransactionForm.this, clickedClass);
@@ -211,6 +233,47 @@ public class TransactionForm extends Activity {
 				}
 			}				
 		});
+	}
+	
+	// Fill the transaction variable with updated information.
+	private void fillTransObject() {
+		transaction.setAId(transAccountI);
+		transaction.setName(transNameS);
+		transaction.setDate(transDateS);
+		transaction.setAmount(transAmountS);
+		transaction.setCategory(transCategoryS);
+		transaction.setType(transTypeS);
+		transaction.setInterval(transIntervalS);
+		transaction.setDescription(transDescriptionS);
+	}
+	
+	// Fill the form fields with database data.
+	private void populateForm() {
+		
+		String[] tranCat;
+		String[] tranInt;
+		
+		tranCat = transaction.getCategory().split(" - ");
+		tranInt = transaction.getInterval().split(" - ");
+		
+		transName.setText(transaction.getName());
+		transDate.setText(transaction.getDate());
+		transAmount.setText(transaction.getAmount());
+		transDescription.setText(transaction.getDescription());
+		
+		if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
+			transTypeSelection = (RadioButton)findViewById(R.id.transTypeCredit);
+			transTypeSelection.setChecked(true);
+		} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
+			transTypeSelection = (RadioButton)findViewById(R.id.transTypeDebit);
+			transTypeSelection.setChecked(true);
+		}else {
+			//Do nothing for now.
+		}
+		
+		transCategory.setSelection(Integer.parseInt(tranCat[0]));
+		transInterval.setSelection(Integer.parseInt(tranInt[0]));
+		
 	}
 	
 	private void loadAccountSpinnerData() {
@@ -279,7 +342,7 @@ public class TransactionForm extends Activity {
 		switch (transType.getCheckedRadioButtonId()) {
 		case R.id.transTypeCredit:
 			// Type is a Credit to the account
-			changeAmount = changeAmount;
+			//changeAmount = changeAmount;
 			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 			break;
 			
@@ -306,4 +369,38 @@ public class TransactionForm extends Activity {
 		db.updateAccount(account);
 	}
 
+	//Update the account if this is an edit. Essentially reversing the original transaction
+	private void reverseTransaction() {
+		Account account1 = db.getAccount(A_ID);
+		Transaction transaction = db.getTransaction(T_ID);
+		
+		int oldBalance;
+		int changeAmount;
+		int newBalance;
+		String accountType;
+		
+		changeAmount = Integer.parseInt(transaction.getAmount());
+		
+		if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
+			changeAmount = - changeAmount;
+		} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
+			//changeAmount = changeAmount;
+		}else {
+			//Do nothing for now.
+		}
+		
+		// Reverses amount if this is a credit card.
+		accountType = account1.getType();
+		
+		if (new String("CR").equals(accountType)) {
+			changeAmount = -changeAmount;
+		}
+		
+		oldBalance = Integer.parseInt(account1.getBalance());
+		newBalance = oldBalance + changeAmount;
+		account1.setBalance(String.valueOf(newBalance));
+		db.updateAccount(account1);
+		
+	}
+	
 }

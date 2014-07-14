@@ -15,9 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class Transaction extends Activity {
@@ -105,6 +107,37 @@ public class Transaction extends Activity {
 	
 	public void editClickHandler(View v) {
 		//TODO Open Transaction Form populated with selected transaction information.
+		
+		int t_id;
+		int a_id;
+		
+		// Get the row the clicked button is in
+        vwParentRow = (RelativeLayout)v.getParent();
+        
+        // Get the object that the transaction and account ID are stored in
+        TextView child = (TextView)vwParentRow.getChildAt(1);
+        TextView child2 = (TextView)vwParentRow.getChildAt(2);
+        
+     // Store the account and transaction id in the variable integers.
+        t_id = Integer.parseInt((child.getText().toString().trim()));
+        a_id = Integer.parseInt((child2.getText().toString().trim()));
+        
+        try {
+        	Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+        	Intent newIntent = new Intent(Transaction.this,clickedClass);
+
+			// Brings us back to the root activity, where exit functions properly.
+			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+			
+			// Pass the extras to the intent on AccountForm.
+        	newIntent.putExtra("A_ID", a_id);
+        	newIntent.putExtra("T_ID", t_id);
+        	newIntent.putExtra("T_EDIT", true);
+        	startActivity(newIntent);
+		
+        } catch(ClassNotFoundException e) {
+        	e.printStackTrace();
+        }
 	}
 	
 	public void deleteClickHandler(View v) {
@@ -178,8 +211,8 @@ public class Transaction extends Activity {
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
-		String[] transactionFieldNames = new String[] {db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT, db.TRANSACTION_TYPE};
-		int[] toViewIDs = new int[] {R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon};
+		String[] transactionFieldNames = new String[] {db.T_ID, db.T_A_ID, db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT, db.TRANSACTION_TYPE};
+		int[] toViewIDs = new int[] {R.id.transactionID, R.id.transactionAccountID, R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon};
 			
 		// Fills the ListView with all the Transactions in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
