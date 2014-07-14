@@ -65,14 +65,15 @@ public class Account extends Activity {
 		});
 	};
 	
-	
+	/*
 	// Close the Database on destroy.
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		db.close();
-		//finish();
+		finish();
 	};
+	*/
 	
 	// This method uses the Cursor getAllAccounts and populates the ListView on the view_account layout with a list of template_list_accounts (layouts)
 	@SuppressWarnings("deprecation")
@@ -81,7 +82,7 @@ public class Account extends Activity {
 		// Set a cursor with all the Accounts
 		Cursor cursor = db.getAllAccounts();
 		
-		startManagingCursor(cursor);
+		//startManagingCursor(cursor);
 		
 		// Map the ACCOUNT_TABLE fields to the TextViews on the template_list_account layout.
 		String[] accountFieldNames = new String[] {db.A_ID, db.ACCOUNT_NAME, db.BALANCE};
@@ -122,7 +123,7 @@ public class Account extends Activity {
 		return "Account [id=" + _id + ", account_name=" + account_name + ", account_number=" + account_number + ", account_type=" + account_type + ", balance=" + balance +"]";
 	}
 	
-	// Set ImageButon click action.
+	// Set Icon Button click action.
 	public void iconClickHandler(View v) {
 		
 		int a_id;
@@ -139,7 +140,9 @@ public class Account extends Activity {
         try {
         	Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
         	Intent newIntent = new Intent(Account.this,clickedClass);
-        	//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+
+			// Brings us back to the root activity, where exit functions properly.
+			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
         	newIntent.putExtra("A_ID", a_id);
         	startActivity(newIntent);
 		
@@ -148,7 +151,38 @@ public class Account extends Activity {
         }
 	}
 	
-	// Set ImageButon click action.
+	// Set Edit Button click action.
+		public void editClickHandler(View v) {
+			
+			int a_id;
+					
+			// Get the row the clicked button is in
+	        vwParentRow = (RelativeLayout)v.getParent();
+	        
+	        // Get the object that the account ID is stored in
+	        TextView child = (TextView)vwParentRow.getChildAt(1);
+	        
+	     // Store the account id in the variable integer.
+	        a_id = Integer.parseInt((child.getText().toString().trim()));
+	        
+	        try {
+	        	Class clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+	        	Intent newIntent = new Intent(Account.this,clickedClass);
+
+				// Brings us back to the root activity, where exit functions properly.
+				newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+				
+				// Pass the extras to the intent on AccountForm.
+	        	newIntent.putExtra("A_ID", a_id);
+	        	newIntent.putExtra("A_EDIT", true);
+	        	startActivity(newIntent);
+			
+	        } catch(ClassNotFoundException e) {
+	        	e.printStackTrace();
+	        }
+		}
+	
+	// Set Delete Button click action.
 		public void deleteClickHandler(View v) {
 			
 			int a_id;

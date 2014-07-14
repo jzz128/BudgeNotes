@@ -23,6 +23,10 @@ public class AccountForm extends Activity implements InputValidator{
 	String accountNumberS;
 	String accountTypeS;
 	String accountBalanceS;
+	
+	int A_ID;
+	boolean A_EDIT;
+	Account account;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,22 +36,34 @@ public class AccountForm extends Activity implements InputValidator{
 		// Access the database.
 		db = new DBHelper(getBaseContext());	
 		
+		// Get the extras from previous activity.
+		Intent intent = getIntent();
+		A_ID = intent.getIntExtra("A_ID",0);
+		A_EDIT = intent.getBooleanExtra("A_EDIT", false);
+		
+		//Save the values entered in the Account form (form_account.xml).
+		accountName = (EditText)findViewById(R.id.accountEditName);
+		accountNumber = (EditText)findViewById(R.id.accountEditNumber);
+		accountType = (RadioGroup)findViewById(R.id.accountEditType);
+		accountBalance = (EditText)findViewById(R.id.accountEditBalance);
+		
+		if (A_EDIT) {
+			account = db.getAccount(A_ID);
+			populateForm();
+		} else {
+			//Do Nothing.
+		}
+		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveAccount = (Button) findViewById(R.id.accountButtonSave);
 		saveAccount.setOnClickListener(new View.OnClickListener() {		
-								
+			
 			@Override
 			public void onClick(View v) {
 				try{
 					
-					//Save the values entered in the Account form (form_account.xml).
-					accountName = (EditText)findViewById(R.id.accountEditName);
-					accountNumber = (EditText)findViewById(R.id.accountEditNumber);
-					accountType = (RadioGroup)findViewById(R.id.accountEditType);
-					
 					accountTypeSelection = (RadioButton)findViewById(accountType.getCheckedRadioButtonId());
-					accountBalance = (EditText)findViewById(R.id.accountEditBalance);
-					
+										
 					// Transfer edit text to ACCOUNT_TABLE attribute types.
 					accountNameS = accountName.getText().toString().trim();
 					accountNumberS = accountNumber.getText().toString().trim();
@@ -55,12 +71,20 @@ public class AccountForm extends Activity implements InputValidator{
 					accountBalanceS = accountBalance.getText().toString().trim();
 					
 					if(inputsValid()){
-						// Call the add account method to add the account to the database!
-						addAccount();
-					
-						Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
-						Intent newIntent = new Intent(AccountForm.this, clickedClass);
-						startActivity(newIntent);
+						
+						if (A_EDIT) {
+							fillAccountObject();
+							db.updateAccount(account);
+						} else {
+							// Call the add account method to add the account to the database!
+							addAccount();
+						}
+							Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
+							Intent newIntent = new Intent(AccountForm.this, clickedClass);
+
+							// Brings us back to the root activity, where exit functions properly.
+							newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(newIntent);
 					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
@@ -74,6 +98,34 @@ public class AccountForm extends Activity implements InputValidator{
 		db.addAccount(new Account(accountNameS, accountNumberS, accountTypeS, accountBalanceS));
 	}
 
+	private void fillAccountObject() {
+		account.setName(accountNameS);
+		account.setNumber(accountNumberS);
+		account.setType(accountTypeS);
+		account.setBalance(accountBalanceS);
+	}
+	
+	private void populateForm() {
+		accountName.setText(account.getName());
+		accountNumber.setText(account.getNumber());
+		
+		if (account.getType().equals("CHK")) {
+			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeChecking);
+			accountTypeSelection.setChecked(true);
+		} else if (account.getType().equals("SAV")) {
+			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeSavings);
+			accountTypeSelection.setChecked(true);
+		} else if (account.getType().equals("CR")) {
+			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeCredit);
+			accountTypeSelection.setChecked(true);
+		} else {
+			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeOther);
+			accountTypeSelection.setChecked(true);
+		}
+		
+		accountBalance.setText(account.getBalance());
+	}
+	
 	@Override
 	public boolean inputsValid() {
 		boolean valid = true;

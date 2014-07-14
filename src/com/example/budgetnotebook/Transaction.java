@@ -157,6 +157,7 @@ public class Transaction extends Activity {
 		transactionList.setAdapter(myCursorAdapter);
 	}
 	
+	/*
 	// Close the Database on destroy.
 		@Override
 		protected void onDestroy() {
@@ -164,7 +165,7 @@ public class Transaction extends Activity {
 			db.close();
 			finish();
 		};
-	
+	*/
 	//Getters --------------------------------------------------------------------
 	public int getId(){
 		return _id;

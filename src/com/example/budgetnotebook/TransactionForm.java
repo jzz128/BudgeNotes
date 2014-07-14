@@ -192,6 +192,8 @@ public class TransactionForm extends Activity {
 					
 					Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
 					Intent newIntent = new Intent(TransactionForm.this, clickedClass);
+
+					// Brings us back to the root activity, where exit functions properly.
 					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", transAccountI);
 					startActivity(newIntent);
@@ -227,19 +229,13 @@ public class TransactionForm extends Activity {
 			showDialog(0);
 		}
 	};
-
-	@Override
-	protected void onPause() {
-		// Kill activity once complete
-		super.onPause();
-		finish();
-	}
 	
 	// Close the Database on destroy.
 		@Override
 		protected void onDestroy() {
 			super.onDestroy();
 			db.close();
+			finish();
 		};
 	
 	@Override

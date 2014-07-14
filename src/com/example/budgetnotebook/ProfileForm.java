@@ -82,7 +82,6 @@ public class ProfileForm extends Activity implements InputValidator {
 							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
 							
 							// Brings us back to the root activity, where exit functions properly.
-							// we may want to add this to some of the other views where needed.
 							newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(newIntent);
 							} catch(ClassNotFoundException e) {

@@ -76,7 +76,7 @@ public class Goal extends Activity{
 		// Set a cursor with all the Goals
 		Cursor cursor = db.getAllGoals();
 		
-		startManagingCursor(cursor);
+		//startManagingCursor(cursor);
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
 		String[] goalFieldNames = new String[] {db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
