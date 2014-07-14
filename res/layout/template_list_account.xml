@@ -31,11 +31,20 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/accountBalance"
+        android:id="@+id/accountBalanceSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/accountName"
         android:layout_toRightOf="@+id/accountIcon"
+        android:text="$"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/accountBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accountName"
+        android:layout_toRightOf="@+id/accountBalanceSymbol"
         android:text="Account Balance"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

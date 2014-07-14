@@ -187,6 +187,14 @@ public class TransactionForm extends Activity {
 					transIntervalS = transInterval.toString().trim();
 					transDescriptionS = transDescription.getText().toString().trim();
 					
+					if (transTypeS.equals("CR")) {
+						transTypeS = String.valueOf(R.drawable.credit1);
+					} else if (transTypeS.equals("DE")) {
+						transTypeS = String.valueOf(R.drawable.debit1);
+					} else {
+						transTypeS = String.valueOf(R.drawable.other1);
+					}
+					
 					// Call the add transaction method to add the transaction to the database!
 					addTransaction();
 					updateAccount();
@@ -247,7 +255,7 @@ public class TransactionForm extends Activity {
 
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					transDate.setText(selectedDay + " / " + (selectedMonth + 1) + " / " + selectedYear);
+					transDate.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
 }
 };
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -76,7 +78,7 @@ public class Transaction extends Activity {
 				
 		// Populate the ListView
 		populateListViewTransactions(A_ID);
-		
+				
 		// Set the ADD TRANSACTION button to display the ADD Transaction form when clicked
 		addTransaction = (Button) findViewById(R.id.addTransaction);
 		addTransaction.setOnClickListener(new View.OnClickListener() {		
@@ -94,6 +96,7 @@ public class Transaction extends Activity {
 					}
 			}				
 		});
+		
 	}
 	
 	public void iconClickHandler(View v) {
@@ -175,8 +178,8 @@ public class Transaction extends Activity {
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
-		String[] transactionFieldNames = new String[] {db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT};
-		int[] toViewIDs = new int[] {R.id.transName, R.id.transDate, R.id.transAmount};
+		String[] transactionFieldNames = new String[] {db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT, db.TRANSACTION_TYPE};
+		int[] toViewIDs = new int[] {R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon};
 			
 		// Fills the ListView with all the Transactions in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
@@ -188,8 +191,9 @@ public class Transaction extends Activity {
 				);
 		ListView transactionList = (ListView) findViewById(R.id.listViewTrans);
 		transactionList.setAdapter(myCursorAdapter);
+		
 	}
-	
+		
 	/*
 	// Close the Database on destroy.
 		@Override
