@@ -1,0 +1,47 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"    
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="#f0000000"
+    android:orientation="vertical">
+
+    		<Button
+                android:background="@drawable/styledbutton"
+                android:id="@+id/advancedReports"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text= "VIEW REPORTS"
+                style="@style/button_text" />
+    
+            <Button
+                android:background="@drawable/styledbutton"
+                android:id="@+id/advancedRecommendations"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text= "VIEW RECOMMENDATIONS"
+                style="@style/button_text" />
+            
+			<Button
+                android:background="@drawable/styledbutton"
+                android:id="@+id/advancedExportTransactions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text= "EXPORT TRANSACTIONS"
+                style="@style/button_text" />
+			
+			<Button
+                android:background="@drawable/styledbutton"
+                android:id="@+id/advancedImportTransactions"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text= "IMPORT TRANSACTIONS"
+                style="@style/button_text" />
+			
+			<Button
+                android:background="@drawable/styledbutton"
+                android:id="@+id/advancedAlerts"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text= "VIEW UPCOMING ALERTS"
+                style="@style/button_text" />
+			
+ </TableLayout>

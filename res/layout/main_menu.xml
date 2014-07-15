@@ -41,7 +41,7 @@
                 android:id="@+id/view_recommendations"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/view_recommendations"
+                android:text="ADVANCED MENU"
                 style="@style/button_text"  />
             
             <Button

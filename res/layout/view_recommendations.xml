@@ -1,22 +1,12 @@
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-                <Button
-                    android:id="@+id/viewRecommendations"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text= "VIEW RECOMMENDATIONS"
-                    android:background="@drawable/styledbutton"
-        			style="@style/button_text" />
-                
-               
+        <ListView
+            android:id="@+id/listViewRecommendations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+           
     </LinearLayout>
-
-</TabHost>

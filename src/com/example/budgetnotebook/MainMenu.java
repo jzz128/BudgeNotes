@@ -86,6 +86,7 @@ public class MainMenu extends Activity {
 			}
 		});
 		
+		// ======================================================================================================================
 		// Set the VIEW RECOMMENDATIONS button to display the VIEW RECOMMENDATIONS page when clicked
 		view_recommendations = (Button) findViewById(R.id.view_recommendations);
 		view_recommendations.setOnClickListener(new View.OnClickListener() {
@@ -93,15 +94,15 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
+					Class clickedClass = Class.forName("com.example.budgetnotebook.AdvancedMenu");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
-					}
-						
+					}		
 			}
 		});
+		// ======================================================================================================================
 		
 		// Set the EXIT button to exit the application when clicked
 		exit = (Button) findViewById(R.id.exit);
