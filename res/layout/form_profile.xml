@@ -55,7 +55,7 @@
             	    <TextView
                     	android:paddingRight="2px"
                     	android:text="Birthday (DD/MM/YYYY):" />					
-            		<EditText
+            		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
             			android:id="@+id/profileBirthday"

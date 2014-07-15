@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfileForm extends Activity implements InputValidator {
@@ -22,7 +23,8 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileLastName;
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
-	EditText profileBirthday;
+	//EditText profileBirthday;
+	TextView profileBirthday;
 	ImageButton calendar;
 	EditText profileCity;
 	EditText profileEmail;
@@ -55,7 +57,7 @@ public class ProfileForm extends Activity implements InputValidator {
 									
 		profileGender = (RadioGroup)findViewById(R.id.profileGender);
 				
-		profileBirthday = (EditText)findViewById(R.id.profileBirthday);
+		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
 		profileCity = (EditText)findViewById(R.id.profileCity);
 		profileEmail = (EditText)findViewById(R.id.profileEmail);
 		
