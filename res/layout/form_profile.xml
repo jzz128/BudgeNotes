@@ -54,12 +54,17 @@
 	<TableRow>
             	    <TextView
                     	android:paddingRight="2px"
-                    	android:text="Birthday (MM/DD/YYYY):" />					
+                    	android:text="Birthday (DD/MM/YYYY):" />					
             		<EditText
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
             			android:id="@+id/profileBirthday"
             			android:maxWidth="140sp" />
+            		<ImageButton
+		            android:id="@+id/profileButtonCalendar"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:src="@drawable/calendar_icon" />
             	</TableRow>		
             	<TableRow>
             	    <TextView

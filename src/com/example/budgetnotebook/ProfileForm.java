@@ -1,11 +1,17 @@
 package com.example.budgetnotebook;
 
+import java.util.Calendar;
+
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -17,8 +23,12 @@ public class ProfileForm extends Activity implements InputValidator {
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
 	EditText profileBirthday;
+	ImageButton calendar;
 	EditText profileCity;
 	EditText profileEmail;
+	
+	private Calendar cal;
+	private int day, month, year;
 	
 	String profileFirstNameString;
 	String profileLastNameString;
@@ -58,6 +68,16 @@ public class ProfileForm extends Activity implements InputValidator {
 			populateForm();
 		}
 		
+		// Initialize the calendar.
+		cal = Calendar.getInstance();
+		day = cal.get(Calendar.DAY_OF_MONTH);
+		month = cal.get(Calendar.MONTH);
+		year = cal.get(Calendar.YEAR);
+		
+		calendar = (ImageButton) findViewById(R.id.profileButtonCalendar);
+		calendar.setOnClickListener(onDate);
+		
+		
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
 		save_profile = (Button) findViewById(R.id.save_profile);
 		save_profile.setOnClickListener(new View.OnClickListener() {				
@@ -69,21 +89,22 @@ public class ProfileForm extends Activity implements InputValidator {
 							fillProfileVariables();
 							
 							if (profile_exists) {
+								// Populate profile object
 								fillProfileObject();
+								// Write to database
 								db.updateProfile(profile);
+								// Finish activity to return to main menu
 								finish();
 							} else {
 								profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
 								db.addProfile(profile);
-								finish();
+								// Display Main Menu after profile is created
+								Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+								Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+								startActivity(newIntent);
+								
 							}
-							// Display Main Menu after profile is created or edited
-							Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
 							
-							// Brings us back to the root activity, where exit functions properly.
-							newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(newIntent);
 							} catch(ClassNotFoundException e) {
 								e.printStackTrace();
 							}
@@ -92,13 +113,7 @@ public class ProfileForm extends Activity implements InputValidator {
 		
 	}
 	
-	// Close the Database on destroy.
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		db.close();
-		finish();
-	};
+
 	
 	private void fillProfileObject() {
 		profile.setFirstName(profileFirstNameString);
@@ -128,7 +143,7 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileCity.setText(profile.getCity());
 		profileEmail.setText(profile.getEmail());
 	}
-	
+		
 	private void fillProfileVariables() {		
 		// Transfer edit text to PROFILE_TABLE attribute types.							
 		profileFirstNameString = profileFirstName.getText().toString().trim();
@@ -185,4 +200,29 @@ public class ProfileForm extends Activity implements InputValidator {
 		return valid;
 	}
 	
+	private View.OnClickListener onDate = new View.OnClickListener() {
+		public void onClick(View v) {
+			showDialog(0);
+		}
+	};
+	
+	@Override
+	@Deprecated
+	protected Dialog onCreateDialog(int id) {
+		return new DatePickerDialog(this, datePickerListener, year, month, day);
+	}
+
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+					profileBirthday.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+}
+};
+
+	@Override
+	protected void onPause() {
+		// Kill activity once complete
+		super.onPause();
+		finish();
+	}
+
 }
