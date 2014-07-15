@@ -21,11 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * Added the adapter scaffolding and getters / setters.
- * 
- */
-
 public class Account extends Activity {
 	Button addAccount;	
 	DBHelper db;
@@ -76,6 +71,12 @@ public class Account extends Activity {
 		finish();
 	};
 	*/
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		populateListViewAccounts();
+	};
 	
 	// This method uses the Cursor getAllAccounts and populates the ListView on the view_account layout with a list of template_list_accounts (layouts)
 	@SuppressWarnings("deprecation")

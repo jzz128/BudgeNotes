@@ -10,42 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
-        android:src="@drawable/goal" />
-
-    <TextView
-        android:id="@+id/goalEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/goalType"
-        android:text="GoalEndDate!"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/goalDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/goalIcon"
-        android:layout_centerHorizontal="true"
-        android:text="GoalDescription!" />
-
-    <TextView
-        android:id="@+id/goalName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/goalIcon"
-        android:text="GoalName!"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/goalType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="GoalType!"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:src="@drawable/goal2" />
 
     <TextView
         android:id="@+id/goalAccount"
@@ -54,6 +19,42 @@
         android:layout_below="@+id/goalName"
         android:layout_toRightOf="@+id/goalIcon"
         android:text="GoalAccount!"
+        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+	    android:id="@+id/goalDescription"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBottom="@+id/goalIcon"
+	    android:layout_toRightOf="@+id/goalIcon"
+	    android:text="GoalDescription!" />
+
+	<TextView
+	    android:id="@+id/goalName"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/goalDescription"
+	    android:layout_toRightOf="@+id/goalIcon"
+	    android:text="GoalName!"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+	    android:id="@+id/goalType"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_toRightOf="@+id/goalIcon"
+	    android:text="GoalType!"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<TextView
+	    android:id="@+id/goalEnd"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:text="GoalEndDate!"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

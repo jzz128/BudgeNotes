@@ -9,7 +9,7 @@
         android:orientation="vertical" >
 
                 <Button
-                    android:id="@+id/view_account"
+                    android:id="@+id/viewRecommendations"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text= "VIEW RECOMMENDATIONS"
