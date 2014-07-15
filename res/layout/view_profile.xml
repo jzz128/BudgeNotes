@@ -43,7 +43,7 @@
 	<TableRow>
             	    <TextView
                     	android:paddingRight="2px"
-                    	android:text="Birthday (MM/DD/YYYY):" />					
+                    	android:text="Birthday (DD/MM/YYYY):" />					
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                

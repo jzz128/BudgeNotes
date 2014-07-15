@@ -15,28 +15,8 @@ public class Profile extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_profile);
-		/*
-		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
 		
-		//Create Database instance
-			DBHelper db = new DBHelper(getBaseContext());
-						
-		// Testing Goal with Toast
-		db.toastProfile(getBaseContext());
-						
-		// Close db
-		db.close();*/
-		
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
 		//Display Profile Information - Need to get from Database
-		/*String first_name = "Ryan";
-		String last_name = "Donovan";
-		String gender = "M";
-		String birthday = "01/18/1984";
-		String city = "Philadelphia";
-		String email = "rmd259@psu.edu";*/
 		
 		//Create Database instance
 		DBHelper db = new DBHelper(getBaseContext());
@@ -76,6 +56,7 @@ public class Profile extends Activity {
 					@Override
 					public void onClick(View v) {
 						try{
+							// Finish the Profile activity and start the Profile Form activity
 							finish();
 							Class clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
 							Intent newIntent = new Intent(Profile.this, clickedClass);
@@ -87,11 +68,14 @@ public class Profile extends Activity {
 				});
 		
 	}
+	
+	// Return the profile object as a string
 	@Override
 	public String toString() {
 		return "Profile [id=" + _id + ", first_name=" + first_name + ", last_name=" + last_name + ", gender=" + gender + ", birthday=" + birthday + ", city=" + city + ", email=" + email +"]";
 	}
 	
+	// Class variables
 	private int _id;
 	private String first_name;
 	private String last_name;
@@ -102,6 +86,7 @@ public class Profile extends Activity {
 	
 	public Profile(){}
 	
+	// Create a new Profile object using parameters
 	public Profile(String first_name, String last_name, String gender, String birthday, String city, String email) {
 		super();
 		this.first_name = first_name;

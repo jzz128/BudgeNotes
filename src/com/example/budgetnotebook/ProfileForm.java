@@ -1,6 +1,9 @@
 package com.example.budgetnotebook;
 
+import java.net.InetAddress;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -16,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import javax.*;
 
 public class ProfileForm extends Activity implements InputValidator {
 	Button save_profile;
@@ -23,7 +27,6 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileLastName;
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
-	//EditText profileBirthday;
 	TextView profileBirthday;
 	ImageButton calendar;
 	EditText profileCity;
@@ -50,36 +53,34 @@ public class ProfileForm extends Activity implements InputValidator {
 		
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
-		
 		//Save the values entered in the Profile form (form_profile.xml).
-		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
-		profileLastName = (EditText)findViewById(R.id.profileLastName);
-									
-		profileGender = (RadioGroup)findViewById(R.id.profileGender);
-				
-		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
-		profileCity = (EditText)findViewById(R.id.profileCity);
-		profileEmail = (EditText)findViewById(R.id.profileEmail);
-		
-		// Check if a profile exists.
-		if (db.checkProfileExists() == 0) {
-			profile_exists = false;
-		} else {
-			profile_exists = true;
-			profile = db.getProfile(1);	
-			populateForm();
-		}
-		
+		saveFieldsToStrings();
+
 		// Initialize the calendar.
 		cal = Calendar.getInstance();
 		day = cal.get(Calendar.DAY_OF_MONTH);
 		month = cal.get(Calendar.MONTH);
 		year = cal.get(Calendar.YEAR);
-		
 		calendar = (ImageButton) findViewById(R.id.profileButtonCalendar);
 		calendar.setOnClickListener(onDate);
 		
-		
+		// Check if a profile exists and write result to local variable.
+		if (db.checkProfileExists() == 0) {
+			profile_exists = false;
+			// Set the gender selection button to default to MALE
+			profileGenderSelection = (RadioButton)findViewById(R.id.profileMale);
+			profileGenderSelection.setChecked(true);
+			// Set birthday default to 01/01/2000
+			profileBirthday.setText("01/01/2000");
+			
+		} else {
+			profile_exists = true;
+			// Get profile from the database
+			profile = db.getProfile(1);	
+			// Display database information in the form fields
+			populateForm();
+		}
+			
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
 		save_profile = (Button) findViewById(R.id.save_profile);
 		save_profile.setOnClickListener(new View.OnClickListener() {				
@@ -88,35 +89,49 @@ public class ProfileForm extends Activity implements InputValidator {
 					public void onClick(View v) {
 						try{
 							profileGenderSelection = (RadioButton)findViewById(profileGender.getCheckedRadioButtonId());
+							// Transfer edit text to PROFILE_TABLE attribute types.	
 							fillProfileVariables();
-							
-							if (profile_exists) {
-								// Populate profile object
-								fillProfileObject();
-								// Write to database
-								db.updateProfile(profile);
-								// Finish activity to return to main menu
-								finish();
-							} else {
-								profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
-								db.addProfile(profile);
-								// Display Main Menu after profile is created
-								Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-								Intent newIntent = new Intent(ProfileForm.this, clickedClass);
-								startActivity(newIntent);
-								
-							}
-							
+							if(inputsValid()){
+								if (profile_exists) {
+									// Populate profile object
+									fillProfileObject();
+									// Write to database
+									db.updateProfile(profile);
+									// Finish activity to return to main menu
+									finish();
+								} else {
+									// Create new profile object using the information the user entered
+									profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
+									// Write to database
+									db.addProfile(profile);
+									// Display Main Menu after profile is created
+									Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+									Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+									startActivity(newIntent);
+									
+									}
+								}
 							} catch(ClassNotFoundException e) {
 								e.printStackTrace();
 							}
+							
 					}				
 				});
 		
 	}
 	
-
+	// Save all fields to strings
+	private void saveFieldsToStrings() {
+		//Save the values entered in the Profile form (form_profile.xml).
+		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
+		profileLastName = (EditText)findViewById(R.id.profileLastName);							
+		profileGender = (RadioGroup)findViewById(R.id.profileGender);	
+		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
+		profileCity = (EditText)findViewById(R.id.profileCity);
+		profileEmail = (EditText)findViewById(R.id.profileEmail);
+	}
 	
+	// Populate profile object
 	private void fillProfileObject() {
 		profile.setFirstName(profileFirstNameString);
 		profile.setLastName(profileLastNameString);
@@ -126,6 +141,7 @@ public class ProfileForm extends Activity implements InputValidator {
 		profile.setEmail(profileEmailString);
 	}
 	
+	// Display database information in the form fields
 	private void populateForm() {
 		profileFirstName.setText(profile.getFirstName());
 		profileLastName.setText(profile.getLastName());
@@ -146,8 +162,8 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileEmail.setText(profile.getEmail());
 	}
 		
-	private void fillProfileVariables() {		
-		// Transfer edit text to PROFILE_TABLE attribute types.							
+	// Transfer edit text to PROFILE_TABLE attribute types.	
+	private void fillProfileVariables() {								
 		profileFirstNameString = profileFirstName.getText().toString().trim();
 		profileLastNameString = profileLastName.getText().toString().trim();
 		profileGenderString = profileGenderSelection.getText().toString().trim();
@@ -155,10 +171,35 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileCityString = profileCity.getText().toString().trim();
 		profileEmailString = profileEmail.getText().toString().trim();
 	}
+	
+	// Adds current profile object to the database. Note: Creates a new row in the DB.
 	private void addProfile() {
 		db.addProfile(new Profile(profileFirstNameString, profileLastNameString, profileGenderString, profileBirthdayString, profileCityString, profileEmailString));
 	}
 	
+	// Defines onClickListener for the date selection action
+	private View.OnClickListener onDate = new View.OnClickListener() {
+		public void onClick(View v) {
+			showDialog(0);
+		}
+	};
+	
+	// Defines calendar dialog pop up
+	@Override
+	@Deprecated
+	protected Dialog onCreateDialog(int id) {
+		return new DatePickerDialog(this, datePickerListener, year, month, day);
+	}
+
+	// Sets form text to the selected date after DONE is pressed
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+	
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+					profileBirthday.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+}
+};
+
+	// Validates inputs on the profile form
 	@Override
 	public boolean inputsValid() {
 		boolean valid = true;
@@ -199,27 +240,23 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
+		// Profile email contains @ symbol
+		if(!profileEmailString.contains("@")){
+			// Change to invalid input?
+			profileEmail.setError(InputValidator.EMAIL_REQUIRED);
+			valid = false;
+		}
+		
+		// Profile email contains . symbol
+		if(!profileEmailString.contains(".")){
+			profileEmail.setError(InputValidator.EMAIL_REQUIRED);
+			valid = false;
+		}
+		
 		return valid;
 	}
-	
-	private View.OnClickListener onDate = new View.OnClickListener() {
-		public void onClick(View v) {
-			showDialog(0);
-		}
-	};
-	
-	@Override
-	@Deprecated
-	protected Dialog onCreateDialog(int id) {
-		return new DatePickerDialog(this, datePickerListener, year, month, day);
-	}
 
-	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					profileBirthday.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
-}
-};
-
+	// Defines what to do when the activity pauses
 	@Override
 	protected void onPause() {
 		// Kill activity once complete
