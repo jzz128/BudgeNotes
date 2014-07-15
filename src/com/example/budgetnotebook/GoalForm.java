@@ -122,6 +122,9 @@ public class GoalForm extends Activity implements InputValidator{
 												
 						Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
+						
+						// Brings us back to the root activity, where exit functions properly.
+						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(newIntent);						
 					}
 				} catch(ClassNotFoundException e) {

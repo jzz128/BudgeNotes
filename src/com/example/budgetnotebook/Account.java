@@ -56,7 +56,9 @@ public class Account extends Activity {
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
 					Intent newIntent = new Intent(Account.this, clickedClass);
-					//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					
+					// Brings us back to the root activity, where exit functions properly.
+					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();

@@ -20,30 +20,13 @@ public class Goal extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_goals);
-		
-		// DATABASE OPEN AND TEST USING TOAST ---------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
-				
-		// Testing Goal listViewGoals
-		//db.toastGoal(getBaseContext());
-		
-		// Add Goals to table *** CAUTION *** THIS ADDS THESE THREE GOALS EVERYTIME THIS ACTIVITY RUNS!
-		//db.addGoal(new Goal(1, "Goal 1", "This is the first goal.", "Save", "$500", "$200", "1 Jan 2015"));
-		//db.addGoal(new Goal(1, "Goal 2", "This is the second goal.", "Save", "$500", "$200", "1 Jan 2015"));
-		//db.addGoal(new Goal(1, "Goal 3", "This is the third goal.", "Save", "$500", "$200", "1 Jan 2015"));
-			
-		// Close db
-		//db.close();
-		
+					
 		// Populate the ListView
 		populateListViewGoals();	
-		
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
 		addGoal = (Button) findViewById(R.id.addGoal);
 		addGoal.setOnClickListener(new View.OnClickListener() {		
@@ -61,6 +44,7 @@ public class Goal extends Activity{
 		});
 	};
 	
+	/*
 	// Close the Database on destroy.
 	@Override
 	protected void onDestroy() {
@@ -68,6 +52,7 @@ public class Goal extends Activity{
 		db.close();
 		finish();
 	};
+	*/
 	
 	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
 	@SuppressWarnings("deprecation")

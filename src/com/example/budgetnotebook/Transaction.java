@@ -27,6 +27,10 @@ public class Transaction extends Activity {
 	// It must be set by the calling class, or it will show all transactions.
 	int A_ID;
 	int S_A_ID;
+	int lowestID;
+	
+	Account account;
+	Transaction transaction;
 	
 	Spinner transAccount;
 	String[] seperated;
@@ -53,7 +57,6 @@ public class Transaction extends Activity {
 		// Get the extras from previous activity.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
-        int lowestID;
         lowestID = db.lowestAccountID();
         S_A_ID = A_ID - lowestID + 1 ;
 		
@@ -90,7 +93,9 @@ public class Transaction extends Activity {
 				try{
 					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(Transaction.this, clickedClass);
-					//newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					
+					// Brings us back to the root activity, where exit functions properly.
+					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -106,8 +111,6 @@ public class Transaction extends Activity {
 	}
 	
 	public void editClickHandler(View v) {
-		//TODO Open Transaction Form populated with selected transaction information.
-		
 		int t_id;
 		int a_id;
 		
@@ -141,13 +144,35 @@ public class Transaction extends Activity {
 	}
 	
 	public void deleteClickHandler(View v) {
-		 // Alert dialog to affirm delete.
+		int t_id;
+		int a_id;
+		
+		// Get the row the clicked button is in
+        vwParentRow = (RelativeLayout)v.getParent();
+        
+        // Get the object that the transaction and account ID are stored in
+        TextView child = (TextView)vwParentRow.getChildAt(1);
+        TextView child2 = (TextView)vwParentRow.getChildAt(2);
+        
+        // Store the account and transaction id in the variable integers.
+        t_id = Integer.parseInt((child.getText().toString().trim()));
+        a_id = Integer.parseInt((child2.getText().toString().trim()));
+		
+        // Initialize the objects.
+        account = db.getAccount(a_id);
+        transaction = db.getTransaction(t_id);
+        
+		// Alert dialog to affirm delete.
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    //Do Nothing.
+                	reverseTransaction();
+                	db.deleteTransaction(transaction);
+                	loadAccountSpinnerData();
+                	S_A_ID = A_ID - lowestID + 1 ;
+            		transAccount.setSelection(S_A_ID-1);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -161,6 +186,37 @@ public class Transaction extends Activity {
         builder.setMessage("Are you sure you want to delete transaction?").setPositiveButton("Yes", dialogClickListener)
             .setNegativeButton("No", dialogClickListener).show();
 	}
+	
+	//Update the account if this is an edit. Essentially reversing the original transaction
+		private void reverseTransaction() {		
+			int oldBalance;
+			int changeAmount;
+			int newBalance;
+			String accountType;
+			
+			changeAmount = Integer.parseInt(transaction.getAmount());
+			
+			if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
+				changeAmount = - changeAmount;
+			} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
+				//changeAmount = changeAmount;
+			}else {
+				//Do nothing for now.
+			}
+			
+			// Reverses amount if this is a credit card.
+			accountType = account.getType();
+			
+			if (new String("CR").equals(accountType)) {
+				changeAmount = -changeAmount;
+			}
+			
+			oldBalance = Integer.parseInt(account.getBalance());
+			newBalance = oldBalance + changeAmount;
+			account.setBalance(String.valueOf(newBalance));
+			db.updateAccount(account);
+			
+		}
 	
 	private int _id;
 	private int t_a_id;
@@ -276,7 +332,7 @@ public class Transaction extends Activity {
 	
 	//Setters --------------------------------------------------------------------
 	public void setViewAccount(int id) {
-		this.A_ID = id;
+		A_ID = id;
 	}
 	
 	public void setId(int id){

@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_launcher" />
+        android:padding="5dp"
+        android:src="@drawable/goal" />
 
     <TextView
         android:id="@+id/goalEnd"
