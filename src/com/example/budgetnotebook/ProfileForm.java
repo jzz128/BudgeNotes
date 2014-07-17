@@ -1,10 +1,6 @@
 package com.example.budgetnotebook;
 
-import java.net.InetAddress;
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,8 +14,6 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-import javax.*;
 
 public class ProfileForm extends Activity implements InputValidator {
 	Button save_profile;
@@ -179,6 +173,7 @@ public class ProfileForm extends Activity implements InputValidator {
 	
 	// Defines onClickListener for the date selection action
 	private View.OnClickListener onDate = new View.OnClickListener() {
+		@SuppressWarnings("deprecation")
 		public void onClick(View v) {
 			showDialog(0);
 		}

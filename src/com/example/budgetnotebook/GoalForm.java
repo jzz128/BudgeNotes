@@ -1,9 +1,12 @@
 package com.example.budgetnotebook;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,10 +15,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GoalForm extends Activity implements InputValidator{
@@ -27,9 +34,13 @@ public class GoalForm extends Activity implements InputValidator{
 	EditText goalName;
 	Spinner goalType;
 	EditText goalEnd;
+	ImageButton calendar;
 	EditText goalStart;
 	EditText goalDelta;
 	EditText goalDescription;
+	
+	private Calendar cal;
+	private int day, month, year;
 	
 	private int goalAccountI;
 	private String goalNameS;
@@ -47,16 +58,20 @@ public class GoalForm extends Activity implements InputValidator{
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 		
+		// Initialize the calendar.
+		cal = Calendar.getInstance();
+		day = cal.get(Calendar.DAY_OF_MONTH);
+		month = cal.get(Calendar.MONTH);
+		year = cal.get(Calendar.YEAR);
+		calendar = (ImageButton) findViewById(R.id.goalButtonCalendar); 
+		calendar.setOnClickListener(onDate);
+		
 		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
 		goalType = (Spinner) findViewById(R.id.goalEditTypeSpinner);
 		
 		// Associate fields in the Goal form (form_goal.xml) to our variables.
-		goalName = (EditText) findViewById(R.id.goalEditName);
-		goalEnd = (EditText) findViewById(R.id.goalEditEnd);
-		goalStart = (EditText) findViewById(R.id.goalEditStart);
-		goalDelta = (EditText) findViewById(R.id.goalEditDelta);
-		goalDescription = (EditText) findViewById(R.id.goalEditDescription);
+		saveFieldsToStrings();
 		
 		// Add data to the spinners.
 		loadAccountSpinnerData();
@@ -133,6 +148,42 @@ public class GoalForm extends Activity implements InputValidator{
 			}				
 		});
 		
+	};
+	
+	// Save all fields to strings
+		private void saveFieldsToStrings() {
+			// Associate fields in the Goal form (form_goal.xml) to our variables.
+			goalName = (EditText) findViewById(R.id.goalEditName);
+			goalEnd = (EditText) findViewById(R.id.goalEditEnd);
+			goalStart = (EditText) findViewById(R.id.goalEditStart);
+			goalDelta = (EditText) findViewById(R.id.goalEditDelta);
+			goalDescription = (EditText) findViewById(R.id.goalEditDescription);
+		}
+	
+	
+	
+	
+	// Defines onClickListener for the date selection action
+		private View.OnClickListener onDate = new View.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			public void onClick(View v) {
+				showDialog(0);
+			}
+		};
+		
+		// Defines calendar dialog pop up
+		@Override
+		@Deprecated
+		protected Dialog onCreateDialog(int id) {
+			return new DatePickerDialog(this, datePickerListener, year, month, day);
+		}
+
+		// Sets form text to the selected date after DONE is pressed
+		private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+		
+			public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+				goalEnd.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+	}
 	};
 	
 	public boolean inputsValid(){
