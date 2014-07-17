@@ -24,8 +24,13 @@ public class AdvancedMenu extends Activity {
 						
 		@Override
 			public void onClick(View v) {
-				// TODO Open Report view populated with report data.
-				// TODO Create Report.java class
+			try{
+				Class clickedClass = Class.forName("com.example.budgetnotebook.Report");
+				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
+				startActivity(newIntent);
+				} catch(ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}	
 		});
 		
