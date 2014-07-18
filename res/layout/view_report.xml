@@ -8,7 +8,13 @@
         android:id="@+id/reportAccountSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-        
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category               Count          Percentage"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 <ListView
 	android:id="@+id/reportTable"          	
 	android:layout_width="match_parent"
@@ -16,4 +22,5 @@
 	android:orientation="vertical"
 	android:stretchColumns="*">
 </ListView>  
+
 </LinearLayout>

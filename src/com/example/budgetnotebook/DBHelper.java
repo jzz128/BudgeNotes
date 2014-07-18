@@ -67,6 +67,18 @@ public class DBHelper extends SQLiteOpenHelper {
 	// String for all GOAL_TABLE field names.
 	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE};
 	
+	//Fields associated with the Rec Table.
+	public static final String REC_TABLE = "recommendation_table";
+	public static final String R_ID = "_id";
+	public static final String R_CRITERIA_1 = "criteria_one";
+	public static final String R_CRITERIA_2 = "criteria_two";
+	public static final String R_CRITERIA_3 = "criteria_three";
+	public static final String R_CRITERIA_4 = "criteria_four";
+	public static final String R_CRITERIA_5 = "criteria_five";
+	public static final String R_IS_VALID = "is_valid";
+	// String for all REC_TABLE field names.
+	public static final String[] REC_FIELDS = new String[] {R_ID, R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
+	
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
 	
@@ -78,6 +90,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
+	
+	//SQL Statement for creating the Rec Table.
+	private final String createRec = "CREATE TABLE IF NOT EXISTS " + REC_TABLE + " ( " + R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + R_CRITERIA_1 + " TEXT, " + R_CRITERIA_2 + " TEXT, " + R_CRITERIA_3 + " TEXT, " + R_CRITERIA_4 + " TEXT, " + R_CRITERIA_5 + " TEXT, " + R_IS_VALID + " BOOLEAN);";
 	
 	// SQL Statement for deleting an account trigger event.
 	private final String deleteAccountTrigger = "CREATE TRIGGER delete_account AFTER DELETE ON " + ACCOUNT_TABLE + " FOR EACH ROW BEGIN"
@@ -97,6 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createAccount);
 		db.execSQL(createTransaction);
 		db.execSQL(deleteAccountTrigger);
+		db.execSQL(createRec);
 	}
 
 	//Tells the system what to do when the DB is updated.
@@ -107,22 +123,34 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TRANSACTION_TABLE);
+        //TODO Delete trigger.
+        db.execSQL("DROP TABLE IF EXISTS " + REC_TABLE);
         
         // create fresh database table
         this.onCreate(db);
 	}
 
-	// ---------------------------------------------------------------------------------------------------------------------
-	// Generic Query method
-	
-	// Toast all Goals -- REMOVE AFTER TESTING --
-			public Cursor dbQuery(String query){
+		// ---------------------------------------------------------------------------------------------------------------------
+		// Generic Query method
+		public Cursor dbQuery(String query){
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
 				
-				SQLiteDatabase db = this.getWritableDatabase();
-				Cursor cursor = db.rawQuery(query, null);
-				
-				return cursor;
-			}
+			return cursor;
+		}
+		
+		// ---------------------------------------------------------------------------------------------------------------------
+		// Recommendation Methods
+		public Cursor getRcommendations() {
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			String query = "SELECT * FROM " + REC_TABLE;
+			
+			Cursor cursor = db.rawQuery(query, null);
+			
+			return cursor;
+		}
 			
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------

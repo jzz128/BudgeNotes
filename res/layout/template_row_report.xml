@@ -4,25 +4,32 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:stretchColumns="*" >
+
 <TableRow 
     android:layout_weight="1"
-    android:gravity="center" >
+    android:gravity="right" >
 
 	<TextView
 	    android:id="@+id/catName"
-		android:gravity="center"
+	    android:gravity="left|center_vertical"
+        android:padding="5dip"
+        android:layout_weight=".43"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:text="Category:" />
 	<TextView
 	    android:id="@+id/catCount"
-		android:gravity="center"
+	    android:gravity="center_vertical"
+        android:padding="5dip"
+        android:layout_weight=".23"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:text="Count:" />
 	<TextView
 	    android:id="@+id/catPercent"
-		android:gravity="center"
+	    android:gravity="right|center_vertical"
+        android:padding="5dip"
+        android:layout_weight=".33"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:text="Percentage:" />
