@@ -10,6 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
+        android:onClick="goalIconClickHandler"
         android:src="@drawable/goal2" />
 
     <TextView
@@ -47,14 +48,34 @@
 	    android:layout_toRightOf="@+id/goalIcon"
 	    android:text="GoalType!"
 	    android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	<ImageButton
+        android:id="@+id/goalEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:onClick="editGoalClickHandler"
+        android:src="@drawable/edit1" />
 
-	<TextView
-	    android:id="@+id/goalEnd"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentTop="true"
-	    android:text="GoalEndDate!"
-	    android:textAppearance="?android:attr/textAppearanceSmall" />
+    <ImageButton
+        android:id="@+id/transactionDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/goalEditButton"
+        android:padding="5dp"
+        android:onClick="deleteGoalClickHandler"
+        android:src="@drawable/delete1" />
+
+    <TextView
+        android:id="@+id/goalEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/transactionDeleteButton"
+        android:layout_toRightOf="@+id/goalIcon"
+        android:text="GoalEndDate!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

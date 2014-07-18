@@ -1,6 +1,5 @@
 package com.example.budgetnotebook;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,12 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.RadioGroup;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class GoalForm extends Activity implements InputValidator{
 
@@ -50,6 +43,10 @@ public class GoalForm extends Activity implements InputValidator{
 	private String goalDeltaS;
 	private String goalDescriptionS;
 	
+	int G_ID;
+	boolean G_EDIT;
+	Goal goal;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,14 +55,11 @@ public class GoalForm extends Activity implements InputValidator{
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 		
-		// Initialize the calendar.
-		cal = Calendar.getInstance();
-		day = cal.get(Calendar.DAY_OF_MONTH);
-		month = cal.get(Calendar.MONTH);
-		year = cal.get(Calendar.YEAR);
-		calendar = (ImageButton) findViewById(R.id.goalButtonCalendar); 
-		calendar.setOnClickListener(onDate);
-		
+		// Get the id of the goal from the spinner on the goal view.
+		Intent intent = getIntent();
+		G_ID = intent.getIntExtra("G_ID",0);
+		G_EDIT = intent.getBooleanExtra("G_EDIT", false);
+				
 		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
 		goalType = (Spinner) findViewById(R.id.goalEditTypeSpinner);
@@ -112,6 +106,22 @@ public class GoalForm extends Activity implements InputValidator{
 				// TODO Auto-generated method stub			
 			}
 		});
+		
+		// Initialize the calendar.
+		cal = Calendar.getInstance();
+		day = cal.get(Calendar.DAY_OF_MONTH);
+		month = cal.get(Calendar.MONTH);
+		year = cal.get(Calendar.YEAR);
+		calendar = (ImageButton) findViewById(R.id.goalButtonCalendar); 
+		calendar.setOnClickListener(onDate);
+		
+		// Auto fill the form if this is an edit.
+		if (G_EDIT) {
+			goal = db.getGoal(1);
+			populateForm();
+		} else {
+			//Do Nothing.
+		}
 						
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
 		saveGoal = (Button) findViewById(R.id.goalButtonSave);
@@ -132,8 +142,17 @@ public class GoalForm extends Activity implements InputValidator{
 					
 					// Validate inputs
 					if(inputsValid()){
-						// Call the add goal method to add the goal to the database!
-						addGoal();
+						
+						if (G_EDIT) {
+							// Update the goal record.
+							fillGoalObject();
+							db.updateGoal(goal);
+						} else {
+							// Call the add goal method to add the goal to the database
+							addGoal();
+						}
+					}
+
 												
 						Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
@@ -141,7 +160,7 @@ public class GoalForm extends Activity implements InputValidator{
 						// Brings us back to the root activity, where exit functions properly.
 						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(newIntent);						
-					}
+					
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -150,7 +169,7 @@ public class GoalForm extends Activity implements InputValidator{
 		
 	};
 	
-	// Save all fields to strings
+		// Save all fields to strings
 		private void saveFieldsToStrings() {
 			// Associate fields in the Goal form (form_goal.xml) to our variables.
 			goalName = (EditText) findViewById(R.id.goalEditName);
@@ -160,10 +179,45 @@ public class GoalForm extends Activity implements InputValidator{
 			goalDescription = (EditText) findViewById(R.id.goalEditDescription);
 		}
 	
+		// Fill the goal variable with updated information.
+		private void fillGoalObject() {
+			//goal.setId(G_ID);
+			goal.setId(1);
+			goal.setAId(goalAccountI);
+			goal.setName(goalNameS);
+			goal.setDescription(goalDescriptionS);
+			goal.setType(goalTypeS);
+			goal.setStartAmount(goalStartS);
+			goal.setDeltaAmount(goalDeltaS);
+			goal.setEndDate(goalEndS);
+		}
+		
+		// Fill the form fields with database data.
+		private void populateForm() {			
+			// Set goal to account ID (subtract 1 because list is 0 based)
+			goalAccount.setSelection(goal.getAId()-1);
+			// Set goal name text
+			goalName.setText(goal.getName());
+			// Set goal type spinner
+			if (goal.getType().equals("Save DELTA Amount.")) {
+				goalType.setSelection(0);
+			} else if (goal.getType().equals("Pay off DELTA Amount.")) {
+				goalType.setSelection(1);
+			} else if (goal.getType().equals("Do not Spend more than DELTA.")) {
+				goalType.setSelection(2);
+			}
+			// Set goal end date text
+			goalEnd.setText(goal.getEndDate());
+			// Set goal delta amount text
+			goalDelta.setText(goal.getDeltaAmount());
+			// Set goal start amount text
+			goalStart.setText(goal.getStartAmount());
+			// Set goal description text
+			goalDescription.setText(goal.getDescription());
+		}
 	
 	
-	
-	// Defines onClickListener for the date selection action
+		// Defines onClickListener for the date selection action
 		private View.OnClickListener onDate = new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			public void onClick(View v) {

@@ -10,11 +10,15 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class Goal extends Activity{
 	
 	Button addGoal;
 	DBHelper db;
+	
+	RelativeLayout vwParentRow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,5 +175,34 @@ public class Goal extends Activity{
 	
 	public void setEndDate(String end_date){
 		this.goal_end_date = end_date;
+	}
+	
+	public void editGoalClickHandler(View v) {
+		int g_id;
+		
+		// Get the row the clicked button is in
+        vwParentRow = (RelativeLayout)v.getParent();
+        
+        // Get the object that the goal ID are stored in
+        TextView child = (TextView)vwParentRow.getChildAt(1);
+        
+        // Store the goal id in the variable integers.
+        g_id = Integer.parseInt((child.getText().toString().trim()));
+        
+        try {
+        	Class clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
+        	Intent newIntent = new Intent(Goal.this,clickedClass);
+
+			// Brings us back to the root activity, where exit functions properly.
+			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+			
+			// Pass the extras to the intent on GoalForm.
+        	newIntent.putExtra("G_ID", g_id);
+        	newIntent.putExtra("G_EDIT", true);
+        	startActivity(newIntent);
+        	
+        } catch(ClassNotFoundException e) {
+        	e.printStackTrace();
+        }
 	}
 }
