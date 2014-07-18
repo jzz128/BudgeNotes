@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -37,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String ACCOUNT_NUMBER = "account_number";
 	public static final String ACCOUNT_TYPE = "account_type";
 	public static final String BALANCE = "balance";
+	public static final String DELETE_ACCOUNT_TRIGGER = "delete_account";
 	// String for all ACCOUNT_TABLE field names.
 	public static final String[] ACCOUNT_FIELDS = new String[] {A_ID, ACCOUNT_NAME, ACCOUNT_NUMBER, ACCOUNT_TYPE, BALANCE};
 
@@ -77,7 +79,12 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String R_CRITERIA_5 = "criteria_five";
 	public static final String R_IS_VALID = "is_valid";
 	// String for all REC_TABLE field names.
-	public static final String[] REC_FIELDS = new String[] {R_ID, R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
+	public static final String[] REC_FIELDS = new String[] {R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
+	
+	//Values to use for the Recommendation table.
+	private String[] cats = new String[]{"Expense - Home","Expense - Daily Living","Expense - Transportation","Expense - Entertainment","Expense - Health","Expense - Vacation","Expense - Recreation","Expense - Dues / Subscriptions","Expense - Personal","Expense - Obligation","Expense - Other"};
+
+	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
 	
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
@@ -95,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createRec = "CREATE TABLE IF NOT EXISTS " + REC_TABLE + " ( " + R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + R_CRITERIA_1 + " TEXT, " + R_CRITERIA_2 + " TEXT, " + R_CRITERIA_3 + " TEXT, " + R_CRITERIA_4 + " TEXT, " + R_CRITERIA_5 + " TEXT, " + R_IS_VALID + " BOOLEAN);";
 	
 	// SQL Statement for deleting an account trigger event.
-	private final String deleteAccountTrigger = "CREATE TRIGGER delete_account AFTER DELETE ON " + ACCOUNT_TABLE + " FOR EACH ROW BEGIN"
+	private final String deleteAccountTrigger = "CREATE TRIGGER " + DELETE_ACCOUNT_TRIGGER + " AFTER DELETE ON " + ACCOUNT_TABLE + " FOR EACH ROW BEGIN"
 			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
 			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
 			+ " END";
@@ -113,6 +120,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createTransaction);
 		db.execSQL(deleteAccountTrigger);
 		db.execSQL(createRec);
+		
+        //Add Recommendations to the database table.
+        for (int i = 0; i <11; i++) {
+        	db.execSQL("INSERT INTO " + REC_TABLE + "(criteria_one, criteria_two, is_valid) VALUES ('" + cats[i] + "', '" + thresh[i] + "', 0);");
+        }
 	}
 
 	//Tells the system what to do when the DB is updated.
@@ -123,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TRANSACTION_TABLE);
-        //TODO Delete trigger.
+        db.execSQL("DROP TRIGGER IF EXISTS " + DELETE_ACCOUNT_TRIGGER);
         db.execSQL("DROP TABLE IF EXISTS " + REC_TABLE);
         
         // create fresh database table
@@ -151,7 +163,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			return cursor;
 		}
-			
+					
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
