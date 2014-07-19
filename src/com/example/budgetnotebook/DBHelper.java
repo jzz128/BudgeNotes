@@ -79,10 +79,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String R_CRITERIA_5 = "criteria_five";
 	public static final String R_IS_VALID = "is_valid";
 	// String for all REC_TABLE field names.
-	public static final String[] REC_FIELDS = new String[] {R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
+	public static final String[] REC_FIELDS = new String[] {R_ID, R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
 	
 	//Values to use for the Recommendation table.
-	private String[] cats = new String[]{"Expense - Home","Expense - Daily Living","Expense - Transportation","Expense - Entertainment","Expense - Health","Expense - Vacation","Expense - Recreation","Expense - Dues / Subscriptions","Expense - Personal","Expense - Obligation","Expense - Other"};
+	private String[] cats = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
 
 	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
 	
@@ -163,7 +163,75 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			return cursor;
 		}
+		
+		public Recommendation getRec(int id) {
+			SQLiteDatabase db = this.getReadableDatabase();
+			
+			Cursor cursor =
+					db.query(REC_TABLE, REC_FIELDS, R_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+			if (cursor != null)
+		        cursor.moveToFirst();
+			
+			Recommendation rec = new Recommendation();
+			rec.setId(Integer.parseInt(cursor.getString(0)));
+			rec.setC1(cursor.getString(1));
+			rec.setC2(cursor.getString(2));
+			rec.setC3(cursor.getString(3));
+			rec.setC4(cursor.getString(4));
+			rec.setC5(cursor.getString(5));
+			 
+			 Log.d("getRec("+id+")", rec.toString());
+			 
+			 return rec;
+		}
+		
+		public int updateRec(Recommendation rec) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(R_CRITERIA_1,  rec.getC1());
+			values.put(R_CRITERIA_2, rec.getC2());
+			values.put(R_CRITERIA_3, rec.getC3());
+			values.put(R_CRITERIA_4, rec.getC4());
+			values.put(R_CRITERIA_5, rec.getC5());
+			values.put(R_IS_VALID, rec.getIV());
+			
+			int i = db.update(REC_TABLE, values, R_ID + " = ?", new String[] { String.valueOf(rec.getId()) });
+			
+			db.close();
+			
+			return i;
+		}
+		
+		public List<Recommendation> getListAllRecs() {
+			List<Recommendation> recs = new LinkedList<Recommendation>();
+			
+			String query = "SELECT * FROM " + REC_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			Recommendation rec = null;
+			if (cursor.moveToFirst()) {
+				do {
+					rec = new Recommendation();
+					rec.setId(Integer.parseInt(cursor.getString(0)));
+					rec.setC1(cursor.getString(1));
+					rec.setC2(cursor.getString(2));
+					rec.setC3(cursor.getString(3));
+					rec.setC4(cursor.getString(4));
+					rec.setC5(cursor.getString(5));
+					rec.setIV(Boolean.parseBoolean(cursor.getString(6)));
 					
+					recs.add(rec);
+				} while (cursor.moveToNext());
+			}
+			
+			return recs;
+		}
+		
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------

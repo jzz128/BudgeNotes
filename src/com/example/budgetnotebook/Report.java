@@ -80,6 +80,8 @@ public class Report extends Activity {
 			
 			cursor = db.dbQuery(query);
 			cursor.moveToFirst();
+			
+			//Toast.makeText(this, cursor.getString(5), Toast.LENGTH_LONG).show();
 			/*
 			if (cursor != null) {
 		        cursor.moveToFirst();

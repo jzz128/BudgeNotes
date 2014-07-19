@@ -40,7 +40,7 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendations");
+				Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
