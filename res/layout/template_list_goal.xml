@@ -21,6 +21,16 @@
         android:text="GoalAccount!"
         android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+     <TextView
+        android:id="@+id/goalID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/goalName"
+        android:layout_toRightOf="@+id/goalIcon"
+        android:text="GoalID!"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 	<TextView
 	    android:id="@+id/goalDescription"

@@ -45,6 +45,8 @@ public class GoalForm extends Activity implements InputValidator{
 	private String goalDescriptionS;
 	
 	int G_ID;
+	int A_ID;
+	int S_A_ID; // This will be used to set the spinner for the account. It is set in the populate form method. - DJM
 	boolean G_EDIT;
 	Goal goal;
 	
@@ -59,14 +61,16 @@ public class GoalForm extends Activity implements InputValidator{
 		// Get the id of the goal from the spinner on the goal view.
 		Intent intent = getIntent();
 		G_ID = intent.getIntExtra("G_ID",0);
+		A_ID = intent.getIntExtra("A_ID", 0);
 		G_EDIT = intent.getBooleanExtra("G_EDIT", false);
-				
+		
+		int lowestID;
+        lowestID = db.lowestAccountID();
+        S_A_ID = A_ID - lowestID +1; // If we have deleted accounts in the past, the decrement in the populateForm method may fail. This corrects that issue. - DJM 
+		
 		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
 		goalType = (Spinner) findViewById(R.id.goalEditTypeSpinner);
-		
-		// Associate fields in the Goal form (form_goal.xml) to our variables.
-		saveFieldsToStrings();
 		
 		// Add data to the spinners.
 		loadAccountSpinnerData();
@@ -116,16 +120,18 @@ public class GoalForm extends Activity implements InputValidator{
 		calendar = (ImageButton) findViewById(R.id.goalButtonCalendar); 
 		calendar.setOnClickListener(onDate);
 		
+		// Associate fields in the Goal form (form_goal.xml) to our variables.
+		saveFieldsToStrings();	// Moved this down in the list. - DJM
+		
 		// Auto fill the form if this is an edit.
 		if (G_EDIT) {
-			goal = db.getGoal(1);
-			//goal = db.getGoal(G_ID);
+			goal = db.getGoal(G_ID); // 
 			Log.d("G_ID", String.valueOf(G_ID));
 			populateForm();
 		} else {
 			//Do Nothing.
 		}
-						
+		
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
 		saveGoal = (Button) findViewById(R.id.goalButtonSave);
 		saveGoal.setOnClickListener(new View.OnClickListener() {		
@@ -196,7 +202,7 @@ public class GoalForm extends Activity implements InputValidator{
 		// Fill the form fields with database data.
 		private void populateForm() {			
 			// Set goal to account ID (subtract 1 because list is 0 based)
-			goalAccount.setSelection(goal.getAId()-1);
+			goalAccount.setSelection(S_A_ID-1);
 			// Set goal name text
 			goalName.setText(goal.getName());
 			// Set goal type spinner

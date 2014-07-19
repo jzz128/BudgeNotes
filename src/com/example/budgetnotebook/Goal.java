@@ -19,6 +19,7 @@ public class Goal extends Activity{
 	DBHelper db;
 	
 	RelativeLayout vwParentRow;
+	ListView goalList; // moved to higher scope. - DJM
 	Goal goal;
 	
 	@Override
@@ -58,8 +59,8 @@ public class Goal extends Activity{
 		Cursor cursor = db.getAllGoals();
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
-		String[] goalFieldNames = new String[] {db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
-		int[] toViewIDs = new int[] {R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
+		String[] goalFieldNames = new String[] {db.G_ID,db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
+		int[] toViewIDs = new int[] {R.id.goalID,R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
 	
 		// Fills the ListView with all the Goals in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
@@ -69,7 +70,7 @@ public class Goal extends Activity{
 				goalFieldNames,
 				toViewIDs
 				);
-		ListView goalList = (ListView) findViewById(R.id.listViewGoals);
+		goalList = (ListView) findViewById(R.id.listViewGoals);
 		goalList.setAdapter(myCursorAdapter);
 
 	}
@@ -169,15 +170,18 @@ public class Goal extends Activity{
 	
 	public void editGoalClickHandler(View v) {
 		int g_id;
+		int a_id;
 		
 		// Get the row the clicked button is in
         vwParentRow = (RelativeLayout)v.getParent();
         
         // Get the object that the goal ID are stored in
         TextView child = (TextView)vwParentRow.getChildAt(1);
+        TextView child2 = (TextView)vwParentRow.getChildAt(2);
         
         // Store the goal id in the variable integers.
-        g_id = Integer.parseInt((child.getText().toString().trim()));
+        a_id = Integer.parseInt((child.getText().toString().trim())); // The value stored in the this child is the 
+        g_id = Integer.parseInt((child2.getText().toString().trim()));
         
         try {
         	Class clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
@@ -187,7 +191,8 @@ public class Goal extends Activity{
 			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
 			
 			// Pass the extras to the intent on GoalForm.
-        	newIntent.putExtra("G_ID", g_id);
+			newIntent.putExtra("G_ID", g_id);
+        	newIntent.putExtra("A_ID", a_id);
         	newIntent.putExtra("G_EDIT", true);
         	startActivity(newIntent);
         	
@@ -203,7 +208,7 @@ public class Goal extends Activity{
         vwParentRow = (RelativeLayout)v.getParent();
         
         // Get the object that the transaction and account ID are stored in
-        TextView child = (TextView)vwParentRow.getChildAt(1);
+        TextView child = (TextView)vwParentRow.getChildAt(2); // Updated to the 2 index, to correspond with the correct ID from the template_list. - DJM
         
         // Store the goal id in the variable integers.
         g_id = Integer.parseInt((child.getText().toString().trim()));

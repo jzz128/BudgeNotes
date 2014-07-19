@@ -174,7 +174,7 @@ public class TransactionForm extends Activity {
 		
 		// Auto fill the form if this is an edit.
 		if (T_EDIT) {
-			transaction = db.getTransaction(A_ID);
+			transaction = db.getTransaction(T_ID); // Corrected this. Was A_ID - DJM
 			populateForm();
 		} else {
 			//Do Nothing.
