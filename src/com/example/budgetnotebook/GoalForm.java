@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -118,6 +119,8 @@ public class GoalForm extends Activity implements InputValidator{
 		// Auto fill the form if this is an edit.
 		if (G_EDIT) {
 			goal = db.getGoal(1);
+			//goal = db.getGoal(G_ID);
+			Log.d("G_ID", String.valueOf(G_ID));
 			populateForm();
 		} else {
 			//Do Nothing.
@@ -181,8 +184,8 @@ public class GoalForm extends Activity implements InputValidator{
 	
 		// Fill the goal variable with updated information.
 		private void fillGoalObject() {
-			//goal.setId(G_ID);
-			goal.setId(1);
+			goal.setId(G_ID);
+			//goal.setId(1);
 			goal.setAId(goalAccountI);
 			goal.setName(goalNameS);
 			goal.setDescription(goalDescriptionS);

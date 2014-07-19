@@ -10,7 +10,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
-        android:onClick="goalIconClickHandler"
         android:src="@drawable/goal2" />
 
     <TextView

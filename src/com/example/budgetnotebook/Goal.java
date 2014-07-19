@@ -1,8 +1,8 @@
 package com.example.budgetnotebook;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ public class Goal extends Activity{
 	DBHelper db;
 	
 	RelativeLayout vwParentRow;
+	Goal goal;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,24 +49,13 @@ public class Goal extends Activity{
 		});
 	};
 	
-	/*
-	// Close the Database on destroy.
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		db.close();
-		finish();
-	};
-	*/
-	
+
 	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
 	@SuppressWarnings("deprecation")
 	private void populateListViewGoals() {
 	
 		// Set a cursor with all the Goals
 		Cursor cursor = db.getAllGoals();
-		
-		//startManagingCursor(cursor);
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
 		String[] goalFieldNames = new String[] {db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
@@ -204,5 +194,44 @@ public class Goal extends Activity{
         } catch(ClassNotFoundException e) {
         	e.printStackTrace();
         }
+	}
+	
+	public void deleteGoalClickHandler(View v) {
+		int g_id;
+		
+		// Get the row the clicked button is in
+        vwParentRow = (RelativeLayout)v.getParent();
+        
+        // Get the object that the transaction and account ID are stored in
+        TextView child = (TextView)vwParentRow.getChildAt(1);
+        
+        // Store the goal id in the variable integers.
+        g_id = Integer.parseInt((child.getText().toString().trim()));
+		
+        // Initialize the objects.
+        goal = db.getGoal(g_id);
+        
+		// Alert dialog to affirm delete.
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                	db.deleteGoal(goal);
+                	populateListViewGoals();
+                	//S_A_ID = A_ID - lowestID + 1 ;
+            		//transAccount.setSelection(S_A_ID-1);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //Do Nothing.
+                    break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete goal?").setPositiveButton("Yes", dialogClickListener)
+            .setNegativeButton("No", dialogClickListener).show();
 	}
 }
