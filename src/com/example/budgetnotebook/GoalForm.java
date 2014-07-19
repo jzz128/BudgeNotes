@@ -154,16 +154,14 @@ public class GoalForm extends Activity implements InputValidator{
 							// Call the add goal method to add the goal to the database
 							addGoal();
 						}
-					}
-
-												
 						Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
 						
 						// Brings us back to the root activity, where exit functions properly.
 						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(newIntent);						
-					
+						startActivity(newIntent);		
+					}
+
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}

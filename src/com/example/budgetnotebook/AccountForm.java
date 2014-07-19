@@ -47,6 +47,10 @@ public class AccountForm extends Activity implements InputValidator{
 		accountType = (RadioGroup)findViewById(R.id.accountEditType);
 		accountBalance = (EditText)findViewById(R.id.accountEditBalance);
 		
+		// Set checking to be selected by default
+		accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeChecking);
+		accountTypeSelection.setChecked(true);
+		
 		// Auto fill the form if this is an edit.
 		if (A_EDIT) {
 			account = db.getAccount(A_ID);
@@ -120,7 +124,7 @@ public class AccountForm extends Activity implements InputValidator{
 			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeCredit);
 			accountTypeSelection.setChecked(true);
 		} else {
-			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeOther);
+			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeChecking);
 			accountTypeSelection.setChecked(true);
 		}
 		

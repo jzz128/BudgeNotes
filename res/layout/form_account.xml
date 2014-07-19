@@ -58,10 +58,6 @@
                             	android:id="@+id/accountTypeCredit"
                             	android:text="CR" 
                             	android:scaleX="0.666" />
-                        	<RadioButton
-                            	android:id="@+id/accountTypeOther"
-                            	android:text="OT" 
-                            	android:scaleX="0.666" />
                     	</RadioGroup>
                 	</TableRow>	
 					<TableRow>
