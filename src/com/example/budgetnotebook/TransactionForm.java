@@ -1,5 +1,7 @@
 package com.example.budgetnotebook;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class TransactionForm extends Activity {
+public class TransactionForm extends Activity implements InputValidator {
 
 	Button saveTransaction;
 	ImageButton calendar;
@@ -56,7 +58,7 @@ public class TransactionForm extends Activity {
 	RadioButton transTypeSelection;
 	
 	EditText transName;
-	EditText transDate;
+	TextView transDate;
 	EditText transAmount;
 	EditText transDescription;
 	
@@ -98,7 +100,7 @@ public class TransactionForm extends Activity {
         S_A_ID = A_ID - lowestID + 1 ;
 		
 		// Initialize date field.
-		transDate = (EditText) findViewById(R.id.transEditDate);
+		transDate = (TextView) findViewById(R.id.transEditDate);
 		
 		// Initialize the Spinners.
 		transAccount = (Spinner) findViewById(R.id.transSpinnerAccount);
@@ -177,7 +179,16 @@ public class TransactionForm extends Activity {
 			transaction = db.getTransaction(T_ID); // Corrected this. Was A_ID - DJM
 			populateForm();
 		} else {
-			//Do Nothing.
+			// Set the type selection button to default to CR
+			transTypeSelection = (RadioButton)findViewById(R.id.transTypeCredit);
+			transTypeSelection.setChecked(true);
+			// Set date to todays date
+			cal= Calendar.getInstance();
+            String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+            String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+            String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+			transDate.setText(todayAsString);
 		}
 		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
@@ -209,25 +220,28 @@ public class TransactionForm extends Activity {
 						transTypeS = String.valueOf(R.drawable.other1);
 					}
 					
-					if (T_EDIT) {
-						// Update the account balance and then update the transaction record.
-						fillTransObject();
-						reverseTransaction();
-						updateAccount();
-						db.updateTransaction(transaction);
-					} else {
-						// Call the add transaction method to add the transaction to the database and update the account balance!
-						addTransaction();
-						updateAccount();
+					// Validate inputs
+					if(inputsValid()){
+						if (T_EDIT) {
+							// Update the account balance and then update the transaction record.
+							fillTransObject();
+							reverseTransaction();
+							updateAccount();
+							db.updateTransaction(transaction);
+						} else {
+							// Call the add transaction method to add the transaction to the database and update the account balance!
+							addTransaction();
+							updateAccount();
+						}
+						
+						Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+						Intent newIntent = new Intent(TransactionForm.this, clickedClass);
+	
+						// Brings us back to the root activity, where exit functions properly.
+						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+						newIntent.putExtra("A_ID", transAccountI);
+						startActivity(newIntent);
 					}
-					
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
-					Intent newIntent = new Intent(TransactionForm.this, clickedClass);
-
-					// Brings us back to the root activity, where exit functions properly.
-					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
-					newIntent.putExtra("A_ID", transAccountI);
-					startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -401,6 +415,36 @@ public class TransactionForm extends Activity {
 		account1.setBalance(String.valueOf(newBalance));
 		db.updateAccount(account1);
 		
+	}
+	
+	public boolean inputsValid(){
+		boolean valid = true;
+
+		// Transaction name not empty
+		if(transNameS.length() == 0){
+			transName.setError("Input is required.");
+			valid = false;
+		}
+		
+		// Transaction date not empty
+		if(transDateS.length() == 0){
+			transDate.setError("Input is required.");
+			valid = false;
+		}
+		
+		// Transaction Amount not empty		
+		if(transAmountS.length() == 0){
+			transAmount.setError("Input is required.");
+			valid = false;
+		}
+		
+		// Description not empty
+		if(transDescriptionS.length() == 0){
+			transDescription.setError("Input is required");
+			valid = false;
+		}
+		
+		return valid;
 	}
 	
 }

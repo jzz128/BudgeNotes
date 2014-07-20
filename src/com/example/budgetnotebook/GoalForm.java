@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class GoalForm extends Activity implements InputValidator{
 
@@ -27,7 +28,7 @@ public class GoalForm extends Activity implements InputValidator{
 	String[] seperated;
 	EditText goalName;
 	Spinner goalType;
-	EditText goalEnd;
+	TextView goalEnd;
 	ImageButton calendar;
 	EditText goalStart;
 	EditText goalDelta;
@@ -180,7 +181,7 @@ public class GoalForm extends Activity implements InputValidator{
 		private void saveFieldsToStrings() {
 			// Associate fields in the Goal form (form_goal.xml) to our variables.
 			goalName = (EditText) findViewById(R.id.goalEditName);
-			goalEnd = (EditText) findViewById(R.id.goalEditEnd);
+			goalEnd = (TextView) findViewById(R.id.goalEditEnd);
 			goalStart = (EditText) findViewById(R.id.goalEditStart);
 			goalDelta = (EditText) findViewById(R.id.goalEditDelta);
 			goalDescription = (EditText) findViewById(R.id.goalEditDescription);
@@ -189,7 +190,6 @@ public class GoalForm extends Activity implements InputValidator{
 		// Fill the goal variable with updated information.
 		private void fillGoalObject() {
 			goal.setId(G_ID);
-			//goal.setId(1);
 			goal.setAId(goalAccountI);
 			goal.setName(goalNameS);
 			goal.setDescription(goalDescriptionS);
@@ -247,6 +247,7 @@ public class GoalForm extends Activity implements InputValidator{
 	}
 	};
 	
+	// Validate all form input
 	public boolean inputsValid(){
 		boolean valid = true;
 		
@@ -256,13 +257,10 @@ public class GoalForm extends Activity implements InputValidator{
 			valid = false;
 		}
 		
-		// Target goal end date not empty and valid date
+		// Target goal end date not empty
 		if(goalEndS.length() == 0){
 			goalEnd.setError("Input is required.");
 			valid = false;
-		}
-		else{
-			// TODO validate to an agreed upon format 	 	
 		}
 		
 		// Delta Amount not empty		
