@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/export_details"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4px"
+        android:stretchColumns="1" >
+
+        <TableRow>
+
+            <TextView
+                android:paddingRight="2px"
+                android:text="File Path:" />
+
+            <TextView
+                android:id="@+id/exportPath"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="140sp" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/executeExport"
+            style="@style/button_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/styledbutton"
+            android:text="START EXPORTING" />
+    </TableLayout>
+
+</LinearLayout>

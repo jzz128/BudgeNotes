@@ -55,6 +55,13 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 				// TODO Export Transactions table to a CSV file.
+			try{
+				Class clickedClass = Class.forName("com.example.budgetnotebook.ExportActivity");
+				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
+				startActivity(newIntent);
+				} catch(ClassNotFoundException e) {
+					e.printStackTrace();
+				}	
 			}	
 		});
 		
@@ -64,6 +71,13 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 				// TODO Import Transactions from a CSV file.
+			try{
+				Class clickedClass = Class.forName("com.example.budgetnotebook.ImportActivity");
+				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
+				startActivity(newIntent);
+				} catch(ClassNotFoundException e) {
+					e.printStackTrace();
+				}	
 			}	
 		});
 		
@@ -73,7 +87,13 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 				// TODO Open Alert view populated with alert data.
-				// TODO Create Alert.java class
+			try{
+				Class clickedClass = Class.forName("com.example.budgetnotebook.AlertActivity");
+				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
+				startActivity(newIntent);
+				} catch(ClassNotFoundException e) {
+					e.printStackTrace();
+				}	
 			}	
 		});
 	}

@@ -85,7 +85,17 @@ public class DBHelper extends SQLiteOpenHelper {
 	private String[] cats = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
 
 	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
+	//Fields associated with the Alert Table.
+	public static final String ALERT_TABLE = "alert_table";
+	public static final String AT_ID = "_id";
+	public static final String AT_A_ID = "at_a_id";
+	public static final String ALERT_NAME = "alert_name";
+	public static final String ALERT_DESCRIPTION = "alert_description";
+	public static final String ALERT_DUE_DATE = "alert_due_date";
 	
+	// String for all ALERT_TABLE field names.
+	public static final String[] ALERT_FIELDS = new String[] {AT_ID, AT_A_ID, ALERT_NAME, ALERT_DESCRIPTION, ALERT_DUE_DATE};
+		
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
 	
@@ -106,6 +116,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
 			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
 			+ " END";
+	//SQL Statement for creating the Alert Table.
+	//private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT, " + "FOREIGN KEY (" + AT_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + AT_ID + "));";
+	private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT);";
 	
 	public DBHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
@@ -118,6 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createProfile);
 		db.execSQL(createAccount);
 		db.execSQL(createTransaction);
+		db.execSQL(createAlert);
 		db.execSQL(deleteAccountTrigger);
 		db.execSQL(createRec);
 		
@@ -137,6 +151,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TRANSACTION_TABLE);
         db.execSQL("DROP TRIGGER IF EXISTS " + DELETE_ACCOUNT_TRIGGER);
         db.execSQL("DROP TABLE IF EXISTS " + REC_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + ALERT_TABLE);
         
         // create fresh database table
         this.onCreate(db);
@@ -809,7 +824,121 @@ public class DBHelper extends SQLiteOpenHelper {
 					
 		}
 				
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		// Alert methods ---------------------------------------------------------------------------------------------------------------------------------------------------
+		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+		// Add a single Alert.
+		public void addAlert(Alert alert){
+			Log.d("addAlert", alert.toString());
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(AT_A_ID, alert.getAtId());
+			values.put(ALERT_NAME, alert.getName());
+			values.put(ALERT_DESCRIPTION, alert.getDescription());
+			values.put(ALERT_DUE_DATE, alert.getDueDate());
+			
+			db.insert(ALERT_TABLE, null, values);
+		
+			db.close();
+		}
+		
+		// Get a single Alert.
+		public Alert getAlert(int id){
+			SQLiteDatabase db = this.getReadableDatabase();
+			
+			Cursor cursor =
+					db.query(ALERT_TABLE, ALERT_FIELDS, AT_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+			if (cursor != null)
+		        cursor.moveToFirst();
+			
+			Alert alert = new Alert();
+			alert.setId(Integer.parseInt(cursor.getString(0)));
+			alert.setAId(Integer.parseInt(cursor.getString(1)));
+			alert.setName(cursor.getString(2));
+			alert.setDescription(cursor.getString(3));
+			alert.setDueDate(cursor.getString(4));
+			 
+			 Log.d("getAlert("+id+")", alert.toString());
+			 
+			 return alert;
+		}
+		
+		// Get a list of all Alerts. 
+		public List<Alert> getListAllAlerts() {
+			List<Alert> alerts = new LinkedList<Alert>();
+			
+			String query = "SELECT * FROM " + ALERT_TABLE;
+			
+			SQLiteDatabase db = this.getReadableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			Alert alert = null;
+			if (cursor.moveToFirst()) {
+				do {
+					alert = new Alert();
+					alert.setId(Integer.parseInt(cursor.getString(0)));
+					alert.setAId(Integer.parseInt(cursor.getString(1)));
+					alert.setName(cursor.getString(2));
+					alert.setDescription(cursor.getString(3));
+					alert.setDueDate(cursor.getString(4));
+					
+					alerts.add(alert);
+				} while (cursor.moveToNext());
+			}
+			
+			Log.d("getAllAlerts()", alerts.toString());
+			
+			return alerts;
+		}
+		
+		// For List population of Alert
+		public Cursor getAllAlerts() {
+			SQLiteDatabase db = this.getReadableDatabase();
+			
+			String where = null;
+			Cursor cursor = db.query(true, ALERT_TABLE, ALERT_FIELDS,  where,  null, null,  null, null, null);
+			
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+			
+			return cursor;
+		}
+		
+		
+		// Update a single Alert.
+		public int updateAlert(Alert alert) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			ContentValues values = new ContentValues();
+			values.put(AT_A_ID,  alert.getAtId());
+			values.put(ALERT_NAME, alert.getName());
+			values.put(ALERT_DESCRIPTION, alert.getDescription());
+			values.put(ALERT_DUE_DATE, alert.getDueDate());
+
+			
+			int i = db.update(ALERT_TABLE, values, AT_ID + " = ?", new String[] { String.valueOf(alert.getId()) });
+			
+			db.close();
+			
+			return i;
+		}
+		
+		// Delete a single Alert.
+		public void deleteAlert(Alert alert) {
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			db.delete(ALERT_TABLE, AT_ID+"= ?", new String[] { String.valueOf(alert.getId()) });
+			
+			db.close();
+			
+		}	
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------

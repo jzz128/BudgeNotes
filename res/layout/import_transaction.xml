@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/importDetails"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4px"
+        android:stretchColumns="1" >
+
+        <TableRow>
+
+            <TextView
+                android:paddingRight="2px"
+                android:text="File Directory:" />
+
+            <TextView
+                android:id="@+id/importPath"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="140sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:paddingRight="2px"
+                android:text="File Name:" />
+
+            <EditText
+                android:id="@+id/importFile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="140sp" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/executeImport"
+            style="@style/button_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/styledbutton"
+            android:text="Import CSV File" />
+    </TableLayout>
+
+</LinearLayout>

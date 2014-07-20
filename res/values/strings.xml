@@ -44,4 +44,9 @@
         <item>Expense - Other</item>
     </string-array>
     
+    <string name="title_activity_import">ImportActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_export">ExportActivity</string>
+    <string name="title_activity_alert">AlertActivity</string>
+
 </resources>
