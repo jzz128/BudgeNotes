@@ -139,7 +139,7 @@ public class Recommendation extends Activity {
 			// Fills the ListView with all the Goals in the Table.
 			SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
 					this,
-					R.layout.template_row_recommendation,
+					R.layout.template_row_recommendations,
 					recCursor,
 					transFieldNames,
 					toViewIDs
