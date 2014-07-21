@@ -84,11 +84,11 @@ public class AccountForm extends Activity implements InputValidator{
 							// Call the add account method to add the account to the database!
 							addAccount();
 						}
-							Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
+							Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Account");
 							Intent newIntent = new Intent(AccountForm.this, clickedClass);
 
 							// Brings us back to the root activity, where exit functions properly.
-							newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+							newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(newIntent);
 					}
 				} catch(ClassNotFoundException e) {

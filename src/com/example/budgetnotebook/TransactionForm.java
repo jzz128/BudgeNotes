@@ -1,43 +1,23 @@
 package com.example.budgetnotebook;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class TransactionForm extends Activity implements InputValidator {
@@ -234,11 +214,11 @@ public class TransactionForm extends Activity implements InputValidator {
 							updateAccount();
 						}
 						
-						Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
 						Intent newIntent = new Intent(TransactionForm.this, clickedClass);
 	
 						// Brings us back to the root activity, where exit functions properly.
-						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						newIntent.putExtra("A_ID", transAccountI);
 						startActivity(newIntent);
 					}
@@ -301,16 +281,17 @@ public class TransactionForm extends Activity implements InputValidator {
 	}
 	
 	private void loadCategorySpinnerData() {
-		ArrayAdapter dataAdapter = ArrayAdapter.createFromResource(this, R.array.transCatArray, android.R.layout.simple_spinner_item);       
+		ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.transCatArray, android.R.layout.simple_spinner_item);       
 		transCategory.setAdapter(dataAdapter);
 	}
 	
 	private void loadIntervalSpinnerData() {
-		ArrayAdapter dataAdapter = ArrayAdapter.createFromResource(this, R.array.transIntArray, android.R.layout.simple_spinner_item);       
+		ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.transIntArray, android.R.layout.simple_spinner_item);       
 		transInterval.setAdapter(dataAdapter);
 	}
 	
 	private View.OnClickListener onDate = new View.OnClickListener() {
+		@SuppressWarnings("deprecation")
 		public void onClick(View v) {
 			showDialog(0);
 		}

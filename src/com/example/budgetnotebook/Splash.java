@@ -3,7 +3,6 @@ package com.example.budgetnotebook;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 // This method displays the splash screen briefly and then starts the main program
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class AdvancedMenu extends Activity {
 	Button vewReports;
@@ -25,7 +24,7 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.Report");
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Report");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
@@ -40,7 +39,7 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Recommendation");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
@@ -56,7 +55,7 @@ public class AdvancedMenu extends Activity {
 			public void onClick(View v) {
 				// TODO Export Transactions table to a CSV file.
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.ExportActivity");
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ExportActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
@@ -72,7 +71,7 @@ public class AdvancedMenu extends Activity {
 			public void onClick(View v) {
 				// TODO Import Transactions from a CSV file.
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.ImportActivity");
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ImportActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {
@@ -88,7 +87,7 @@ public class AdvancedMenu extends Activity {
 			public void onClick(View v) {
 				// TODO Open Alert view populated with alert data.
 			try{
-				Class clickedClass = Class.forName("com.example.budgetnotebook.AlertActivity");
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AlertActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
 				} catch(ClassNotFoundException e) {

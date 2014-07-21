@@ -5,7 +5,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class Report extends Activity {
@@ -76,7 +73,7 @@ public class Report extends Activity {
 			cCursor = db.getAllTransactions(A_ID);
 			count = cCursor.getCount();
 			
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + db.TRANSACTION_TABLE + " WHERE " + db.T_A_ID + " = " + A_ID + " GROUP BY " + db.TRANSACTION_CATEGORY;
+			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
 			
 			cursor = db.dbQuery(query);
 			cursor.moveToFirst();
@@ -95,7 +92,7 @@ public class Report extends Activity {
 			//startManagingCursor(cursor);
 			
 			// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
-			String[] transFieldNames = new String[] {db.TRANSACTION_CATEGORY, cursor.getColumnName(9), cursor.getColumnName(10)};
+			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(9), cursor.getColumnName(10)};
 			int[] toViewIDs = new int[] {R.id.catName, R.id.catCount, R.id.catPercent};
 		
 			// Fills the ListView with all the Goals in the Table.

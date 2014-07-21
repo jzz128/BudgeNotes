@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainMenu extends Activity {
 	Button view_account;
@@ -28,7 +27,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Account");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Account");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -45,7 +44,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -61,7 +60,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Profile");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Profile");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -77,7 +76,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -94,7 +93,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.AdvancedMenu");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AdvancedMenu");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {

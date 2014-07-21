@@ -11,7 +11,7 @@
         android:id="@+id/goalAccountLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account"
+        android:text="@string/account"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Spinner
@@ -124,15 +124,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:background="@drawable/styledbutton"
-        style="@style/button_text"
-        />
-
-    <Button
-        android:id="@+id/goalButtonClear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Clear"
         android:background="@drawable/styledbutton"
         style="@style/button_text"
         />

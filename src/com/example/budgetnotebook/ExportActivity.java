@@ -3,7 +3,6 @@ package com.example.budgetnotebook;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;

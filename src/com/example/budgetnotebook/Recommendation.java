@@ -10,7 +10,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -84,10 +83,10 @@ public class Recommendation extends Activity {
 			count = cCursor.getCount();
 			
 			// Set the query to get stats on the transactions for the current account.
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + db.TRANSACTION_TABLE + " WHERE " + db.T_A_ID + " = " + A_ID + " GROUP BY " + db.TRANSACTION_CATEGORY;
+			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
 			
 			// Set the recQuery to get the true recommendations when needed.
-			recQuery = "SELECT * FROM " + db.REC_TABLE + " WHERE " + db.R_IS_VALID + " = 1";
+			recQuery = "SELECT * FROM " + DBHelper.REC_TABLE + " WHERE " + DBHelper.R_IS_VALID + " = 1";
 			
 			// Fill cursor for the transaction stats using the set query.
 			reportCursor = db.dbQuery(query);
@@ -133,7 +132,7 @@ public class Recommendation extends Activity {
 			//startManagingCursor(cursor);
 			
 			// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
-			String[] transFieldNames = new String[] {db.R_CRITERIA_1};
+			String[] transFieldNames = new String[] {DBHelper.R_CRITERIA_1};
 			int[] toViewIDs = new int[] {R.id.recMessage};
 		
 			// Fills the ListView with all the Goals in the Table.

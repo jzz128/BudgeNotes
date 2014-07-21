@@ -2,24 +2,16 @@ package com.example.budgetnotebook;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Account extends Activity {
 	Button addAccount;	
@@ -49,11 +41,11 @@ public class Account extends Activity {
 		@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
 					Intent newIntent = new Intent(Account.this, clickedClass);
 					
 					// Brings us back to the root activity, where exit functions properly.
-					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
@@ -88,7 +80,7 @@ public class Account extends Activity {
 		//startManagingCursor(cursor);
 		
 		// Map the ACCOUNT_TABLE fields to the TextViews on the template_list_account layout.
-		String[] accountFieldNames = new String[] {db.A_ID, db.ACCOUNT_NAME, db.BALANCE};
+		String[] accountFieldNames = new String[] {DBHelper.A_ID, DBHelper.ACCOUNT_NAME, DBHelper.BALANCE};
 		int[] toViewIDs = new int[] {R.id.accountID, R.id.accountName, R.id.accountBalance};
 	
 		// Fills the ListView with all the Accounts in the Table.
@@ -141,11 +133,11 @@ public class Account extends Activity {
         a_id = Integer.parseInt((child.getText().toString().trim()));
         
         try {
-        	Class clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
         	Intent newIntent = new Intent(Account.this,clickedClass);
 
 			// Brings us back to the root activity, where exit functions properly.
-			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	newIntent.putExtra("A_ID", a_id);
         	startActivity(newIntent);
 		
@@ -169,11 +161,11 @@ public class Account extends Activity {
 	        a_id = Integer.parseInt((child.getText().toString().trim()));
 	        
 	        try {
-	        	Class clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+	        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
 	        	Intent newIntent = new Intent(Account.this,clickedClass);
 
 				// Brings us back to the root activity, where exit functions properly.
-				newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+				newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				
 				// Pass the extras to the intent on AccountForm.
 	        	newIntent.putExtra("A_ID", a_id);

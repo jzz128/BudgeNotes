@@ -14,17 +14,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Goal extends Activity{
-	
+	// Setup global variables
 	Button addGoal;
 	DBHelper db;
 	
 	RelativeLayout vwParentRow;
-	ListView goalList; // moved to higher scope. - DJM
+	ListView goalList;
 	Goal goal;
+	
+	private int _id;
+	private int g_id;
+	private String goal_name;
+	private String goal_description;
+	private String goal_type;
+	private String goal_start_amount;
+	private String goal_delta_amount;
+	private String goal_end_date;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Set to view goals layout
 		setContentView(R.layout.view_goals);
 
 		//Create Database instance
@@ -36,11 +46,12 @@ public class Goal extends Activity{
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
 		addGoal = (Button) findViewById(R.id.addGoal);
 		addGoal.setOnClickListener(new View.OnClickListener() {		
-						
+		
+		// Display Goal Form when ADD GOAL
 		@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
 					Intent newIntent = new Intent(Goal.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -59,7 +70,7 @@ public class Goal extends Activity{
 		Cursor cursor = db.getAllGoals();
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
-		String[] goalFieldNames = new String[] {db.G_ID,db.G_A_ID, db.GOAL_NAME, db.GOAL_DESCRIPTION, db.GOAL_TYPE, db.GOAL_END_DATE};
+		String[] goalFieldNames = new String[] {DBHelper.G_ID,DBHelper.G_A_ID, DBHelper.GOAL_NAME, DBHelper.GOAL_DESCRIPTION, DBHelper.GOAL_TYPE, DBHelper.GOAL_END_DATE};
 		int[] toViewIDs = new int[] {R.id.goalID,R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
 	
 		// Fills the ListView with all the Goals in the Table.
@@ -74,21 +85,13 @@ public class Goal extends Activity{
 		goalList.setAdapter(myCursorAdapter);
 
 	}
-		
-	private int _id;
-	private int a_id;
-	private String goal_name;
-	private String goal_description;
-	private String goal_type;
-	private String goal_start_amount;
-	private String goal_delta_amount;
-	private String goal_end_date;
 	
 	public Goal(){}
 	
-	public Goal(int a_id, String name, String description, String type, String start_amount, String delta_amount, String end_date) {
+	// Method to create Goal object 
+	public Goal(int g_id, String name, String description, String type, String start_amount, String delta_amount, String end_date) {
 		super();
-		this.a_id = a_id;
+		this.g_id = g_id;
 		this.goal_name = name;
 		this.goal_description = description;
 		this.goal_type = type;
@@ -97,9 +100,10 @@ public class Goal extends Activity{
 		this.goal_end_date = end_date;
 	}
 	
+	// Return Goal object as a string
 	@Override
 	public String toString() {
-		return "Goal [id=" + _id + ", a_id=" + a_id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"]";
+		return "Goal [id=" + _id + ", g_id=" + g_id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"]";
 	}
 	
 	//Getters --------------------------------------------------------------------
@@ -108,7 +112,7 @@ public class Goal extends Activity{
 	}
 	
 	public int getAId(){
-		return a_id;
+		return g_id;
 	}
 	
 	public String getName(){
@@ -140,8 +144,8 @@ public class Goal extends Activity{
 		this._id = id;
 	}
 	
-	public void setAId(int a_id){
-		this.a_id = a_id;
+	public void setAId(int g_id){
+		this.g_id = g_id;
 	}
 	
 	public void setName(String name){
@@ -168,6 +172,7 @@ public class Goal extends Activity{
 		this.goal_end_date = end_date;
 	}
 	
+	// Functionality performed when edit goal is clicked	
 	public void editGoalClickHandler(View v) {
 		int g_id;
 		int a_id;
@@ -183,12 +188,13 @@ public class Goal extends Activity{
         a_id = Integer.parseInt((child.getText().toString().trim())); // The value stored in the this child is the 
         g_id = Integer.parseInt((child2.getText().toString().trim()));
         
+        // Display Goal Form
         try {
-        	Class clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
+        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalForm");
         	Intent newIntent = new Intent(Goal.this,clickedClass);
 
-			// Brings us back to the root activity, where exit functions properly.
-			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+			// Brings application back to the root activity, where exit functions properly.
+			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			
 			// Pass the extras to the intent on GoalForm.
 			newIntent.putExtra("G_ID", g_id);
@@ -201,6 +207,7 @@ public class Goal extends Activity{
         }
 	}
 	
+	// Functionality performed when delete goal is clicked	
 	public void deleteGoalClickHandler(View v) {
 		int g_id;
 		
@@ -216,25 +223,24 @@ public class Goal extends Activity{
         // Initialize the objects.
         goal = db.getGoal(g_id);
         
-		// Alert dialog to affirm delete.
+		// Alert dialog to confirm delete.
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
-                	db.deleteGoal(goal);
-                	populateListViewGoals();
-                	//S_A_ID = A_ID - lowestID + 1 ;
-            		//transAccount.setSelection(S_A_ID-1);
-                    break;
-
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //Do Nothing.
-                    break;
+                	// YES Clicked
+	                case DialogInterface.BUTTON_POSITIVE:
+	                	db.deleteGoal(goal);
+	                	populateListViewGoals();
+	                    break;
+	                 // No Clicked
+	                case DialogInterface.BUTTON_NEGATIVE:
+	                    //Do Nothing.
+	                    break;
                 }
             }
         };
-
+        // Alert Dialog Popup
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete goal?").setPositiveButton("Yes", dialogClickListener)
             .setNegativeButton("No", dialogClickListener).show();

@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,8 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -91,11 +88,11 @@ public class Transaction extends Activity {
 		@Override
 			public void onClick(View v) {
 				try{
-					Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(Transaction.this, clickedClass);
 					
 					// Brings us back to the root activity, where exit functions properly.
-					newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+					newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -126,11 +123,11 @@ public class Transaction extends Activity {
         a_id = Integer.parseInt((child2.getText().toString().trim()));
         
         try {
-        	Class clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
         	Intent newIntent = new Intent(Transaction.this,clickedClass);
 
 			// Brings us back to the root activity, where exit functions properly.
-			newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			
 			// Pass the extras to the intent on AccountForm.
         	newIntent.putExtra("A_ID", a_id);
@@ -267,7 +264,7 @@ public class Transaction extends Activity {
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
-		String[] transactionFieldNames = new String[] {db.T_ID, db.T_A_ID, db.TRANSACTION_NAME, db.TRANSACTION_DATE, db.TRANSACTION_AMOUNT, db.TRANSACTION_TYPE};
+		String[] transactionFieldNames = new String[] {DBHelper.T_ID, DBHelper.T_A_ID, DBHelper.TRANSACTION_NAME, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT, DBHelper.TRANSACTION_TYPE};
 		int[] toViewIDs = new int[] {R.id.transactionID, R.id.transactionAccountID, R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon};
 			
 		// Fills the ListView with all the Transactions in the Table.

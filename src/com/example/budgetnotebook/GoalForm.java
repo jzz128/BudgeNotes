@@ -130,7 +130,13 @@ public class GoalForm extends Activity implements InputValidator{
 			Log.d("G_ID", String.valueOf(G_ID));
 			populateForm();
 		} else {
-			//Do Nothing.
+			// Set date to todays date
+			cal= Calendar.getInstance();
+            String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+            String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+            String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+			goalEnd.setText(todayAsString);
 		}
 		
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
@@ -161,11 +167,11 @@ public class GoalForm extends Activity implements InputValidator{
 							// Call the add goal method to add the goal to the database
 							addGoal();
 						}
-						Class clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Goal");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
 						
 						// Brings us back to the root activity, where exit functions properly.
-						newIntent.setFlags(newIntent.FLAG_ACTIVITY_CLEAR_TOP);
+						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(newIntent);		
 					}
 
@@ -293,7 +299,7 @@ public class GoalForm extends Activity implements InputValidator{
 	}
 	
 	private void loadTypeSpinnerData() {
-		ArrayAdapter dataAdapter = ArrayAdapter.createFromResource(this, R.array.goalTypeArray, android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.goalTypeArray, android.R.layout.simple_spinner_item);
                       
 		goalType.setAdapter(dataAdapter);
 	}

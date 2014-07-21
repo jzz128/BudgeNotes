@@ -94,12 +94,10 @@ public class ProfileForm extends Activity implements InputValidator {
 									// Finish activity to return to main menu
 									finish();
 								} else {
-									// Create new profile object using the information the user entered
-									profile = new Profile(profileFirstNameString,profileLastNameString,profileGenderString,profileBirthdayString,profileCityString,profileEmailString);	
-									// Write to database
-									db.addProfile(profile);
+									// Write to profile to database									
+									addProfile();
 									// Display Main Menu after profile is created
-									Class clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+									Class<?> clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
 									Intent newIntent = new Intent(ProfileForm.this, clickedClass);
 									startActivity(newIntent);
 									

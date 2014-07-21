@@ -48,5 +48,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_export">ExportActivity</string>
     <string name="title_activity_alert">AlertActivity</string>
+    <string name="account">Account</string>
 
 </resources>

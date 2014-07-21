@@ -16,8 +16,6 @@ public class Profile extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_profile);
 		
-		//Display Profile Information - Need to get from Database
-		
 		//Create Database instance
 		DBHelper db = new DBHelper(getBaseContext());
 		//Display Profile Information from Database
@@ -58,7 +56,7 @@ public class Profile extends Activity {
 						try{
 							// Finish the Profile activity and start the Profile Form activity
 							finish();
-							Class clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
+							Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
 							Intent newIntent = new Intent(Profile.this, clickedClass);
 							startActivity(newIntent);
 							} catch(ClassNotFoundException e) {
