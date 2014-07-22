@@ -51,6 +51,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TRANSACTION_TYPE = "transaction_type";
 	public static final String TRANSACTION_INTERVAL = "transaction_interval";
 	public static final String TRANSACTION_DESCRIPTION = "transaction_description";
+	// public static final String TRANSACTION_ACCOUNTED = "transaction_accounted";
 	// String for all TRANSACTION_TABLE field names.
 	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION};
 	
