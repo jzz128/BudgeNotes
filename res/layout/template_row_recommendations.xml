@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:stretchColumns="*" >
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:stretchColumns="*" >
 
-<TableRow 
-    android:layout_weight="1"
-    android:gravity="right" >
+    <TableRow
+        android:layout_weight="1"
+        android:gravity="right"
+        tools:ignore="UselessParent" >
 
-	<TextView
-	    android:gravity="left|center_vertical"
-        android:padding="5dip"
-        android:layout_weight=".65"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:text="Consider cutting back spending in category: " />
-	<TextView
-	    android:id="@+id/recMessage"
-	    android:gravity="center_vertical"
-        android:padding="5dip"
-        android:layout_weight=".35"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:text="Category:" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight=".65"
+            android:gravity="left|center_vertical"
+            android:padding="5dip"
+            android:text="@string/consider_cutting_back_spending_in_category_" />
 
-</TableRow>
+        <TextView
+            android:id="@+id/recMessage"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight=".35"
+            android:gravity="center_vertical"
+            android:padding="5dip"
+            android:text="@string/category_" />
+    </TableRow>
+
 </TableLayout>

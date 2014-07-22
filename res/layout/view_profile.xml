@@ -7,13 +7,13 @@
             	android:id="@+id/details"
             	android:layout_width="fill_parent"
             	android:layout_height="wrap_content"
-            	android:paddingTop="4px"
+            	android:paddingTop="4dp"
             	android:stretchColumns="1" >
 
             	<TableRow>
 		<TextView
-                    	android:paddingRight="2px"
-                    	android:text="First Name:" />
+                    	android:paddingRight="2dp"
+                    	android:text="@string/first_name_" />
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"
@@ -22,8 +22,8 @@
             	</TableRow>
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="Last Name.:" />
+                    	android:paddingRight="2dp"
+                    	android:text="@string/last_name_" />
             		<TextView
                   android:layout_height="wrap_content"
                   android:layout_width="fill_parent"
@@ -32,8 +32,8 @@
          	</TableRow>
 	<TableRow>
                 	<TextView
-                    	android:paddingRight="2px"
-                    	android:text="Gender:" />							           	
+                    	android:paddingRight="2dp"
+                    	android:text="@string/gender_" />							           	
 				<TextView
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -42,8 +42,8 @@
             	</TableRow>	
 	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="Birthday (DD/MM/YYYY):" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/birthday_dd_mm_yyyy_" />					
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
@@ -52,8 +52,8 @@
             	</TableRow>		
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="City:" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/city_" />					
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
@@ -62,8 +62,8 @@
             	</TableRow>		 
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="E-Mail:" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/e_mail_" />					
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
@@ -77,7 +77,7 @@
             	    android:layout_width="fill_parent"
             	    android:layout_height="wrap_content"
             	    android:background="@drawable/styledbutton"
-            	    android:text="EDIT PROFILE" />
+            	    android:text="@string/edit_profile" />
 
     	</TableLayout>             
 </LinearLayout>

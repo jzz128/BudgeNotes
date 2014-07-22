@@ -1,14 +1,15 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4px"
+    android:paddingTop="4dp"
     android:stretchColumns="1" >
 
     <TableRow>
 
         <TextView
-            android:paddingRight="2px"
-            android:text="Account:" />
+            android:paddingRight="2dp"
+            android:text="@string/account_" />
 
         <Spinner
             android:id="@+id/transSpinnerAccount"
@@ -18,25 +19,27 @@
     <TableRow>
 
         <TextView
-            android:paddingRight="2px"
-            android:text="Name:" />
+            android:paddingRight="2dp"
+            android:text="@string/name_" />
 
         <EditText
             android:id="@+id/transEditName"
+            android:inputType="text"
             android:maxWidth="140sp" />
     </TableRow>
-        <LinearLayout
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent" >
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.92"
-            android:paddingLeft="2px"
-            android:paddingRight="2px"
-            android:text="Date:"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/date_"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -44,21 +47,22 @@
             android:layout_width="178dp"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="date"
             android:textSize="16sp" />
 
         <ImageButton
             android:id="@+id/transButtonCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/cal"
             android:src="@drawable/calendar_icon" />
     </LinearLayout>
+
     <TableRow>
 
         <TextView
-            android:paddingLeft="2px"
-            android:paddingRight="2px"
-            android:text="Amount:" />
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/amount_" />
 
         <EditText
             android:id="@+id/transEditAmount"
@@ -68,7 +72,7 @@
 
     <TableRow>
 
-    <TextView android:text="Category" />
+        <TextView android:text="@string/category" />
 
         <Spinner
             android:id="@+id/transSpinnerCategory"
@@ -79,8 +83,8 @@
             android:scrollHorizontally="false"
             android:singleLine="false" />
     </TableRow>
-    
-    <TextView android:text="Type:" />
+
+    <TextView android:text="@string/type_" />
 
     <TableRow>
 
@@ -88,26 +92,25 @@
             android:id="@+id/transEditType"
             android:layout_span="2"
             android:orientation="horizontal"
-            android:scaleType="fitXY" >
+            android:scaleType="fitXY"
+            tools:ignore="UselessParent" >
 
             <RadioButton
                 android:id="@+id/transTypeCredit"
-                android:scaleX="0.666"
-                android:text="CR" />
+                android:text="@string/cr" />
 
             <RadioButton
                 android:id="@+id/transTypeDebit"
-                android:scaleX="0.666"
-                android:text="DE" />
+                android:text="@string/de" />
         </RadioGroup>
     </TableRow>
-    
+
     <TableRow>
 
         <TextView
-            android:paddingLeft="2px"
-            android:paddingRight="2px"
-            android:text="Interval(days):" />
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/interval_days_" />
 
         <Spinner
             android:id="@+id/transSpinnerInterval"
@@ -117,7 +120,7 @@
 
     <TableRow>
 
-    <TextView android:text="Description" />
+        <TextView android:text="@string/description" />
 
         <EditText
             android:id="@+id/transEditDescription"
@@ -126,15 +129,16 @@
             android:maxLines="2"
             android:maxWidth="200sp"
             android:scrollHorizontally="false"
-            android:singleLine="false" />
+            android:singleLine="false" 
+            android:inputType="text"/>
     </TableRow>
 
     <Button
         android:id="@+id/transButtonSave"
+        style="@style/button_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Save"
         android:background="@drawable/styledbutton"
-        style="@style/button_text" />
+        android:text="@string/save" />
 
 </TableLayout>

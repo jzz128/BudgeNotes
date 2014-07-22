@@ -9,7 +9,7 @@
                 android:id="@+id/advancedReports"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text= "VIEW REPORTS"
+                android:text= "@string/view_reports"
                 style="@style/button_text" />
     
             <Button
@@ -17,7 +17,7 @@
                 android:id="@+id/advancedRecommendations"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text= "VIEW RECOMMENDATIONS"
+                android:text= "@string/view_recommendations"
                 style="@style/button_text" />
             
 			<Button
@@ -25,7 +25,7 @@
                 android:id="@+id/advancedExportTransactions"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text= "EXPORT TRANSACTIONS"
+                android:text= "@string/export_transactions"
                 style="@style/button_text" />
 			
 			<Button
@@ -33,7 +33,7 @@
                 android:id="@+id/advancedImportTransactions"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text= "IMPORT TRANSACTIONS"
+                android:text= "@string/import_transactions"
                 style="@style/button_text" />
 			
 			<Button
@@ -41,7 +41,7 @@
                 android:id="@+id/advancedAlerts"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text= "VIEW UPCOMING ALERTS"
+                android:text= "@string/view_upcoming_alerts"
                 style="@style/button_text" />
 			
  </TableLayout>

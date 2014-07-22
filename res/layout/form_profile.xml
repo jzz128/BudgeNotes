@@ -7,33 +7,35 @@
             	android:id="@+id/details"
             	android:layout_width="fill_parent"
             	android:layout_height="wrap_content"
-            	android:paddingTop="4px"
+            	android:paddingTop="4dp"
             	android:stretchColumns="1" >
 
             	<TableRow>
 		<TextView
-                    	android:paddingRight="2px"
-                    	android:text="First Name:" />
+                    	android:paddingRight="2dp"
+                    	android:text="@string/first_name_" />
             		<EditText
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"
+                		android:inputType="text"
             			android:id="@+id/profileFirstName"
             			android:maxWidth="140sp" />
             	</TableRow>
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="Last Name.:" />
+                    	android:paddingRight="2dp"
+                    	android:text="@string/last_name_" />
             		<EditText
                   android:layout_height="wrap_content"
                   android:layout_width="fill_parent"
+                  android:inputType="text"
               	android:id="@+id/profileLastName"
               	android:maxWidth="140sp" />
          	</TableRow>
 	<TableRow>
                 	<TextView
-                    	android:paddingRight="2px"
-                    	android:text="Gender:" />							           	
+                    	android:paddingRight="2dp"
+                    	android:text="@string/gender_" />							           	
 		<RadioGroup
                     	android:id="@+id/profileGender"
                     	android:orientation="horizontal"
@@ -43,18 +45,16 @@
                     	android:scaleType="fitXY" >
                     	<RadioButton
                         	android:id="@+id/profileMale"
-                        	android:text="M"
-                        	android:scaleX="0.666" />
+                        	android:text="@string/m"/>
                     	<RadioButton
                         	android:id="@+id/profileFemale"
-                        	android:text="F" 
-                        	android:scaleX="0.666" />
+                        	android:text="@string/f"/>
                 	</RadioGroup>
             	</TableRow>	
 	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="Birthday (DD/MM/YYYY):" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/birthday_dd_mm_yyyy_" />					
             		<TextView
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
@@ -64,25 +64,28 @@
 		            android:id="@+id/profileButtonCalendar"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:src="@drawable/calendar_icon" />
+		            android:src="@drawable/calendar_icon" 
+		            android:contentDescription="@string/cal"/>
             	</TableRow>		
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="City:" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/city_" />					
             		<EditText
                 		android:layout_height="wrap_content"
-                		android:layout_width="fill_parent"                
+                		android:layout_width="fill_parent"  
+                		android:inputType="text"              
             			android:id="@+id/profileCity"
             			android:maxWidth="140sp" />
             	</TableRow>		 
             	<TableRow>
             	    <TextView
-                    	android:paddingRight="2px"
-                    	android:text="E-Mail:" />					
+                    	android:paddingRight="2dp"
+                    	android:text="@string/e_mail_" />					
             		<EditText
                 		android:layout_height="wrap_content"
-                		android:layout_width="fill_parent"                
+                		android:layout_width="fill_parent"
+                		android:inputType="textEmailAddress"                
             			android:id="@+id/profileEmail"
             			android:maxWidth="140sp" />
             	</TableRow>		                 
@@ -90,10 +93,8 @@
                 	android:id="@+id/save_profile"
                 	android:layout_width="fill_parent"
                 	android:layout_height="wrap_content"
-                	android:text= "SAVE"
+                	android:text= "@string/save"
                 	android:background="@drawable/styledbutton"
     				style="@style/button_text"  />
-    	</TableLayout>  
-            
-           
+    	</TableLayout>                        
 </LinearLayout>

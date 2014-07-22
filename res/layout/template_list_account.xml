@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -8,8 +9,9 @@
         android:id="@+id/accountIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:contentDescription="@string/account_icon"
         android:onClick="iconClickHandler"
+        android:padding="5dp"
         android:src="@drawable/spend" />
 
     <TextView
@@ -17,9 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/accountBalance"
-        android:text="ID"
-        android:visibility="gone"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/id"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/accountName"
@@ -27,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/accountID"
         android:layout_toRightOf="@+id/accountIcon"
-        android:text="Account Name"
+        android:text="@string/account_name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -37,15 +39,16 @@
         android:layout_below="@+id/accountName"
         android:layout_toRightOf="@+id/accountIcon"
         android:text="$"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText" />
+
     <TextView
         android:id="@+id/accountBalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/accountName"
         android:layout_toRightOf="@+id/accountBalanceSymbol"
-        android:text="Account Balance"
+        android:text="@string/account_balance"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageButton
@@ -54,8 +57,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="5dp"
+        android:contentDescription="@string/account_edit"
         android:onClick="editClickHandler"
+        android:padding="5dp"
         android:src="@drawable/edit1" />
 
     <ImageButton
@@ -64,8 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/accountEditButton"
-        android:padding="5dp"
         android:onClick="deleteClickHandler"
-        android:src="@drawable/delete1" />
+        android:padding="5dp"
+        android:src="@drawable/delete1" 
+        android:contentDescription="@string/account_delete"/>
 
 </RelativeLayout>

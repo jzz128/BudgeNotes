@@ -7,14 +7,14 @@
         android:id="@+id/importDetails"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="4px"
+        android:paddingTop="4dp"
         android:stretchColumns="1" >
 
         <TableRow>
 
             <TextView
-                android:paddingRight="2px"
-                android:text="File Directory:" />
+                android:paddingRight="2dp"
+                android:text="@string/file_directory_" />
 
             <TextView
                 android:id="@+id/importPath"
@@ -26,10 +26,11 @@
         <TableRow>
 
             <TextView
-                android:paddingRight="2px"
-                android:text="File Name:" />
+                android:paddingRight="2dp"
+                android:text="@string/file_name_" />
 
             <EditText
+                android:inputType="text"
                 android:id="@+id/importFile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/styledbutton"
-            android:text="Import CSV File" />
-    </TableLayout>
+            android:text="@string/import_csv_file" />
+    </TableLayout> 
 
 </LinearLayout>

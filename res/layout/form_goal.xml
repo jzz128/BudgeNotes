@@ -1,132 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/goalAccountLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Spinner
-        android:id="@+id/goalEditAccountSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/goalNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-    <EditText
-        android:id="@+id/goalEditName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Goal Name"/>
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/goalTypeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Type"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <TextView
+            android:id="@+id/goalAccountLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/account"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Spinner
-        android:id="@+id/goalEditTypeSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-	
-	
-	<TableLayout
-            	android:id="@+id/details"
-            	android:layout_width="fill_parent"
-            	android:layout_height="wrap_content"
-            	android:paddingTop="4px"
-            	android:stretchColumns="1" >
-    	<TableRow>
+        <Spinner
+            android:id="@+id/goalEditAccountSpinner" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-			    <TextView
-			        android:id="@+id/goalEndLabel"
-			        android:layout_width="85dp"
-			        android:layout_height="wrap_content"
-			        android:text="End Date"
-			        android:textAppearance="?android:attr/textAppearanceSmall" />
-			
-			    <TextView
-			        android:id="@+id/goalEditEnd"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:inputType="date"
-			        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/goalNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-			    <ImageButton
-		            android:id="@+id/goalButtonCalendar"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:src="@drawable/calendar_icon" />
-		</TableRow>
-	</TableLayout> 
-	
-	
-	
-    <TextView
-        android:id="@+id/goalDeltaLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delta Amount"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <EditText
+            android:id="@+id/goalEditName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/goal_name" />
 
-    <EditText
-        android:id="@+id/goalEditDelta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="What is the Goal Value?"
-        android:inputType="numberDecimal"/>
+        <TextView
+            android:id="@+id/goalTypeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/goalStartLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Amount"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <Spinner
+            android:id="@+id/goalEditTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/goalEditStart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="&lt;Will Show Current Account Balance>"
-        android:inputType="numberDecimal" />
+        <TableLayout
+            android:id="@+id/details"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:stretchColumns="1" >
 
-    <TextView
-        android:id="@+id/goalDescriptionLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TableRow tools:ignore="UselessParent" >
 
-    <EditText
-        android:id="@+id/goalEditDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Describe The Goal."
-        android:inputType="textMultiLine"/>
+                <TextView
+                    android:id="@+id/goalEndLabel"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/end_date"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Button
-        android:id="@+id/goalButtonSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:background="@drawable/styledbutton"
-        style="@style/button_text"
-        />
+                <TextView
+                    android:id="@+id/goalEditEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp" />
 
-</LinearLayout>
+                <ImageButton
+                    android:id="@+id/goalButtonCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/cal"
+                    android:src="@drawable/calendar_icon" />
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/goalDeltaLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delta_amount"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <EditText
+            android:id="@+id/goalEditDelta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/what_is_the_goal_value_"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/goalStartLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/current_amount"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <EditText
+            android:id="@+id/goalEditStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/_lt_will_show_current_account_balance_"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/goalDescriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <EditText
+            android:id="@+id/goalEditDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/describe_the_goal_"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/goalButtonSave"
+            style="@style/button_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/styledbutton"
+            android:text="@string/save" />
+    </LinearLayout>
+
 </ScrollView>

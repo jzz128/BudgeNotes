@@ -39,7 +39,7 @@
 
                     <TextView
                         android:paddingRight="2px"
-                        android:text="Item:" />
+                        android:text="@string/item_" />
 
                     <EditText
                         android:id="@+id/item"

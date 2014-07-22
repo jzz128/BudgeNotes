@@ -14,7 +14,7 @@
         android:id="@+id/addGoal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="ADD GOAL"
+        android:text="@string/add_goal"
         android:background="@drawable/styledbutton"
         style="@style/button_text" />
 

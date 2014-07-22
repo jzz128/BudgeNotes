@@ -21,6 +21,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/styledbutton"
-        android:text="ADD TRANSACTION" />
+        android:text="@string/add_transaction" /> 
 
-</LinearLayout>
+</LinearLayout> 
