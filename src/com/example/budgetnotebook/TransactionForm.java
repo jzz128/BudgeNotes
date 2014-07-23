@@ -221,6 +221,8 @@ public class TransactionForm extends Activity implements InputValidator {
 						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						newIntent.putExtra("A_ID", transAccountI);
 						startActivity(newIntent);
+						// Finish activity
+						finish();
 					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
