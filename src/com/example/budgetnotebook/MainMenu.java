@@ -30,19 +30,72 @@ public class MainMenu extends Activity {
 		// !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
 		
 		DBHelper db = new DBHelper(this);
+		int numAccounts;
+		int numTran = 0;
+		int tranSum = 0;
+		int accBase = 0;
+		int a_id;
+		String query;
 		
+		// Check if any accounts exist. Could be replaced with comparison based on a queryCount() call.
 		if (db.checkAccountExists()) {
+			// Get a list off all the accounts and a count of how many there are.
+			List<Account> accList = db.getListAllAccounts();
+			numAccounts = accList.size();				
+			
+			// Check if any transactions exist.
 			if(db.checkTransExists()) {
+				// Iterate through all accounts.
+				for (int i = 0; i < numAccounts; i++) {
+					// Get the _id of the current account.
+					a_id = accList.get(i).getId();
+					//Establish a base query returning all transactions associated with an account.
+					query = "SELECT * FROM " + db.TRANSACTION_TABLE + " WHERE " + db.T_A_ID + " = " + a_id;
+					//Returns the total count of transactions associated with the current account.
+					numTran = db.queryCount(query);
+					//Returns a sum of all Transactions that are currently accounted for.
+					tranSum = db.querySum(query + " AND " + db.TRANSACTION_ACCOUNTED + " = " + 1);
+					//Returns the base (beginning) balance of the current account.
+					accBase = Integer.parseInt(accList.get(i).getBalance()) - tranSum;
+					
+					// Reset the current account base balance.
+					accList.get(i).setBalance(String.valueOf(accBase));
+					db.updateAccount(accList.get(i));
+					
+					//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+					//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+					//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+				}
+				// Get a list of all the transactions and a count of how many there are.
 				List<Transaction> tranList = db.getAllListTransactions();
-				
 				int count = tranList.size();
+				
+				Account account;
+				String currBalance;
+				String changeAmount;
+				int newBalance;
+				// 
 				for (int i = 0; i < count; i++) {
-						tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate()));
-						db.updateTransaction(tranList.get(i));
+					account = db.getAccount(tranList.get(i).getAID());
+					currBalance = account.getBalance();
+					
+					tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate()));
+					db.updateTransaction(tranList.get(i));
+					
+					changeAmount = tranList.get(i).getAmount();
+					
+					if(tranList.get(i).getAccounted()) {
+						
+						newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
+						account.setBalance(String.valueOf(newBalance));
+						
+						db.updateAccount(account);
+					}
 				}
 			} else {
 				Toast.makeText(this, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
 			}
+			
 		} else {
 			Toast.makeText(this, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
 		}

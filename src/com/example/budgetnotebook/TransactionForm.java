@@ -72,6 +72,36 @@ public class TransactionForm extends Activity implements InputValidator {
 		// Access the database.
 		db = new DBHelper(getBaseContext());
 
+		// !!! ====================================================================================================================================== !!!
+		// !!! TESTING - SET ALL TRANSACTIONS TO BE ACCOUNTED, EVEN FUTURE DATES.
+		// !!! ====================================================================================================================================== !!!
+		/*
+		List<Transaction> tranList = db.getAllListTransactions();
+		int numTrans = tranList.size();
+		Account account;
+		String currBalance;
+		String changeAmount;
+		int newBalance;
+		boolean pAccounted;
+		
+		for (int i = 0; i < numTrans; i++) {
+			account = db.getAccount(tranList.get(i).getAID());
+			currBalance = account.getBalance();
+			pAccounted = tranList.get(i).getAccounted();
+			
+			tranList.get(i).setAccounted(true);
+			db.updateTransaction(tranList.get(i));
+			if(!pAccounted) {
+				changeAmount = tranList.get(i).getAmount();
+				newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
+				account.setBalance(String.valueOf(newBalance));				
+				db.updateAccount(account);
+			}
+		}
+		*/
+		// !!! ====================================================================================================================================== !!!
+		// !!! ====================================================================================================================================== !!!
+		
 		// Get the id of the account from the spinner on the transaction view.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);

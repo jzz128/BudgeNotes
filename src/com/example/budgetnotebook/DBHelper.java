@@ -161,8 +161,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 		// ---------------------------------------------------------------------------------------------------------------------
-		//TODO Generic Query method !!! This is probably not safe and should be controlled further with predefined queries. !!!
+		//TODO Generic Query methods !!! This is probably not safe and should be controlled further with predefined queries. !!!
 		// ---------------------------------------------------------------------------------------------------------------------
+	
 		public Cursor dbQuery(String query){
 			
 			SQLiteDatabase db = this.getWritableDatabase();
@@ -171,7 +172,30 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor;
 		}
 		
+		public int queryCount(String query) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+				
+			return cursor.getCount();
+		}
+		
+		public int querySum(String query) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			if(cursor != null)
+				cursor.moveToFirst();
+			int sum = 0;
+			for (int i = 0; i < cursor.getCount(); i++) {
+				sum += Integer.parseInt(cursor.getString(4));
+				cursor.moveToNext();
+			}
+			
+			return sum;
+		}
+		
 		// ---------------------------------------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------------------------------
+				
 		// Recommendation Methods
 		public Cursor getRcommendations() {
 			SQLiteDatabase db = this.getWritableDatabase();
