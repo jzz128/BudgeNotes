@@ -506,6 +506,20 @@ public class DBHelper extends SQLiteOpenHelper {
 		// Account methods ------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+		// Check if any Accounts exist.
+		public boolean checkAccountExists() {
+			String query = "SELECT * FROM " + ACCOUNT_TABLE;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery(query, null);
+			
+			if (cursor.getCount() < 1) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
 		// Add a single Account.
 		public void addAccount(Account account){
 			Log.d("addAccount", account.toString());
@@ -679,6 +693,20 @@ public class DBHelper extends SQLiteOpenHelper {
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Transaction methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		// Check if any Accounts exist.
+			public boolean checkTransExists() {
+				String query = "SELECT * FROM " + TRANSACTION_TABLE;
+					
+				SQLiteDatabase db = this.getWritableDatabase();
+				Cursor cursor = db.rawQuery(query, null);
+					
+				if (cursor.getCount() < 1) {
+					return false;
+				} else {
+					return true;
+				}
+			}
 		
 		// Check if a transaction date is on or before today.
 		public boolean checkAccountedDate(String transDate) {
