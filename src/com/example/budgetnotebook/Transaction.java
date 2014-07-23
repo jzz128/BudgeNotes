@@ -185,6 +185,7 @@ public class Transaction extends Activity {
 	}
 	
 	//Update the account if this is an edit. Essentially reversing the original transaction
+	//TODO update with new transaction method.
 		private void reverseTransaction() {		
 			int oldBalance;
 			int changeAmount;
@@ -193,6 +194,7 @@ public class Transaction extends Activity {
 			
 			changeAmount = Integer.parseInt(transaction.getAmount());
 			
+			/*
 			if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
 				changeAmount = - changeAmount;
 			} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
@@ -200,6 +202,7 @@ public class Transaction extends Activity {
 			}else {
 				//Do nothing for now.
 			}
+			*/
 			
 			// Reverses amount if this is a credit card.
 			accountType = account.getType();
@@ -209,9 +212,9 @@ public class Transaction extends Activity {
 			}
 			
 			oldBalance = Integer.parseInt(account.getBalance());
-			newBalance = oldBalance + changeAmount;
+			newBalance = oldBalance - changeAmount;
 			account.setBalance(String.valueOf(newBalance));
-			db.updateAccount(account);
+			if(transaction.getAccounted()) db.updateAccount(account);
 			
 		}
 	
@@ -224,10 +227,11 @@ public class Transaction extends Activity {
 	private String transaction_type;
 	private String transaction_interval;
 	private String transaction_description;
+	private boolean transaction_accounted;
 	
 	public Transaction(){}
 	
-	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description) {
+	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description, boolean transaction_accounted) {
 		super();
 		this.t_a_id = t_a_id;
 		this.transaction_name = transaction_name;
@@ -237,11 +241,12 @@ public class Transaction extends Activity {
 		this.transaction_type = transaction_type;
 		this.transaction_interval = transaction_interval;
 		this.transaction_description = transaction_description;
+		this.transaction_accounted = transaction_accounted;
 	}
 	
 	@Override
 	public String toString() {
-		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +"]";
+		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +", transaction_accounted=" + transaction_accounted + "]";
 	}
 	
 	// Populate the spinner with account numbers
@@ -327,6 +332,10 @@ public class Transaction extends Activity {
 		return transaction_description;
 	}
 	
+	public boolean getAccounted() {
+		return transaction_accounted;
+	}
+	
 	//Setters --------------------------------------------------------------------
 	public void setViewAccount(int id) {
 		A_ID = id;
@@ -366,6 +375,10 @@ public class Transaction extends Activity {
 	
 	public void setDescription(String transaction_description) {
 		this.transaction_description = transaction_description;
+	}
+	
+	public void setAccounted(boolean transaction_accounted) {
+		this.transaction_accounted = transaction_accounted;
 	}
 
 }

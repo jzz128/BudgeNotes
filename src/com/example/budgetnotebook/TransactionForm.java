@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 public class TransactionForm extends Activity implements InputValidator {
 
@@ -54,6 +55,8 @@ public class TransactionForm extends Activity implements InputValidator {
 	private String transDateS;
 	private String transAmountS;
 	private String transDescriptionS;
+	private boolean transAccounted;
+	private boolean prevAccounted;
 	
 	int A_ID;
 	int T_ID;
@@ -157,6 +160,8 @@ public class TransactionForm extends Activity implements InputValidator {
 		// Auto fill the form if this is an edit.
 		if (T_EDIT) {
 			transaction = db.getTransaction(T_ID); // Corrected this. Was A_ID - DJM
+			prevAccounted = transaction.getAccounted();
+			//Toast.makeText(this, String.valueOf(prevAccounted), Toast.LENGTH_LONG).show();
 			populateForm();
 		} else {
 			// Set the type selection button to default to CR
@@ -192,10 +197,13 @@ public class TransactionForm extends Activity implements InputValidator {
 					transIntervalS = String.valueOf(transInterval.getSelectedItemPosition()) + " - " + transInterval.getSelectedItem().toString();
 					transDescriptionS = transDescription.getText().toString().trim();
 					
+					transAccounted = db.checkAccountedDate(transDateS); // To incorporate the new transaction format.
+					
 					if (transTypeS.equals("CR")) {
 						transTypeS = String.valueOf(R.drawable.credit1);
 					} else if (transTypeS.equals("DE")) {
 						transTypeS = String.valueOf(R.drawable.debit1);
+						if (Integer.parseInt(transAmountS) > 0 ) transAmountS = String.valueOf(-Integer.parseInt(transAmountS)); //Sets the debits to negative numbers.
 					} else {
 						transTypeS = String.valueOf(R.drawable.other1);
 					}
@@ -205,13 +213,13 @@ public class TransactionForm extends Activity implements InputValidator {
 						if (T_EDIT) {
 							// Update the account balance and then update the transaction record.
 							fillTransObject();
-							reverseTransaction();
-							updateAccount();
+							if (prevAccounted) reverseTransaction();
 							db.updateTransaction(transaction);
+							if (transAccounted) updateAccount();
 						} else {
 							// Call the add transaction method to add the transaction to the database and update the account balance!
 							addTransaction();
-							updateAccount();
+							if (transAccounted) updateAccount();
 						}
 						
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
@@ -221,8 +229,8 @@ public class TransactionForm extends Activity implements InputValidator {
 						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						newIntent.putExtra("A_ID", transAccountI);
 						startActivity(newIntent);
-						// Finish activity
-						finish();
+                        // Finish Activity
+                        finish();
 					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
@@ -241,6 +249,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		transaction.setType(transTypeS);
 		transaction.setInterval(transIntervalS);
 		transaction.setDescription(transDescriptionS);
+		transaction.setAccounted(transAccounted);
 	}
 	
 	// Fill the form fields with database data.
@@ -315,12 +324,12 @@ public class TransactionForm extends Activity implements InputValidator {
 
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					transDate.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+					transDate.setText((selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear);
 }
 };
 	
 	private void addTransaction() {
-		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS));
+		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted));
 	}
 
 	private void updateAccount() {
@@ -336,6 +345,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 		//Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
 		
+		/*
 		switch (transType.getCheckedRadioButtonId()) {
 		case R.id.transTypeCredit:
 			// Type is a Credit to the account
@@ -349,6 +359,7 @@ public class TransactionForm extends Activity implements InputValidator {
 			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 			break;
 		}
+		*/
 		
 		// Update the value of the Account.
 		account = db.getAccount(accountId);
@@ -367,6 +378,7 @@ public class TransactionForm extends Activity implements InputValidator {
 	}
 
 	//Update the account if this is an edit. Essentially reversing the original transaction
+	// Updated to incorporate new transaction method.
 	private void reverseTransaction() {
 		Account account1 = db.getAccount(A_ID);
 		Transaction transaction = db.getTransaction(T_ID);
@@ -375,9 +387,9 @@ public class TransactionForm extends Activity implements InputValidator {
 		int changeAmount;
 		int newBalance;
 		String accountType;
-		
 		changeAmount = Integer.parseInt(transaction.getAmount());
 		
+		/*
 		if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
 			changeAmount = - changeAmount;
 		} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
@@ -385,6 +397,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		}else {
 			//Do nothing for now.
 		}
+		*/
 		
 		// Reverses amount if this is a credit card.
 		accountType = account1.getType();
@@ -394,7 +407,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		}
 		
 		oldBalance = Integer.parseInt(account1.getBalance());
-		newBalance = oldBalance + changeAmount;
+		newBalance = oldBalance - changeAmount;
 		account1.setBalance(String.valueOf(newBalance));
 		db.updateAccount(account1);
 		

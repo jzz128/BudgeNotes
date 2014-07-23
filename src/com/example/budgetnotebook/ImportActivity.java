@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import android.R.bool;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -100,6 +101,7 @@ public class ImportActivity extends Activity {
 					String transDateS;
 					String transAmountS;
 					String transDescriptionS;
+					boolean transAccounted; // Added to incorporate new transaction table.
 
 					while ((nextLine = reader.readNext()) != null) {
 						rowNumber++;
@@ -116,10 +118,11 @@ public class ImportActivity extends Activity {
 							transTypeS = nextLine[5];
 							transIntervalS = nextLine[6];
 							transDescriptionS = nextLine[7];
+							transAccounted = Boolean.parseBoolean(nextLine[8]);
 							db.addTransaction(new Transaction(transAccountI,
 									transNameS, transDateS, transAmountS,
 									transCategoryS, transTypeS, transIntervalS,
-									transDescriptionS));
+									transDescriptionS, transAccounted));
 						}
 					}
 					success = "true";

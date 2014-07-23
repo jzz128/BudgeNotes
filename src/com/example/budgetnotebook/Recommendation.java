@@ -109,7 +109,7 @@ public class Recommendation extends Activity {
 				do {
 					if (recCursor.moveToFirst()) {
 						do {
-							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(10))) {
+							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(11))) { // Updated to incorporate new transaction method.
 								// Set the Recommendation to True.
 								//Toast.makeText(this, "Recommendation found; " + i, Toast.LENGTH_LONG).show();
 								recs.get(i).setIV(true);
@@ -131,7 +131,7 @@ public class Recommendation extends Activity {
 			recCursor = db.dbQuery(recQuery);
 			//startManagingCursor(cursor);
 			
-			// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
+			// Map the recommendation fields to the TextViews on the template_row_recommendation layout.
 			String[] transFieldNames = new String[] {DBHelper.R_CRITERIA_1};
 			int[] toViewIDs = new int[] {R.id.recMessage};
 		

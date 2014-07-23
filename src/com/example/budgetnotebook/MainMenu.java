@@ -25,8 +25,8 @@ public class MainMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		
-		/* !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
-		
+		// !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
+		/*
 		DBHelper db = new DBHelper(this);
 		Transaction tran = db.getTransaction(1);
 		
@@ -51,8 +51,9 @@ public class MainMenu extends Activity {
 		}
 		
 		db.close();
-		// !!! =================================================================================================================================================================== !!!
 		*/
+		// !!! =================================================================================================================================================================== !!!
+		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {

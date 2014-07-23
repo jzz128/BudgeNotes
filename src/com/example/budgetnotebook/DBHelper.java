@@ -1,6 +1,9 @@
 package com.example.budgetnotebook;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 2;
+	public static final int VERSION = 3; // Updated Transaction Table. 22 July 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
@@ -51,9 +54,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TRANSACTION_TYPE = "transaction_type";
 	public static final String TRANSACTION_INTERVAL = "transaction_interval";
 	public static final String TRANSACTION_DESCRIPTION = "transaction_description";
-	// public static final String TRANSACTION_ACCOUNTED = "transaction_accounted";
+	public static final String TRANSACTION_ACCOUNTED = "transaction_accounted";
 	// String for all TRANSACTION_TABLE field names.
-	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION};
+	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION, TRANSACTION_ACCOUNTED};
 	
 	//Fields associated with the Goal Table.
 	public static final String GOAL_TABLE = "goal_table";
@@ -84,6 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private String[] cats = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
 
 	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
+	
 	//Fields associated with the Alert Table.
 	public static final String ALERT_TABLE = "alert_table";
 	public static final String AT_ID = "_id";
@@ -102,7 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createAccount = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_TABLE + " ( " + A_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNT_NAME + " TEXT, " + ACCOUNT_NUMBER + " TEXT, " + ACCOUNT_TYPE + " TEXT, " + BALANCE + " TEXT);";
 	
 	//SQL Statement for creating the Transaction Table.
-	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT);";
+	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN);";
 	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
@@ -157,7 +161,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 		// ---------------------------------------------------------------------------------------------------------------------
-		// Generic Query method
+		//TODO Generic Query method !!! This is probably not safe and should be controlled further with predefined queries. !!!
+		// ---------------------------------------------------------------------------------------------------------------------
 		public Cursor dbQuery(String query){
 			
 			SQLiteDatabase db = this.getWritableDatabase();
@@ -340,7 +345,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor;
 		}
 		
-		// Toast all Goals -- REMOVE AFTER TESTING --
+		//TODO Toast all Goals -- REMOVE AFTER TESTING --
 		public void toastGoal(Context context){
 			String query = "SELECT * FROM " + GOAL_TABLE;
 			
@@ -449,7 +454,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor.getCount();
 		}
 		
-		// Toast profile  -- REMOVE AFTER TESTING --
+		//TODO Toast profile  -- REMOVE AFTER TESTING --
 		public void toastProfile(Context context){
 			String query = "SELECT * FROM " + PROFILE_TABLE;
 			
@@ -541,7 +546,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			 return account;
 		}
 		
-		// Get a list of all Accounts.
+		// Get a list of all Accounts as Account Objects.
 		public List<Account> getListAllAccounts() {
 			List<Account> accounts = new LinkedList<Account>();
 			
@@ -569,7 +574,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return accounts;
 		}
 		
-		// 
+		// Get a list of all Accounts as Strings.
 		public List<String> getAllStringAccounts(){
 	        List<String> accounts = new ArrayList<String>();
 	         
@@ -608,7 +613,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor;
 		}
 		
-		// Toast all Accounts
+		//TODO Toast all Accounts -- REMOVE AFTER TESTING --
 		public void toastAccount(Context context){
 			String query = "SELECT * FROM " + ACCOUNT_TABLE;
 			
@@ -674,7 +679,30 @@ public class DBHelper extends SQLiteOpenHelper {
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Transaction methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-				
+		
+		// Check if a transaction date is on or before today.
+		public boolean checkAccountedDate(String transDate) {
+			java.util.Date d = Calendar.getInstance().getTime(); // Current time
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+			String currentDate = sdf.format(d); // Get Date String according to date format
+			
+			java.util.Date date = null;
+			java.util.Date today = null;
+			
+			try {
+	            date = sdf.parse(transDate);
+	            today = sdf.parse(currentDate);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+			
+			if (date.before(today) || date.equals(today)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		// Add a single Transaction.
 		public void addTransaction(Transaction transaction){
 			Log.d("addTransaction", transaction.toString());
@@ -690,6 +718,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put(TRANSACTION_TYPE, transaction.getType());
 			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
 			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
+			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
 			
 			db.insert(TRANSACTION_TABLE, null, values);
 					
@@ -702,10 +731,15 @@ public class DBHelper extends SQLiteOpenHelper {
 					
 			Cursor cursor =
 					db.query(TRANSACTION_TABLE, TRANSACTION_FIELDS, T_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-			
+					
 			if (cursor != null)
 		        cursor.moveToFirst();
-					
+			
+			// Set the Boolean
+			boolean accounted = false;
+			int x = cursor.getInt(9);
+			if (x == 1) accounted = true;
+			
 			Transaction transaction = new Transaction();
 			transaction.setId(Integer.parseInt(cursor.getString(0)));
 			transaction.setAId(Integer.parseInt(cursor.getString(1)));
@@ -716,6 +750,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			transaction.setType(cursor.getString(6));
 			transaction.setInterval(cursor.getString(7));
 			transaction.setDescription(cursor.getString(8));
+			transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 					 
 			 Log.d("getTransaction("+id+")", transaction.toString());
 					 
@@ -744,6 +779,7 @@ public class DBHelper extends SQLiteOpenHelper {
 					transaction.setType(cursor.getString(6));
 					transaction.setInterval(cursor.getString(7));
 					transaction.setDescription(cursor.getString(8));
+					transaction.setAccounted(Boolean.parseBoolean(cursor.getString(9))); // Updated to incorporate new transaction method.
 							
 					transactions.add(transaction);
 				} while (cursor.moveToNext());
@@ -772,7 +808,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			return cursor;
 		}
 		
-		// Toast all Transactions
+		//TODO Toast all Transactions -- REMOVE AFTER TESTING --
 		public void toastTransaction(Context context){
 			String query = "SELECT * FROM " + TRANSACTION_TABLE;
 			
@@ -804,6 +840,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put(TRANSACTION_TYPE, transaction.getType());
 			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
 			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
+			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
 					
 			int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
 					
