@@ -98,12 +98,10 @@
             android:text="@string/current_amount"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <EditText
+        <TextView
             android:id="@+id/goalEditStart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/_lt_will_show_current_account_balance_"
-            android:inputType="numberDecimal" />
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/goalDescriptionLabel"

@@ -30,7 +30,7 @@ public class GoalForm extends Activity implements InputValidator{
 	Spinner goalType;
 	TextView goalEnd;
 	ImageButton calendar;
-	EditText goalStart;
+	TextView goalStart;
 	EditText goalDelta;
 	EditText goalDescription;
 	
@@ -188,7 +188,7 @@ public class GoalForm extends Activity implements InputValidator{
 			// Associate fields in the Goal form (form_goal.xml) to our variables.
 			goalName = (EditText) findViewById(R.id.goalEditName);
 			goalEnd = (TextView) findViewById(R.id.goalEditEnd);
-			goalStart = (EditText) findViewById(R.id.goalEditStart);
+			goalStart = (TextView) findViewById(R.id.goalEditStart);
 			goalDelta = (EditText) findViewById(R.id.goalEditDelta);
 			goalDescription = (EditText) findViewById(R.id.goalEditDescription);
 		}
