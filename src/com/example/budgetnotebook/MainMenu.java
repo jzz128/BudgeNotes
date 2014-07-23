@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,32 +28,27 @@ public class MainMenu extends Activity {
 		setContentView(R.layout.main_menu);
 		
 		// !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
-		/*
+		
 		DBHelper db = new DBHelper(this);
-		Transaction tran = db.getTransaction(1);
 		
-		java.util.Date d = Calendar.getInstance().getTime(); // Current time
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
-		String currentDate = sdf.format(d); // Get Date String according to date format
-		
-		java.util.Date tranDate = null;
-		java.util.Date today = null;
-		
-		try {
-            tranDate = sdf.parse(tran.getDate());
-            today = sdf.parse(currentDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-		
-		if (tranDate.before(today)) {
-			Toast.makeText(this, "Before Today.", Toast.LENGTH_LONG).show();
+		if (db.checkAccountExists()) {
+			if(db.checkTransExists()) {
+				List<Transaction> tranList = db.getAllListTransactions();
+				
+				int count = tranList.size();
+				for (int i = 0; i < count; i++) {
+						tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate()));
+						db.updateTransaction(tranList.get(i));
+				}
+			} else {
+				Toast.makeText(this, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
+			}
 		} else {
-			Toast.makeText(this, "After Today.", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
 		}
 		
 		db.close();
-		*/
+		
 		// !!! =================================================================================================================================================================== !!!
 		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
