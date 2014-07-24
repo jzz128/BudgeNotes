@@ -1,9 +1,12 @@
 package com.example.budgetnotebook;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,10 +16,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class Transaction extends Activity {
@@ -37,6 +42,10 @@ public class Transaction extends Activity {
 	RelativeLayout vwParentRow;
 	ListView transactionList;
 	
+	TextView transDate;
+	private Calendar cal;
+	private int day, month, year;
+	private String spinDate;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +56,23 @@ public class Transaction extends Activity {
 		
 		// Initialize the spinner.
 		transAccount = (Spinner) findViewById(R.id.transAccountSpinner);
+		
+		// Initialize date field.
+		transDate = (TextView) findViewById(R.id.tranViewSpinner);
+		
+		// Initialize the calendar.
+		cal = Calendar.getInstance();
+		day = cal.get(Calendar.DAY_OF_MONTH);
+		month = cal.get(Calendar.MONTH);
+		year = cal.get(Calendar.YEAR);
+		
+		// Set date to todays date
+		//cal= Calendar.getInstance();
+		String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+		String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+		String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+		transDate.setText(todayAsString);
 		
 		// Add data to the spinner.
 		loadAccountSpinnerData();
@@ -105,6 +131,72 @@ public class Transaction extends Activity {
 	
 	public void iconClickHandler(View v) {
 		//TODO Do Something when Transaction Icon clicked. Or Nothing.
+	}
+	
+	public void dateClickHandler(View v) {
+		showDialog(0);
+	}
+	
+	@Override
+	@Deprecated
+	protected Dialog onCreateDialog(int id) {
+		return new DatePickerDialog(this, datePickerListener, year, month, day);
+	}
+
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+					spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
+					transDate.setText(spinDate);
+					seeFuture(spinDate);
+		}
+	};
+	
+	public void seeFuture (String date) {
+		// !!! ====================================================================================================================================== !!!
+		// !!! TESTING - SET ALL TRANSACTIONS TO BE ACCOUNTED, EVEN FUTURE DATES.
+		// !!! ====================================================================================================================================== !!!
+				
+		List<Transaction> tranList = db.getAllListTransactions();
+		int numTrans = tranList.size();
+		Account account;
+		String currBalance;
+		String changeAmount;
+		int newBalance;
+		boolean pAccounted;
+				
+		for (int i = 0; i < numTrans; i++) {
+			account = db.getAccount(tranList.get(i).getAID());
+			currBalance = account.getBalance();
+			pAccounted = tranList.get(i).getAccounted();
+								
+			// Set the threshold date here -----------------------------------------------
+			tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate(), date));
+			// --------------------------------------------------------------------------
+			
+			db.updateTransaction(tranList.get(i));
+			//Toast.makeText(this, String.valueOf(pAccounted), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, String.valueOf(tranList.get(i).getAccounted()), Toast.LENGTH_LONG).show();
+			
+			if(!pAccounted && tranList.get(i).getAccounted()) {
+				changeAmount = tranList.get(i).getAmount();
+				newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
+				account.setBalance(String.valueOf(newBalance));				
+				db.updateAccount(account);
+			} else if (pAccounted && !tranList.get(i).getAccounted()) {
+				changeAmount = tranList.get(i).getAmount();
+				newBalance = Integer.parseInt(currBalance) - Integer.parseInt(changeAmount);
+				account.setBalance(String.valueOf(newBalance));				
+				db.updateAccount(account);
+			} else if(pAccounted == tranList.get(i).getAccounted()) {
+				//Do Nothing.
+			} else {
+				Toast.makeText(this, "An Error has Occured!", Toast.LENGTH_LONG).show();
+			}
+			
+			loadAccountSpinnerData();
+		}		
+		// !!! ====================================================================================================================================== !!!
+		// !!! ====================================================================================================================================== !!!
 	}
 	
 	public void editClickHandler(View v) {

@@ -3,11 +3,18 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <TextView
+        style="@android:style/Widget.Spinner"
+        android:id="@+id/tranViewSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:onClick="dateClickHandler"/>
+
     <Spinner
         android:id="@+id/transAccountSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
+    
     <ListView
         android:id="@+id/listViewTrans"
         android:layout_width="fill_parent"

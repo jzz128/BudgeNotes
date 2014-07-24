@@ -733,13 +733,20 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 		
 		// Check if a transaction date is on or before today.
-		public boolean checkAccountedDate(String transDate) {
-			java.util.Date d = Calendar.getInstance().getTime(); // Current time
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
-			String currentDate = sdf.format(d); // Get Date String according to date format
+		public boolean checkAccountedDate(String transDate, String against) {
 			
-			java.util.Date date = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 			java.util.Date today = null;
+			String currentDate;
+			
+			if (against.equals("now")) {
+				java.util.Date d = Calendar.getInstance().getTime(); // Current time
+				currentDate = sdf.format(d); // Get Date String according to date format
+			} else {
+				currentDate = against;
+			}
+			java.util.Date date = null;
+			
 			
 			try {
 	            date = sdf.parse(transDate);
@@ -819,8 +826,17 @@ public class DBHelper extends SQLiteOpenHelper {
 			Cursor cursor = db.rawQuery(query, null);
 					
 			Transaction transaction = null;
+			boolean accounted;
+			int x;
+			
 			if (cursor.moveToFirst()) {
+				
 				do {
+					// Set the Boolean
+					accounted = false;
+					x = cursor.getInt(9);
+					if (x == 1) accounted = true;
+					
 					transaction = new Transaction();
 					transaction.setId(Integer.parseInt(cursor.getString(0)));
 					transaction.setAId(Integer.parseInt(cursor.getString(1)));
@@ -831,7 +847,7 @@ public class DBHelper extends SQLiteOpenHelper {
 					transaction.setType(cursor.getString(6));
 					transaction.setInterval(cursor.getString(7));
 					transaction.setDescription(cursor.getString(8));
-					transaction.setAccounted(Boolean.parseBoolean(cursor.getString(9))); // Updated to incorporate new transaction method.
+					transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 							
 					transactions.add(transaction);
 				} while (cursor.moveToNext());
@@ -848,11 +864,12 @@ public class DBHelper extends SQLiteOpenHelper {
 					
 			String where = null;
 			String having = null;
+			//to_date(column,'dd/MM/yyyy')
 			if(a_id != 0) {
 				where = T_A_ID+"="+a_id;
 			}
 			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, null, null);
-					
+	
 			if (cursor != null) {
 				cursor.moveToFirst();
 			}

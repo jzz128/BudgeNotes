@@ -71,36 +71,6 @@ public class TransactionForm extends Activity implements InputValidator {
 		
 		// Access the database.
 		db = new DBHelper(getBaseContext());
-
-		// !!! ====================================================================================================================================== !!!
-		// !!! TESTING - SET ALL TRANSACTIONS TO BE ACCOUNTED, EVEN FUTURE DATES.
-		// !!! ====================================================================================================================================== !!!
-		/*
-		List<Transaction> tranList = db.getAllListTransactions();
-		int numTrans = tranList.size();
-		Account account;
-		String currBalance;
-		String changeAmount;
-		int newBalance;
-		boolean pAccounted;
-		
-		for (int i = 0; i < numTrans; i++) {
-			account = db.getAccount(tranList.get(i).getAID());
-			currBalance = account.getBalance();
-			pAccounted = tranList.get(i).getAccounted();
-			
-			tranList.get(i).setAccounted(true);
-			db.updateTransaction(tranList.get(i));
-			if(!pAccounted) {
-				changeAmount = tranList.get(i).getAmount();
-				newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
-				account.setBalance(String.valueOf(newBalance));				
-				db.updateAccount(account);
-			}
-		}
-		*/
-		// !!! ====================================================================================================================================== !!!
-		// !!! ====================================================================================================================================== !!!
 		
 		// Get the id of the account from the spinner on the transaction view.
 		Intent intent = getIntent();
@@ -227,7 +197,7 @@ public class TransactionForm extends Activity implements InputValidator {
 					transIntervalS = String.valueOf(transInterval.getSelectedItemPosition()) + " - " + transInterval.getSelectedItem().toString();
 					transDescriptionS = transDescription.getText().toString().trim();
 					
-					transAccounted = db.checkAccountedDate(transDateS); // To incorporate the new transaction format.
+					transAccounted = db.checkAccountedDate(transDateS, "now"); // To incorporate the new transaction format.
 					
 					if (transTypeS.equals("CR")) {
 						transTypeS = String.valueOf(R.drawable.credit1);
@@ -330,14 +300,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.transIntArray, android.R.layout.simple_spinner_item);       
 		transInterval.setAdapter(dataAdapter);
 	}
-	
-	private View.OnClickListener onDate = new View.OnClickListener() {
-		@SuppressWarnings("deprecation")
-		public void onClick(View v) {
-			showDialog(0);
-		}
-	};
-	
+		
 	// Close the Database on destroy.
 		@Override
 		protected void onDestroy() {
@@ -345,7 +308,14 @@ public class TransactionForm extends Activity implements InputValidator {
 			db.close();
 			finish();
 		};
-	
+
+	private View.OnClickListener onDate = new View.OnClickListener() {
+		@SuppressWarnings("deprecation")
+		public void onClick(View v) {
+			showDialog(0);
+		}
+	};
+		
 	@Override
 	@Deprecated
 	protected Dialog onCreateDialog(int id) {
@@ -355,8 +325,8 @@ public class TransactionForm extends Activity implements InputValidator {
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 					transDate.setText((selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear);
-}
-};
+		}
+	};
 	
 	private void addTransaction() {
 		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted));
