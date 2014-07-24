@@ -1,5 +1,6 @@
 package com.example.budgetnotebook;
 
+import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
@@ -357,7 +358,7 @@ public class Transaction extends Activity {
 	private void populateListViewTransactions(int A_ID) {
 		// Set a cursor with all the Transactions
 		Cursor cursor = db.getAllTransactions(A_ID);
-				
+			
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.

@@ -864,11 +864,15 @@ public class DBHelper extends SQLiteOpenHelper {
 					
 			String where = null;
 			String having = null;
+			String order = null;
+			
+			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",4,2) || substr(" + TRANSACTION_DATE + ",1,2) ASC";
 			//to_date(column,'dd/MM/yyyy')
+			
 			if(a_id != 0) {
 				where = T_A_ID+"="+a_id;
 			}
-			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, null, null);
+			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
 	
 			if (cursor != null) {
 				cursor.moveToFirst();

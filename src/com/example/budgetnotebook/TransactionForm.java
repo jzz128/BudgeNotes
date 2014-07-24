@@ -1,5 +1,7 @@
 package com.example.budgetnotebook;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import android.app.Activity;
@@ -63,6 +65,8 @@ public class TransactionForm extends Activity implements InputValidator {
 	int S_A_ID;
 	boolean T_EDIT;
 	Transaction transaction;
+	java.util.Date date = null;
+	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +177,8 @@ public class TransactionForm extends Activity implements InputValidator {
             String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
             String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
 			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
-			transDate.setText(todayAsString);
+
+			transDate.setText(String.valueOf(todayAsString));
 		}
 		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
@@ -324,7 +329,7 @@ public class TransactionForm extends Activity implements InputValidator {
 
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					transDate.setText((selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear);
+					transDate.setText(String.valueOf((selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear));
 		}
 	};
 	
