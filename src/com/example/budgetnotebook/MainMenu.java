@@ -28,7 +28,7 @@ public class MainMenu extends Activity {
 		setContentView(R.layout.main_menu);
 		
 		// !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
-		
+		// !!! =================================================================================================================================================================== !!!
 		DBHelper db = new DBHelper(this);
 		int numAccounts;
 		int numTran = 0;
@@ -74,21 +74,20 @@ public class MainMenu extends Activity {
 				String currBalance;
 				String changeAmount;
 				int newBalance;
-				// 
+				// Iterate through all the transactions
 				for (int i = 0; i < count; i++) {
+					//Get the current transaction Account and balance.
 					account = db.getAccount(tranList.get(i).getAID());
 					currBalance = account.getBalance();
-					
-					tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate()));
+					// Set the accounted flag against today's date and update the transaction
+					tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate(), "now"));
 					db.updateTransaction(tranList.get(i));
-					
+					//Get the transaction amount.
 					changeAmount = tranList.get(i).getAmount();
-					
+					// If the transaction is accounted update the account balance.
 					if(tranList.get(i).getAccounted()) {
-						
 						newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
 						account.setBalance(String.valueOf(newBalance));
-						
 						db.updateAccount(account);
 					}
 				}
@@ -101,7 +100,7 @@ public class MainMenu extends Activity {
 		}
 		
 		db.close();
-		
+		// !!! =================================================================================================================================================================== !!!
 		// !!! =================================================================================================================================================================== !!!
 		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
