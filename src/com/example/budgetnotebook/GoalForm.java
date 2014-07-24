@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GoalForm extends Activity implements InputValidator{
 
@@ -77,6 +78,24 @@ public class GoalForm extends Activity implements InputValidator{
 		loadAccountSpinnerData();
 		loadTypeSpinnerData();
 		
+		// Associate fields in the Goal form (form_goal.xml) to our variables.
+		saveFieldsToStrings();	// Moved this down in the list. - DJM
+				
+		// Auto fill the form if this is an edit.
+		if (G_EDIT) {
+			goal = db.getGoal(G_ID); // 
+			Log.d("G_ID", String.valueOf(G_ID));
+			populateForm();
+		} else {
+			// Set date to todays date
+			cal= Calendar.getInstance();
+		    String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+		    String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+		    String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+			goalEnd.setText(todayAsString);
+		}
+		
 		// Set a listener for the Account spinner selection.
 		goalAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
 			
@@ -121,24 +140,7 @@ public class GoalForm extends Activity implements InputValidator{
 		calendar = (ImageButton) findViewById(R.id.goalButtonCalendar); 
 		calendar.setOnClickListener(onDate);
 		
-		// Associate fields in the Goal form (form_goal.xml) to our variables.
-		saveFieldsToStrings();	// Moved this down in the list. - DJM
-		
-		// Auto fill the form if this is an edit.
-		if (G_EDIT) {
-			goal = db.getGoal(G_ID); // 
-			Log.d("G_ID", String.valueOf(G_ID));
-			populateForm();
-		} else {
-			// Set date to todays date
-			cal= Calendar.getInstance();
-            String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
-            String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
-            String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
-			goalEnd.setText(todayAsString);
-		}
-		
+				
 		// Set the ADD GOAL button to display the ADD Goal form when clicked
 		saveGoal = (Button) findViewById(R.id.goalButtonSave);
 		saveGoal.setOnClickListener(new View.OnClickListener() {		
@@ -206,9 +208,10 @@ public class GoalForm extends Activity implements InputValidator{
 		}
 		
 		// Fill the form fields with database data.
-		private void populateForm() {			
+		private void populateForm() {	
+			//Toast.makeText(this, String.valueOf(goal.getStartAmount()), Toast.LENGTH_LONG).show();
 			// Set goal to account ID (subtract 1 because list is 0 based)
-			goalAccount.setSelection(S_A_ID-1);
+			goalAccount.setSelection(S_A_ID-1, false);
 			// Set goal name text
 			goalName.setText(goal.getName());
 			// Set goal type spinner
@@ -225,6 +228,7 @@ public class GoalForm extends Activity implements InputValidator{
 			goalDelta.setText(goal.getDeltaAmount());
 			// Set goal start amount text
 			goalStart.setText(goal.getStartAmount());
+			//Toast.makeText(this, goalStart.getText(), Toast.LENGTH_LONG).show();
 			// Set goal description text
 			goalDescription.setText(goal.getDescription());
 		}
