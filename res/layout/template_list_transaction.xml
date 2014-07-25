@@ -90,4 +90,25 @@
         android:padding="5dp"
         android:src="@drawable/delete1" />
 
+     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/transAmount"
+        android:layout_toLeftOf="@+id/transChangeAmount"
+        android:text="$"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#0000ff"
+        tools:ignore="HardcodedText" />
+    
+    <TextView
+        android:id="@+id/transChangeAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/transAmount"
+        android:layout_centerHorizontal="true"
+        android:text="Delta$"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#0000ff"
+        tools:ignore="HardcodedText" />
+
 </RelativeLayout>

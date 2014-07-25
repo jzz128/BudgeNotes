@@ -87,7 +87,7 @@ public class ExportActivity extends Activity {
 					exportDir.mkdirs();
 				}
 				try {
-					List<Transaction> listdata = db.getAllListTransactions();
+					List<Transaction> listdata = db.getAllListTransactions(0);
 
 					File file;
 

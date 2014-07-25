@@ -1,6 +1,7 @@
 package com.example.budgetnotebook;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -157,7 +158,7 @@ public class Transaction extends Activity {
 		// !!! TESTING - SET ALL TRANSACTIONS TO BE ACCOUNTED, EVEN FUTURE DATES.
 		// !!! ====================================================================================================================================== !!!
 				
-		List<Transaction> tranList = db.getAllListTransactions();
+		List<Transaction> tranList = db.getAllListTransactions(A_ID);
 		int numTrans = tranList.size();
 		Account account;
 		String currBalance;
@@ -169,7 +170,7 @@ public class Transaction extends Activity {
 			account = db.getAccount(tranList.get(i).getAID());
 			currBalance = account.getBalance();
 			pAccounted = tranList.get(i).getAccounted();
-								
+						
 			// Set the threshold date here -----------------------------------------------
 			tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate(), date));
 			// --------------------------------------------------------------------------
@@ -183,11 +184,15 @@ public class Transaction extends Activity {
 				newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
 				account.setBalance(String.valueOf(newBalance));				
 				db.updateAccount(account);
+				tranList.get(i).setChange(account.getBalance());
+				db.updateTransaction(tranList.get(i));
 			} else if (pAccounted && !tranList.get(i).getAccounted()) {
 				changeAmount = tranList.get(i).getAmount();
 				newBalance = Integer.parseInt(currBalance) - Integer.parseInt(changeAmount);
 				account.setBalance(String.valueOf(newBalance));				
 				db.updateAccount(account);
+				tranList.get(i).setChange(null);
+				db.updateTransaction(tranList.get(i));
 			} else if(pAccounted == tranList.get(i).getAccounted()) {
 				//Do Nothing.
 			} else {
@@ -195,6 +200,7 @@ public class Transaction extends Activity {
 			}
 			
 			loadAccountSpinnerData();
+			populateListViewTransactions(A_ID);
 		}		
 		// !!! ====================================================================================================================================== !!!
 		// !!! ====================================================================================================================================== !!!
@@ -321,10 +327,11 @@ public class Transaction extends Activity {
 	private String transaction_interval;
 	private String transaction_description;
 	private boolean transaction_accounted;
+	private String transaction_change;
 	
 	public Transaction(){}
 	
-	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description, boolean transaction_accounted) {
+	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description, boolean transaction_accounted, String transaction_change) {
 		super();
 		this.t_a_id = t_a_id;
 		this.transaction_name = transaction_name;
@@ -335,11 +342,12 @@ public class Transaction extends Activity {
 		this.transaction_interval = transaction_interval;
 		this.transaction_description = transaction_description;
 		this.transaction_accounted = transaction_accounted;
+		this.transaction_change = transaction_change;
 	}
 	
 	@Override
 	public String toString() {
-		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +", transaction_accounted=" + transaction_accounted + "]";
+		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +", transaction_accounted=" + transaction_accounted + "transaction_change=" + transaction_change + "]";
 	}
 	
 	// Populate the spinner with account numbers
@@ -362,8 +370,8 @@ public class Transaction extends Activity {
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
-		String[] transactionFieldNames = new String[] {DBHelper.T_ID, DBHelper.T_A_ID, DBHelper.TRANSACTION_NAME, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT, DBHelper.TRANSACTION_TYPE};
-		int[] toViewIDs = new int[] {R.id.transactionID, R.id.transactionAccountID, R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon};
+		String[] transactionFieldNames = new String[] {DBHelper.T_ID, DBHelper.T_A_ID, DBHelper.TRANSACTION_NAME, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT, DBHelper.TRANSACTION_TYPE, DBHelper.TRANSACTION_CHANGE};
+		int[] toViewIDs = new int[] {R.id.transactionID, R.id.transactionAccountID, R.id.transName, R.id.transDate, R.id.transAmount, R.id.transcactionButtonIcon, R.id.transChangeAmount};
 			
 		// Fills the ListView with all the Transactions in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
@@ -429,6 +437,10 @@ public class Transaction extends Activity {
 		return transaction_accounted;
 	}
 	
+	public String getChange() {
+		return transaction_change;
+	}
+	
 	//Setters --------------------------------------------------------------------
 	public void setViewAccount(int id) {
 		A_ID = id;
@@ -472,6 +484,10 @@ public class Transaction extends Activity {
 	
 	public void setAccounted(boolean transaction_accounted) {
 		this.transaction_accounted = transaction_accounted;
+	}
+	
+	public void setChange(String transaction_change) {
+		this.transaction_change = transaction_change;
 	}
 
 }

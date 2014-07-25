@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 3; // Updated Transaction Table. 22 July 2014 - DJM
+	public static final int VERSION = 4; // Updated Transaction Table. 22 July 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
@@ -55,8 +55,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TRANSACTION_INTERVAL = "transaction_interval";
 	public static final String TRANSACTION_DESCRIPTION = "transaction_description";
 	public static final String TRANSACTION_ACCOUNTED = "transaction_accounted";
+	public static final String TRANSACTION_CHANGE = "transaction_change";
 	// String for all TRANSACTION_TABLE field names.
-	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION, TRANSACTION_ACCOUNTED};
+	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION, TRANSACTION_ACCOUNTED, TRANSACTION_CHANGE};
 	
 	//Fields associated with the Goal Table.
 	public static final String GOAL_TABLE = "goal_table";
@@ -106,7 +107,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createAccount = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_TABLE + " ( " + A_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNT_NAME + " TEXT, " + ACCOUNT_NUMBER + " TEXT, " + ACCOUNT_TYPE + " TEXT, " + BALANCE + " TEXT);";
 	
 	//SQL Statement for creating the Transaction Table.
-	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN);";
+	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN, " + TRANSACTION_CHANGE + " TEXT);";
 	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
@@ -778,6 +779,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
 			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
+			values.put(TRANSACTION_CHANGE, transaction.getChange());
 			
 			db.insert(TRANSACTION_TABLE, null, values);
 					
@@ -810,6 +812,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			transaction.setInterval(cursor.getString(7));
 			transaction.setDescription(cursor.getString(8));
 			transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
+			transaction.setChange(cursor.getString(10));
 					 
 			 Log.d("getTransaction("+id+")", transaction.toString());
 					 
@@ -817,13 +820,21 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 				
 		// Get a list of all Transactions.
-		public List<Transaction> getAllListTransactions() {
+		public List<Transaction> getAllListTransactions(int a_id) {
 			List<Transaction> transactions = new LinkedList<Transaction>();
 					
-			String query = "SELECT * FROM " + TRANSACTION_TABLE;
+			String where = null;
+			String having = null;
+			String order = null;
+			
+			if(a_id != 0) {
+				where = T_A_ID+"="+a_id;
+			}
+			
+			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
 			
 			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
 					
 			Transaction transaction = null;
 			boolean accounted;
@@ -848,6 +859,7 @@ public class DBHelper extends SQLiteOpenHelper {
 					transaction.setInterval(cursor.getString(7));
 					transaction.setDescription(cursor.getString(8));
 					transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
+					transaction.setChange(cursor.getString(10));
 							
 					transactions.add(transaction);
 				} while (cursor.moveToNext());
@@ -866,9 +878,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			String having = null;
 			String order = null;
 			
-			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",4,2) || substr(" + TRANSACTION_DATE + ",1,2) ASC";
-			//to_date(column,'dd/MM/yyyy')
-			
+			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
+						
 			if(a_id != 0) {
 				where = T_A_ID+"="+a_id;
 			}
@@ -879,6 +890,28 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 					
 			return cursor;
+		}
+		
+		public void toastTranDates(Context context) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			
+			String where = null;
+			String having = null;
+			String order = null;
+			
+			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",4,2) || substr(" + TRANSACTION_DATE + ",1,2) ASC";
+
+			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
+			
+			if (cursor.moveToFirst()) {
+				do {
+					Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
+							
+				} while (cursor.moveToNext());
+			}
+			else {
+				Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
+			}
 		}
 		
 		//TODO Toast all Transactions -- REMOVE AFTER TESTING --
@@ -914,6 +947,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
 			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
+			values.put(TRANSACTION_CHANGE, transaction.getChange());
 					
 			int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
 					

@@ -57,6 +57,8 @@ public class TransactionForm extends Activity implements InputValidator {
 	private String transDateS;
 	private String transAmountS;
 	private String transDescriptionS;
+	
+	private String amountChange;
 	private boolean transAccounted;
 	private boolean prevAccounted;
 	
@@ -65,8 +67,8 @@ public class TransactionForm extends Activity implements InputValidator {
 	int S_A_ID;
 	boolean T_EDIT;
 	Transaction transaction;
-	java.util.Date date = null;
-	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+	String formatMonth;
+	String formatDay;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -174,8 +176,13 @@ public class TransactionForm extends Activity implements InputValidator {
 			// Set date to todays date
 			cal= Calendar.getInstance();
             String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+            if (cal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
+            
             String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+            
             String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+            if (cal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
+            
 			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
 
 			transDate.setText(String.valueOf(todayAsString));
@@ -219,12 +226,14 @@ public class TransactionForm extends Activity implements InputValidator {
 							// Update the account balance and then update the transaction record.
 							fillTransObject();
 							if (prevAccounted) reverseTransaction();
-							db.updateTransaction(transaction);
+							//
 							if (transAccounted) updateAccount();
+							db.updateTransaction(transaction);
 						} else {
 							// Call the add transaction method to add the transaction to the database and update the account balance!
-							addTransaction();
+							//
 							if (transAccounted) updateAccount();
+							addTransaction();
 						}
 						
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
@@ -329,12 +338,24 @@ public class TransactionForm extends Activity implements InputValidator {
 
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					transDate.setText(String.valueOf((selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear));
+					if (selectedMonth < 9) {
+						formatMonth = "0" + String.valueOf(selectedMonth + 1);
+					} else {
+						formatMonth = String.valueOf(selectedMonth);
+					}
+					
+					if (selectedDay < 10) {
+						formatDay = "0" + String.valueOf(selectedDay);
+					} else {
+						formatDay = String.valueOf(selectedDay);
+					}
+					
+					transDate.setText(formatMonth + "/" + formatDay + "/" + String.valueOf(selectedYear));
 		}
 	};
 	
 	private void addTransaction() {
-		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted));
+		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted, amountChange));
 	}
 
 	private void updateAccount() {
@@ -379,6 +400,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		oldBalance = Integer.parseInt(account.getBalance());
 		newBalance = oldBalance + changeAmount;
 		account.setBalance(String.valueOf(newBalance));
+		amountChange = String.valueOf(newBalance);
 		db.updateAccount(account);
 	}
 

@@ -93,7 +93,7 @@ public class Report extends Activity {
 			
 			// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
 			// Updated for new transaction method.
-			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(10), cursor.getColumnName(11)};
+			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
 			int[] toViewIDs = new int[] {R.id.catName, R.id.catCount, R.id.catPercent};
 		
 			// Fills the ListView with all the Goals in the Table.

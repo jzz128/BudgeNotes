@@ -102,6 +102,7 @@ public class ImportActivity extends Activity {
 					String transAmountS;
 					String transDescriptionS;
 					boolean transAccounted; // Added to incorporate new transaction table.
+					String transChange;
 
 					while ((nextLine = reader.readNext()) != null) {
 						rowNumber++;
@@ -119,10 +120,12 @@ public class ImportActivity extends Activity {
 							transIntervalS = nextLine[6];
 							transDescriptionS = nextLine[7];
 							transAccounted = Boolean.parseBoolean(nextLine[8]);
+							transChange = nextLine[9];
+							
 							db.addTransaction(new Transaction(transAccountI,
 									transNameS, transDateS, transAmountS,
 									transCategoryS, transTypeS, transIntervalS,
-									transDescriptionS, transAccounted));
+									transDescriptionS, transAccounted, transChange));
 						}
 					}
 					success = "true";

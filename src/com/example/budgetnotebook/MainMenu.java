@@ -67,7 +67,7 @@ public class MainMenu extends Activity {
 					//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
 				}
 				// Get a list of all the transactions and a count of how many there are.
-				List<Transaction> tranList = db.getAllListTransactions();
+				List<Transaction> tranList = db.getAllListTransactions(0);
 				int count = tranList.size();
 				
 				Account account;
@@ -89,6 +89,11 @@ public class MainMenu extends Activity {
 						newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
 						account.setBalance(String.valueOf(newBalance));
 						db.updateAccount(account);
+						tranList.get(i).setChange(account.getBalance());
+						db.updateTransaction(tranList.get(i));
+					} else {
+						tranList.get(i).setChange(null);
+						db.updateTransaction(tranList.get(i));
 					}
 				}
 			} else {

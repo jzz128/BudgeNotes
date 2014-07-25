@@ -20,10 +20,8 @@
     
     <string-array name ="transIntArray">
         <item>One Time</item>
-        <item>Every Week</item>
         <item>Every Two Weeks</item>
         <item>Every Month</item>
-        <item>Every Six Months</item>
         <item>Every Year</item>
     </string-array>
     
