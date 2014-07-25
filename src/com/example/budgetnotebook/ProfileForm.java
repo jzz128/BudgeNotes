@@ -208,8 +208,8 @@ public class ProfileForm extends Activity implements InputValidator {
 		}
 		
 		// Name cannot contain numbers
-		boolean hasNonAlpha = profileFirstNameString.matches("^.*[^a-zA-Z].*$");
-		if(hasNonAlpha){
+		boolean hasNonAlphaFirst = profileFirstNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaFirst){
 			profileFirstName.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
@@ -221,8 +221,8 @@ public class ProfileForm extends Activity implements InputValidator {
 		}
 		
 		// Name cannot contain numbers
-		hasNonAlpha = profileLastNameString.matches("^.*[^a-zA-Z].*$");
-		if(hasNonAlpha){
+		boolean hasNonAlphaLast = profileLastNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaLast){
 			profileLastName.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
@@ -265,23 +265,17 @@ public class ProfileForm extends Activity implements InputValidator {
 	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
 	    	valid = false;
 	    }
-	    
-	    
-	   /* SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");	    
-	    try {
-	        df.parse(df.format(df.parse(profileBirthdayString.trim())));
-	        
-	    } catch (ParseException e) {
-	    	profileBirthday.setError(InputValidator.INVALID_DATE);
-	        valid = false;
-	    } catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-	    */
-	    
+	    	    
 		// Profile city is not empty
 		if(profileCityString.length() == 0){
 			profileCity.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// City cannot contain numbers
+		boolean hasNonAlphaCity = profileCityString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaCity){
+			profileCity.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
 		
