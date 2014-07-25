@@ -3,6 +3,9 @@ package com.example.budgetnotebook;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -25,7 +28,8 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileLastName;
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
-	TextView profileBirthday;
+	//TextView profileBirthday;
+	EditText profileBirthday;
 	ImageButton calendar;
 	EditText profileCity;
 	EditText profileEmail;
@@ -122,7 +126,8 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
 		profileLastName = (EditText)findViewById(R.id.profileLastName);							
 		profileGender = (RadioGroup)findViewById(R.id.profileGender);	
-		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
+		//profileBirthday = (TextView)findViewById(R.id.profileBirthday);
+		profileBirthday = (EditText)findViewById(R.id.profileBirthday);
 		profileCity = (EditText)findViewById(R.id.profileCity);
 		profileEmail = (EditText)findViewById(R.id.profileEmail);
 	}
@@ -192,7 +197,16 @@ public class ProfileForm extends Activity implements InputValidator {
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 	
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					profileBirthday.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+			String dayString = Integer.toString(selectedDay);
+			String monthString = Integer.toString(selectedMonth+1);
+			String yearString = Integer.toString(selectedYear);
+			// Add 0 to the front of day or month if less than 10 so that format is correct
+			if 	(selectedDay < 10){
+				dayString = "0" + Integer.toString(selectedDay);
+			} else if (selectedMonth + 1 < 10) {
+				monthString = "0" + Integer.toString(selectedMonth+1);
+			}
+			profileBirthday.setText(monthString + "/" + dayString + "/" + yearString);
 }
 };
 
@@ -248,24 +262,37 @@ public class ProfileForm extends Activity implements InputValidator {
 		
 		// Get current date
 		Calendar today = Calendar.getInstance(); 
-	    Calendar birthDate = Calendar.getInstance();
-	    String birthdaySplit[] = profileBirthdayString.split("/");
-	    String day = birthdaySplit[0].trim();
+	    // Set calendar to use for birth date
+		Calendar birthDate = Calendar.getInstance();
+	    // Split birthday string in to day, month and year
+		String birthdaySplit[] = profileBirthdayString.split("/");
+	    String day = birthdaySplit[1].trim();
 	    Log.d("day",day);
-	    String month = birthdaySplit[1].trim();
+	    String month = birthdaySplit[0].trim();
 	    Log.d("month",month);
 	    String year = birthdaySplit[2].trim();
 	    Log.d("year",year); 
-	    
-	    // Check if birth date is in the future
-	    birthDate.set(Integer.parseInt(year)-1,Integer.parseInt(month), Integer.parseInt(day));
+	    // Save each value as an integer
+	    int yearInt = Integer.parseInt(year);
+	    int monthInt = Integer.parseInt(month);
+	    int dayInt = Integer.parseInt(day);
+
+	    // Set birth date calendar date to birth date
+	    birthDate.set(yearInt,monthInt,dayInt);
 	    Log.d("date to string",birthDate.toString());
-	    
+	    // Check if birth date is in the future
 	    if (birthDate.after(today)) {
 	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
 	    	valid = false;
 	    }
-	    	    
+	    
+	    // Validate date format (MM/DD/YYYY)
+	    Log.d("profileBirthdayString",profileBirthdayString); 
+	    if (!validateDate(profileBirthdayString.trim())) {
+	    	profileBirthday.setError(InputValidator.INVALID_DATE);
+	    	valid = false;
+	    }
+	    
 		// Profile city is not empty
 		if(profileCityString.length() == 0){
 			profileCity.setError(InputValidator.INPUT_REQUIRED);
@@ -308,5 +335,60 @@ public class ProfileForm extends Activity implements InputValidator {
 		super.onPause();
 		finish();
 	}
-
+	
+	
+	// Date Validation
+	private Pattern pattern;
+	private Matcher matcher;
+	
+	// Regular expression to verify date is in MM/DD/YYYY format
+	private static final String DATE_PATTERN = 
+			"(0[1-9]|1[012])/0?(0[1-9]|[12][0-9]|3[01])/(19|20)\\d\\d";
+	 
+	// Checks date and returns false if not a valid format    
+	public boolean validateDate(final String date){
+		pattern = Pattern.compile(DATE_PATTERN);	  
+		matcher = pattern.matcher(date);
+	 
+	     if(matcher.matches()){
+	 
+		 matcher.reset();
+		 // Validate all fields of the month, day and year
+		 if(matcher.find()){
+			 // Assign strings to groups from the regular expression
+			 String month = matcher.group(1);
+	         String day = matcher.group(2);		
+		     int year = Integer.parseInt(matcher.group(3));
+		     // Verify values against real valid calendar values
+		     if (day.equals("31") && 
+			  (month.equals("4") || month .equals("6") || month.equals("9") ||
+	                  month.equals("11") || month.equals("04") || month .equals("06") ||
+	                  month.equals("09"))) {
+				return false; // only 1,3,5,7,8,10,12 has 31 days
+		     } else if (month.equals("2") || month.equals("02")) {
+	                  //leap year
+			  if(year % 4==0){
+				  if(day.equals("30") || day.equals("31")){
+					  return false;
+				  }else{
+					  return true;
+				  }
+			  }else{
+			         if(day.equals("29")||day.equals("30")||day.equals("31")){
+					  return false;
+			         }else{
+					  return true;
+				  }
+			  }
+		      }else{				 
+			return true;				 
+		      }
+		   }else{
+	    	      return false;
+		   }		  
+	     }else{
+		  return false;
+	     }			    
+	   }
+	  
 }
