@@ -1,11 +1,15 @@
 package com.example.budgetnotebook;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.ParseException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -203,9 +207,23 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
+		// Name cannot contain numbers
+		boolean hasNonAlphaFirst = profileFirstNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaFirst){
+			profileFirstName.setError(InputValidator.ALPHA_REQUIRED);
+			valid = false;
+		}
+				
 		// Profile last name is not empty
 		if(profileLastNameString.length() == 0){
 			profileLastName.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// Name cannot contain numbers
+		boolean hasNonAlphaLast = profileLastNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaLast){
+			profileLastName.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
 		
@@ -215,15 +233,49 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
+		// Profile gender is not empty
+		if(profileGenderString.length() == 0){
+			profileGenderSelection.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+				
+		
 		// Profile birthday is not empty
 		if(profileBirthdayString.length() == 0){
 			profileBirthday.setError(InputValidator.INPUT_REQUIRED);
 			valid = false;
 		}
 		
+		// Get current date
+		Calendar today = Calendar.getInstance(); 
+	    Calendar birthDate = Calendar.getInstance();
+	    String birthdaySplit[] = profileBirthdayString.split("/");
+	    String day = birthdaySplit[0].trim();
+	    Log.d("day",day);
+	    String month = birthdaySplit[1].trim();
+	    Log.d("month",month);
+	    String year = birthdaySplit[2].trim();
+	    Log.d("year",year); 
+	    
+	    // Check if birth date is in the future
+	    birthDate.set(Integer.parseInt(year)-1,Integer.parseInt(month), Integer.parseInt(day));
+	    Log.d("date to string",birthDate.toString());
+	    
+	    if (birthDate.after(today)) {
+	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
+	    	valid = false;
+	    }
+	    	    
 		// Profile city is not empty
 		if(profileCityString.length() == 0){
 			profileCity.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// City cannot contain numbers
+		boolean hasNonAlphaCity = profileCityString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlphaCity){
+			profileCity.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
 		
