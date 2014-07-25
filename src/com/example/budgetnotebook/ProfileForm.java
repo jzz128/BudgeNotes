@@ -273,8 +273,8 @@ public class ProfileForm extends Activity implements InputValidator {
 		}
 		
 		// City cannot contain numbers
-		boolean hasNonAlphaCity = profileCityString.matches("^.*[^a-zA-Z].*$");
-		if(hasNonAlphaCity){
+		boolean hasNonAlphaCity = profileCityString.matches("^[\\p{L} .'-]+$");
+		if(!hasNonAlphaCity){
 			profileCity.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}

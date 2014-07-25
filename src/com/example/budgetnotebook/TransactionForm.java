@@ -264,6 +264,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		transaction.setInterval(transIntervalS);
 		transaction.setDescription(transDescriptionS);
 		transaction.setAccounted(transAccounted);
+		transaction.setChange(null);
 	}
 	
 	// Fill the form fields with database data.
@@ -401,6 +402,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		newBalance = oldBalance + changeAmount;
 		account.setBalance(String.valueOf(newBalance));
 		amountChange = String.valueOf(newBalance);
+		if (T_EDIT) transaction.setChange(amountChange);
 		db.updateAccount(account);
 	}
 
@@ -437,7 +439,8 @@ public class TransactionForm extends Activity implements InputValidator {
 		newBalance = oldBalance - changeAmount;
 		account1.setBalance(String.valueOf(newBalance));
 		db.updateAccount(account1);
-		
+		amountChange = null;
+		if (T_EDIT) transaction.setChange(amountChange);
 	}
 	
 	public boolean inputsValid(){
