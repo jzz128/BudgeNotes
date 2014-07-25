@@ -124,6 +124,6 @@
     <string name="percentage_">Percentage:</string>
     <string name="add_goal">ADD GOAL</string>
     <string name="edit_profile">EDIT PROFILE</string>
-    <string name="category_count_percentage">Category               Count          Percentage</string>
+    <string name="category_count_percentage">Category \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 Count \u0020 \u0020 \u0020 \u0020 \u0020 Percentage</string>
 
 </resources>

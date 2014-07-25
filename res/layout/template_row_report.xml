@@ -1,42 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:stretchColumns="*" >
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="horizontal" >
 
-    <TableRow
-        android:layout_weight="1"
-        android:gravity="right"
-        tools:ignore="UselessParent" >
+    <TextView
+        android:id="@+id/catName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.25" />
 
-        <TextView
-            android:id="@+id/catName"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight=".43"
-            android:gravity="left|center_vertical"
-            android:padding="5dip"
-            android:text="@string/category_" />
+    <TextView
+        android:id="@+id/catCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5" />
+    <TextView
+        android:id="@+id/catPercent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.75" />
 
-        <TextView
-            android:id="@+id/catCount"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight=".23"
-            android:gravity="center_vertical"
-            android:padding="5dip"
-            android:text="@string/count_" />
-
-        <TextView
-            android:id="@+id/catPercent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight=".33"
-            android:gravity="right|center_vertical"
-            android:padding="5dip"
-            android:text="@string/percentage_" />
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>
