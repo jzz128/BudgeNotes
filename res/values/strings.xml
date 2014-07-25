@@ -73,7 +73,7 @@
     <string name="describe_the_goal_">Describe The Goal.</string>
     <string name="cal">cal</string>
     <string name="city_">City:</string>
-    <string name="birthday_dd_mm_yyyy_">Birthday (DD/MM/YYYY):</string>
+    <string name="birthday_dd_mm_yyyy_">Birthday:</string>
     <string name="f">F</string>
     <string name="m">M</string>
     <string name="gender_">Gender:</string>
@@ -124,6 +124,6 @@
     <string name="percentage_">Percentage:</string>
     <string name="add_goal">ADD GOAL</string>
     <string name="edit_profile">EDIT PROFILE</string>
-    <string name="category_count_percentage">Category \u0020 \u0020 \u0020 \u0020 \u0020 \u0020 Count \u0020 \u0020 \u0020 \u0020 \u0020 Percentage</string>
+    <string name="category_count_percentage">Category  \u0020 \u0020 \u0020 \u0020 \u0020 Count \u0020 \u0020 \u0020 \u0020 \u0020 Percentage</string>
 
 </resources>

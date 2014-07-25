@@ -141,12 +141,24 @@ public class AccountForm extends Activity implements InputValidator{
 			valid = false;
 		}
 		
+		// Account number is valid numeric value
+		try  
+		  {  
+		    double d = Double.parseDouble(accountNumberS);  
+		  }  
+		  catch(NumberFormatException nfe)  
+		  {  
+			  accountNumber.setError(InputValidator.NUMBER_REQUIRED);
+			  valid = false;  
+		  }  
+				
 		// Account number is not empty
 		if(accountNumberS.length() == 0){
 			accountNumber.setError(InputValidator.INPUT_REQUIRED);
 			valid = false;
 		}
 		
+			
 		// Account type has been selected
 		if(accountTypeS.length() == 0){
 			accountTypeSelection.setError(InputValidator.INPUT_REQUIRED);

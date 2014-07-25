@@ -1,11 +1,13 @@
 package com.example.budgetnotebook;
 
+import java.sql.Date;
 import java.util.Calendar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,7 +23,7 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileLastName;
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
-	TextView profileBirthday;
+	EditText profileBirthday;
 	ImageButton calendar;
 	EditText profileCity;
 	EditText profileEmail;
@@ -118,7 +120,7 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
 		profileLastName = (EditText)findViewById(R.id.profileLastName);							
 		profileGender = (RadioGroup)findViewById(R.id.profileGender);	
-		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
+		profileBirthday = (EditText)findViewById(R.id.profileBirthday);
 		profileCity = (EditText)findViewById(R.id.profileCity);
 		profileEmail = (EditText)findViewById(R.id.profileEmail);
 	}
@@ -203,9 +205,23 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
+		// Name cannot contain numbers
+		boolean hasNonAlpha = profileFirstNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlpha){
+			profileFirstName.setError(InputValidator.ALPHA_REQUIRED);
+			valid = false;
+		}
+				
 		// Profile last name is not empty
 		if(profileLastNameString.length() == 0){
 			profileLastName.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+		
+		// Name cannot contain numbers
+		hasNonAlpha = profileLastNameString.matches("^.*[^a-zA-Z].*$");
+		if(hasNonAlpha){
+			profileLastName.setError(InputValidator.ALPHA_REQUIRED);
 			valid = false;
 		}
 		
@@ -215,12 +231,45 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
+		// Profile gender is not empty
+		if(profileGenderString.length() == 0){
+			profileGenderSelection.setError(InputValidator.INPUT_REQUIRED);
+			valid = false;
+		}
+				
+		
 		// Profile birthday is not empty
 		if(profileBirthdayString.length() == 0){
 			profileBirthday.setError(InputValidator.INPUT_REQUIRED);
 			valid = false;
 		}
 		
+		// Profile birthday is not empty
+		/*String birthdaySplit[] = profileBirthdayString.split("/");
+		String year = birthdaySplit[2];
+		int birthdayYearInt = Integer.parseInt(year);
+		int currentYear = cal.get(Calendar.YEAR);
+		if(currentYear-birthdayYearInt < 13){
+					profileBirthday.setError(InputValidator.THIRTEEN_REQUIRED);
+					valid = false;
+				}
+		// Get current date
+		Calendar today = Calendar.getInstance(); 
+	    Calendar birthDate = Calendar.getInstance();
+	    String birthdaySplit[] = profileBirthdayString.split("/");
+	    String day = birthdaySplit[0].trim();
+	    String month = birthdaySplit[1].trim();
+	    String year = birthdaySplit[2].trim();
+	    
+	    //Date dateOfBirth = new Date(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day));
+	    Date dateOfBirth = new Date(2013,1,25);
+	    // Check if birth date is in the future
+	    birthDate.setTime(dateOfBirth);
+	    if (birthDate.after(today)) {
+	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
+	    	valid = false;
+	    }
+		*/
 		// Profile city is not empty
 		if(profileCityString.length() == 0){
 			profileCity.setError(InputValidator.INPUT_REQUIRED);
