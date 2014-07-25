@@ -1,11 +1,13 @@
 package com.example.budgetnotebook;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +25,7 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileLastName;
 	RadioGroup profileGender;
 	RadioButton profileGenderSelection;
-	EditText profileBirthday;
+	TextView profileBirthday;
 	ImageButton calendar;
 	EditText profileCity;
 	EditText profileEmail;
@@ -120,7 +122,7 @@ public class ProfileForm extends Activity implements InputValidator {
 		profileFirstName = (EditText)findViewById(R.id.profileFirstName);
 		profileLastName = (EditText)findViewById(R.id.profileLastName);							
 		profileGender = (RadioGroup)findViewById(R.id.profileGender);	
-		profileBirthday = (EditText)findViewById(R.id.profileBirthday);
+		profileBirthday = (TextView)findViewById(R.id.profileBirthday);
 		profileCity = (EditText)findViewById(R.id.profileCity);
 		profileEmail = (EditText)findViewById(R.id.profileEmail);
 	}
@@ -244,32 +246,39 @@ public class ProfileForm extends Activity implements InputValidator {
 			valid = false;
 		}
 		
-		// Profile birthday is not empty
-		/*String birthdaySplit[] = profileBirthdayString.split("/");
-		String year = birthdaySplit[2];
-		int birthdayYearInt = Integer.parseInt(year);
-		int currentYear = cal.get(Calendar.YEAR);
-		if(currentYear-birthdayYearInt < 13){
-					profileBirthday.setError(InputValidator.THIRTEEN_REQUIRED);
-					valid = false;
-				}
 		// Get current date
 		Calendar today = Calendar.getInstance(); 
 	    Calendar birthDate = Calendar.getInstance();
 	    String birthdaySplit[] = profileBirthdayString.split("/");
 	    String day = birthdaySplit[0].trim();
+	    Log.d("day",day);
 	    String month = birthdaySplit[1].trim();
+	    Log.d("month",month);
 	    String year = birthdaySplit[2].trim();
+	    Log.d("year",year); 
 	    
-	    //Date dateOfBirth = new Date(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day));
-	    Date dateOfBirth = new Date(2013,1,25);
 	    // Check if birth date is in the future
-	    birthDate.setTime(dateOfBirth);
+	    birthDate.set(Integer.parseInt(year)-1,Integer.parseInt(month), Integer.parseInt(day));
+	    Log.d("date to string",birthDate.toString());
+	    
 	    if (birthDate.after(today)) {
 	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
 	    	valid = false;
 	    }
-		*/
+	    
+	    
+	   /* SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");	    
+	    try {
+	        df.parse(df.format(df.parse(profileBirthdayString.trim())));
+	        
+	    } catch (ParseException e) {
+	    	profileBirthday.setError(InputValidator.INVALID_DATE);
+	        valid = false;
+	    } catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+	    */
+	    
 		// Profile city is not empty
 		if(profileCityString.length() == 0){
 			profileCity.setError(InputValidator.INPUT_REQUIRED);
