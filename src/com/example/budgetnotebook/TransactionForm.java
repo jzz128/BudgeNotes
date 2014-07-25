@@ -66,9 +66,22 @@ public class TransactionForm extends Activity implements InputValidator {
 	int T_ID;
 	int S_A_ID;
 	boolean T_EDIT;
+	
 	Transaction transaction;
 	String formatMonth;
 	String formatDay;
+	
+	int recDayInt;
+	int recMonInt;
+	int recYerInt;
+	int recCount;
+	
+	Calendar intCal;
+	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+	java.util.Date date = null;
+	String intDate;
+	int iDay, iMonth, iYear;
+	String nDay, nMonth;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,14 +188,17 @@ public class TransactionForm extends Activity implements InputValidator {
 			transTypeSelection.setChecked(true);
 			// Set date to todays date
 			cal= Calendar.getInstance();
+			
+			// Sets the month value to two digit format for sorting.
             String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
             if (cal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
             
             String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
             
+            //Swets the day value to two digit format for sorting.
             String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+           
             if (cal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
-            
 			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
 
 			transDate.setText(String.valueOf(todayAsString));
@@ -234,6 +250,96 @@ public class TransactionForm extends Activity implements InputValidator {
 							//
 							if (transAccounted) updateAccount();
 							addTransaction();
+							
+							//Handling the recurring transactions.
+							if (transInterval.getSelectedItemPosition() != 0) {
+								
+								switch (transInterval.getSelectedItemPosition()) {
+									case 1:
+										//Every two weeks transaction. Adds 26 extra transactions.
+										recDayInt = 14;
+										recMonInt = 0;
+										recYerInt = 0;
+										recCount = 26;
+										break;
+									case 2:
+										//Every month transaction. Adds 12 additional transactions.
+										recDayInt = 0;
+										recMonInt = 1;
+										recYerInt = 0;
+										recCount = 12;
+										break;
+									case 3:
+										//Every year transaction. Adds one additional transaction.
+										recDayInt = 0;
+										recMonInt = 0;
+										recYerInt = 1;
+										recCount = 1;
+										break;
+								}
+								
+								try {
+									date = sdf.parse(transDateS);
+						        } catch (ParseException e) {
+						            e.printStackTrace();
+						        }
+								
+								intCal = Calendar.getInstance();
+								intCal.setTime(date);
+								intCal.add(Calendar.DATE, recDayInt);
+								intCal.add(Calendar.MONTH, recMonInt);
+								intCal.add(Calendar.YEAR, recYerInt);
+								
+								iDay = intCal.get(Calendar.DAY_OF_MONTH);
+								iMonth = intCal.get(Calendar.MONTH);
+								iYear = intCal.get(Calendar.YEAR);
+								
+								if (iDay < 10) {
+									nDay = "0" + String.valueOf(iDay);
+								} else {
+									nDay = String.valueOf(iDay);
+								}
+								if (iMonth < 9) {
+									nMonth = "0" + String.valueOf(iMonth+1);
+								} else {
+									nMonth =String.valueOf(iMonth+1);
+								}
+								
+								intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
+								//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+								
+								for (int i = 0; i < recCount; i++) {
+									addIntTransaction(intDate);
+									
+									try {
+										date = sdf.parse(intDate);
+							        } catch (ParseException e) {
+							            e.printStackTrace();
+							        }
+									intCal.setTime(date);
+									if (transInterval.getSelectedItemPosition() == 1) intCal.add(Calendar.DATE, recDayInt);
+									intCal.add(Calendar.MONTH, recMonInt);
+									intCal.add(Calendar.YEAR, recYerInt);
+									
+									iDay = intCal.get(Calendar.DAY_OF_MONTH);
+									iMonth = intCal.get(Calendar.MONTH);
+									iYear = intCal.get(Calendar.YEAR);
+									
+									if (iDay < 10) {
+										nDay = "0" + String.valueOf(iDay);
+									} else {
+										nDay = String.valueOf(iDay);
+									}
+									if (iMonth < 9) {
+										nMonth = "0" + String.valueOf(iMonth+1);
+									} else {
+										nMonth =String.valueOf(iMonth+1);
+									}
+									
+									intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
+									//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+								}
+							}
 						}
 						
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
@@ -357,6 +463,12 @@ public class TransactionForm extends Activity implements InputValidator {
 	
 	private void addTransaction() {
 		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted, amountChange));
+	}
+	
+	
+	
+	private void addIntTransaction(String date) {		
+		db.addTransaction(new Transaction(transAccountI, transNameS + "-" + transAccountI, date, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, false, null));
 	}
 
 	private void updateAccount() {
