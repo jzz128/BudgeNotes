@@ -67,6 +67,7 @@ public class Account extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		db.cleanTransactions(this);
 		populateListViewAccounts();
 	};
 	
@@ -133,7 +134,7 @@ public class Account extends Activity {
         a_id = Integer.parseInt((child.getText().toString().trim()));
         
         try {
-        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Transaction");
+        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionView");
         	Intent newIntent = new Intent(Account.this,clickedClass);
 
 			// Brings us back to the root activity, where exit functions properly.

@@ -62,7 +62,7 @@ public class Recommendation extends Activity {
 				});
 	}
 	
-	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
+	// 
 		@SuppressWarnings("deprecation")
 		private void populateRecTable() {
 			Recommendation rec;
@@ -83,7 +83,7 @@ public class Recommendation extends Activity {
 			count = cCursor.getCount();
 			
 			// Set the query to get stats on the transactions for the current account.
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
 			
 			// Set the recQuery to get the true recommendations when needed.
 			recQuery = "SELECT * FROM " + DBHelper.REC_TABLE + " WHERE " + DBHelper.R_IS_VALID + " = 1";
@@ -109,7 +109,7 @@ public class Recommendation extends Activity {
 				do {
 					if (recCursor.moveToFirst()) {
 						do {
-							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(11))) { // Updated to incorporate new transaction method.
+							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(12))) { // Updated to incorporate new transaction method.
 								// Set the Recommendation to True.
 								//Toast.makeText(this, "Recommendation found; " + i, Toast.LENGTH_LONG).show();
 								recs.get(i).setIV(true);

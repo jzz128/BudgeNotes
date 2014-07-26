@@ -194,6 +194,15 @@ public class DBHelper extends SQLiteOpenHelper {
 			return sum;
 		}
 		
+		public int lastRowID (String query) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			int lastId = 0;
+			Cursor c = db.rawQuery(query, null);
+			if (c != null && c.moveToFirst()) {
+			    lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+			}
+			return lastId;
+		}
 		// ---------------------------------------------------------------------------------------------------------------------
 		// ---------------------------------------------------------------------------------------------------------------------
 				
@@ -1086,4 +1095,263 @@ public class DBHelper extends SQLiteOpenHelper {
 		// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+		public void cleanTransactions(Context context) {
+			
+			int numAccounts;
+			int numTran = 0;
+			int tranSum = 0;
+			int accBase = 0;
+			int a_id;
+			String query;
+			
+			// Check if any accounts exist. Could be replaced with comparison based on a queryCount() call.
+			if (checkAccountExists()) {
+				// Get a list off all the accounts and a count of how many there are.
+				List<Account> accList = getListAllAccounts();
+				numAccounts = accList.size();				
+				
+				// Check if any transactions exist.
+				if(checkTransExists()) {
+					// Iterate through all accounts.
+					for (int i = 0; i < numAccounts; i++) {
+						// Get the _id of the current account.
+						a_id = accList.get(i).getId();
+						//Establish a base query returning all transactions associated with an account.
+						query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = " + a_id;
+						//Returns the total count of transactions associated with the current account.
+						numTran = queryCount(query);
+						//Returns a sum of all Transactions that are currently accounted for.
+						tranSum = querySum(query + " AND " + TRANSACTION_ACCOUNTED + " = " + 1);
+						//Returns the base (beginning) balance of the current account.
+						accBase = Integer.parseInt(accList.get(i).getBalance()) - tranSum;
+						
+						// Reset the current account base balance.
+						accList.get(i).setBalance(String.valueOf(accBase));
+						updateAccount(accList.get(i));
+						
+						//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+						//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+						//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+					}
+					// Get a list of all the transactions and a count of how many there are.
+					List<Transaction> tranList = getAllListTransactions(0);
+					int count = tranList.size();
+					
+					Account account;
+					String currBalance;
+					String changeAmount;
+					int newBalance;
+					// Iterate through all the transactions
+					for (int i = 0; i < count; i++) {
+						//Get the current transaction Account and balance.
+						account = getAccount(tranList.get(i).getAID());
+						currBalance = account.getBalance();
+						// Set the accounted flag against today's date and update the transaction
+						tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), "now"));
+						updateTransaction(tranList.get(i));
+						//Get the transaction amount.
+						changeAmount = tranList.get(i).getAmount();
+						// If the transaction is accounted update the account balance.
+						if(tranList.get(i).getAccounted()) {
+							newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
+							account.setBalance(String.valueOf(newBalance));
+							updateAccount(account);
+							tranList.get(i).setChange(account.getBalance());
+							updateTransaction(tranList.get(i));
+						} else {
+							tranList.get(i).setChange(null);
+							updateTransaction(tranList.get(i));
+						}
+					}
+				} else {
+					Toast.makeText(context, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
+				}
+				
+			} else {
+				Toast.makeText(context, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
+			}
+		
+		}
+		
+		// Set transactions to be accounted according to the spinner date.
+		public void seeFuture (Context context, String date, int A_ID) {
+		
+			List<Transaction> tranList = getAllListTransactions(A_ID);
+			int numTrans = tranList.size();
+			Account account;
+			String currBalance;
+			String changeAmount;
+			int newBalance;
+			boolean pAccounted;
+					
+			for (int i = 0; i < numTrans; i++) {
+				account = getAccount(tranList.get(i).getAID());
+				currBalance = account.getBalance();
+				pAccounted = tranList.get(i).getAccounted();
+							
+				// Set the threshold date here -----------------------------------------------
+				tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), date));
+				// --------------------------------------------------------------------------
+				
+				updateTransaction(tranList.get(i));
+				//Toast.makeText(this, String.valueOf(pAccounted), Toast.LENGTH_LONG).show();
+				//Toast.makeText(this, String.valueOf(tranList.get(i).getAccounted()), Toast.LENGTH_LONG).show();
+				
+				if(!pAccounted && tranList.get(i).getAccounted()) {
+					changeAmount = tranList.get(i).getAmount();
+					newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
+					account.setBalance(String.valueOf(newBalance));				
+					updateAccount(account);
+					tranList.get(i).setChange(account.getBalance());
+					updateTransaction(tranList.get(i));
+				} else if (pAccounted && !tranList.get(i).getAccounted()) {
+					changeAmount = tranList.get(i).getAmount();
+					newBalance = Integer.parseInt(currBalance) - Integer.parseInt(changeAmount);
+					account.setBalance(String.valueOf(newBalance));				
+					updateAccount(account);
+					tranList.get(i).setChange(null);
+					updateTransaction(tranList.get(i));
+				} else if(pAccounted == tranList.get(i).getAccounted()) {
+					//Do Nothing.
+				} else {
+					Toast.makeText(context, "An Error has Occured!", Toast.LENGTH_LONG).show();
+				}
+			}		
+		}
+		
+		public void createReccTransactions (int interval, String transDateS, int T_ID) {
+			Transaction transaction = getTransaction(T_ID);
+			int recDayInt = 0;
+			int recMonInt = 0;
+			int recYerInt = 0;
+			int recCount = 0;
+			
+			Calendar intCal;
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+			java.util.Date date = null;
+			String intDate;
+			int iDay, iMonth, iYear;
+			String nDay, nMonth;
+			
+			//Handling the recurring transactions.
+			if (interval != 0) {
+				
+				switch (interval) {
+					case 1:
+						//Every two weeks transaction. Adds 26 extra transactions.
+						recDayInt = 14;
+						recMonInt = 0;
+						recYerInt = 0;
+						recCount = 26;
+						break;
+					case 2:
+						//Every month transaction. Adds 12 additional transactions.
+						recDayInt = 0;
+						recMonInt = 1;
+						recYerInt = 0;
+						recCount = 12;
+						break;
+					case 3:
+						//Every year transaction. Adds one additional transaction.
+						recDayInt = 0;
+						recMonInt = 0;
+						recYerInt = 1;
+						recCount = 1;
+						break;
+				}
+				
+				try {
+					date = sdf.parse(transDateS);
+		        } catch (ParseException e) {
+		            e.printStackTrace();
+		        }
+				
+				intCal = Calendar.getInstance();
+				intCal.setTime(date);
+				intCal.add(Calendar.DATE, recDayInt);
+				intCal.add(Calendar.MONTH, recMonInt);
+				intCal.add(Calendar.YEAR, recYerInt);
+				
+				iDay = intCal.get(Calendar.DAY_OF_MONTH);
+				iMonth = intCal.get(Calendar.MONTH);
+				iYear = intCal.get(Calendar.YEAR);
+				
+				if (iDay < 10) {
+					nDay = "0" + String.valueOf(iDay);
+				} else {
+					nDay = String.valueOf(iDay);
+				}
+				if (iMonth < 9) {
+					nMonth = "0" + String.valueOf(iMonth+1);
+				} else {
+					nMonth =String.valueOf(iMonth+1);
+				}
+				
+				intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
+				//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+				String tName = transaction.getName();
+				int tID = transaction.getId();
+				for (int i = 0; i < recCount; i++) {
+					transaction.setName(tName + "-" + String.valueOf(tID));
+					transaction.setDate(intDate);
+					transaction.setAccounted(false);
+					transaction.setChange(null);
+					addTransaction(transaction);
+					
+					try {
+						date = sdf.parse(intDate);
+			        } catch (ParseException e) {
+			            e.printStackTrace();
+			        }
+					intCal.setTime(date);
+					if (interval == 1) intCal.add(Calendar.DATE, recDayInt);
+					intCal.add(Calendar.MONTH, recMonInt);
+					intCal.add(Calendar.YEAR, recYerInt);
+					
+					iDay = intCal.get(Calendar.DAY_OF_MONTH);
+					iMonth = intCal.get(Calendar.MONTH);
+					iYear = intCal.get(Calendar.YEAR);
+					
+					if (iDay < 10) {
+						nDay = "0" + String.valueOf(iDay);
+					} else {
+						nDay = String.valueOf(iDay);
+					}
+					if (iMonth < 9) {
+						nMonth = "0" + String.valueOf(iMonth+1);
+					} else {
+						nMonth =String.valueOf(iMonth+1);
+					}
+					
+					intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
+					//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+		
+	public void deleteReccTransactions(Transaction transaction) {
+		int nLen = transaction.getName().length() + 2;
+		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";
+		Transaction recTran;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+		int changeAmount = 0;
+		if (transaction.getAccounted()) changeAmount = 1;
+		Account account;
+		account = getAccount(transaction.getAID());
+		
+		if (cursor.moveToFirst()) {
+			do {
+				recTran = getTransaction(cursor.getInt(0));
+				if (recTran.getAccounted()) changeAmount = changeAmount + 1;
+				deleteTransaction(recTran);
+			} while (cursor.moveToNext());
+		}
+		changeAmount = changeAmount * Integer.parseInt(transaction.getAmount());
+		deleteTransaction(getTransaction(transaction.getId()));
+		changeAmount = Integer.parseInt(account.getBalance()) - changeAmount;
+		account.setBalance(String.valueOf(changeAmount));
+		updateAccount(account);
+	}
 }

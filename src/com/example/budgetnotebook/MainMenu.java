@@ -27,86 +27,9 @@ public class MainMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
 		
-		// !!! ================================================================== Testing Some App Open Functionality for Recurring / Future Transactions ======================== !!!
-		// !!! =================================================================================================================================================================== !!!
 		DBHelper db = new DBHelper(this);
-		int numAccounts;
-		int numTran = 0;
-		int tranSum = 0;
-		int accBase = 0;
-		int a_id;
-		String query;
-		
-		// Check if any accounts exist. Could be replaced with comparison based on a queryCount() call.
-		if (db.checkAccountExists()) {
-			// Get a list off all the accounts and a count of how many there are.
-			List<Account> accList = db.getListAllAccounts();
-			numAccounts = accList.size();				
-			
-			// Check if any transactions exist.
-			if(db.checkTransExists()) {
-				// Iterate through all accounts.
-				for (int i = 0; i < numAccounts; i++) {
-					// Get the _id of the current account.
-					a_id = accList.get(i).getId();
-					//Establish a base query returning all transactions associated with an account.
-					query = "SELECT * FROM " + db.TRANSACTION_TABLE + " WHERE " + db.T_A_ID + " = " + a_id;
-					//Returns the total count of transactions associated with the current account.
-					numTran = db.queryCount(query);
-					//Returns a sum of all Transactions that are currently accounted for.
-					tranSum = db.querySum(query + " AND " + db.TRANSACTION_ACCOUNTED + " = " + 1);
-					//Returns the base (beginning) balance of the current account.
-					accBase = Integer.parseInt(accList.get(i).getBalance()) - tranSum;
-					
-					// Reset the current account base balance.
-					accList.get(i).setBalance(String.valueOf(accBase));
-					db.updateAccount(accList.get(i));
-					
-					//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-					//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-					//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-				}
-				// Get a list of all the transactions and a count of how many there are.
-				List<Transaction> tranList = db.getAllListTransactions(0);
-				int count = tranList.size();
-				
-				Account account;
-				String currBalance;
-				String changeAmount;
-				int newBalance;
-				// Iterate through all the transactions
-				for (int i = 0; i < count; i++) {
-					//Get the current transaction Account and balance.
-					account = db.getAccount(tranList.get(i).getAID());
-					currBalance = account.getBalance();
-					// Set the accounted flag against today's date and update the transaction
-					tranList.get(i).setAccounted(db.checkAccountedDate(tranList.get(i).getDate(), "now"));
-					db.updateTransaction(tranList.get(i));
-					//Get the transaction amount.
-					changeAmount = tranList.get(i).getAmount();
-					// If the transaction is accounted update the account balance.
-					if(tranList.get(i).getAccounted()) {
-						newBalance = Integer.parseInt(currBalance) + Integer.parseInt(changeAmount);
-						account.setBalance(String.valueOf(newBalance));
-						db.updateAccount(account);
-						tranList.get(i).setChange(account.getBalance());
-						db.updateTransaction(tranList.get(i));
-					} else {
-						tranList.get(i).setChange(null);
-						db.updateTransaction(tranList.get(i));
-					}
-				}
-			} else {
-				Toast.makeText(this, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
-			}
-			
-		} else {
-			Toast.makeText(this, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
-		}
-		
+		db.cleanTransactions(this);
 		db.close();
-		// !!! =================================================================================================================================================================== !!!
-		// !!! =================================================================================================================================================================== !!!
 		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);

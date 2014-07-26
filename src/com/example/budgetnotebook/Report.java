@@ -73,7 +73,7 @@ public class Report extends Activity {
 			cCursor = db.getAllTransactions(A_ID);
 			count = cCursor.getCount();
 			
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
 			
 			cursor = db.dbQuery(query);
 			cursor.moveToFirst();
