@@ -169,7 +169,7 @@ public class GoalForm extends Activity implements InputValidator{
 							// Call the add goal method to add the goal to the database
 							addGoal();
 						}
-						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalView");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
 						
 						// Brings us back to the root activity, where exit functions properly.

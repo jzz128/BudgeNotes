@@ -12,7 +12,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -1354,4 +1356,5 @@ public class DBHelper extends SQLiteOpenHelper {
 		account.setBalance(String.valueOf(changeAmount));
 		updateAccount(account);
 	}
+	
 }

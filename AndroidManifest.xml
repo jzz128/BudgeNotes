@@ -35,10 +35,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.budgetnotebook.Account"
+            android:name="com.example.budgetnotebook.AccountView"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.example.budgetnotebook.ACCOUNT" />
+                <action android:name="com.example.budgetnotebook.ACCOUNTVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -53,28 +53,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.budgetnotebook.Profile"
+            android:name="com.example.budgetnotebook.ProfileView"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.example.budgetnotebook.PROFILE" />
+                <action android:name="com.example.budgetnotebook.PROFILEVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.budgetnotebook.Goal"
+            android:name="com.example.budgetnotebook.GoalView"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.example.budgetnotebook.GOAL" />
+                <action android:name="com.example.budgetnotebook.GOALVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.budgetnotebook.Recommendation"
+            android:name="com.example.budgetnotebook.RecommendationView"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="com.example.budgetnotebook.RECOMMENDATION" />
+                <action android:name="com.example.budgetnotebook.RECOMMENDATIONVIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -38,7 +38,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Account");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountView");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -71,7 +71,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Profile");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ProfileView");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
@@ -87,7 +87,7 @@ public class MainMenu extends Activity {
 			@Override
 			public void onClick(View v) {
 				try{
-					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.Goal");
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalView");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
