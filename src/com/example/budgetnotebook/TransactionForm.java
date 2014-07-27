@@ -219,7 +219,7 @@ public class TransactionForm extends Activity implements InputValidator {
 						transTypeS = String.valueOf(R.drawable.credit1);
 					} else if (transTypeS.equals("DE")) {
 						transTypeS = String.valueOf(R.drawable.debit1);
-						if (Integer.parseInt(transAmountS) > 0 ) transAmountS = String.valueOf(-Integer.parseInt(transAmountS)); //Sets the debits to negative numbers.
+						if (Float.parseFloat(transAmountS) > 0 ) transAmountS = String.format("%.2f",-Float.parseFloat(transAmountS)); //Sets the debits to negative numbers.
 					} else {
 						transTypeS = String.valueOf(R.drawable.other1);
 					}
@@ -370,12 +370,12 @@ public class TransactionForm extends Activity implements InputValidator {
 	private void updateAccount() {
 		int accountId = transAccountI;
 		Account account;
-		int oldBalance;
-		int changeAmount;
-		int newBalance;
+		float oldBalance;
+		float changeAmount;
+		float newBalance;
 		String accountType;
 		
-		changeAmount = Integer.parseInt(transAmountS);
+		changeAmount = Float.parseFloat(transAmountS);
 		
 		//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
 		//Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
@@ -406,10 +406,10 @@ public class TransactionForm extends Activity implements InputValidator {
 			changeAmount = -changeAmount;
 		}
 		
-		oldBalance = Integer.parseInt(account.getBalance());
+		oldBalance = Float.parseFloat(account.getBalance());
 		newBalance = oldBalance + changeAmount;
-		account.setBalance(String.valueOf(newBalance));
-		amountChange = String.valueOf(newBalance);
+		account.setBalance(String.format("%.2f",newBalance));
+		amountChange = String.format("%.2f",newBalance);
 		if (T_EDIT) transaction.setChange(amountChange);
 		db.updateAccount(account);
 	}
@@ -420,11 +420,11 @@ public class TransactionForm extends Activity implements InputValidator {
 		Account account1 = db.getAccount(A_ID);
 		Transaction transaction = db.getTransaction(T_ID);
 		
-		int oldBalance;
-		int changeAmount;
-		int newBalance;
+		float oldBalance;
+		float changeAmount;
+		float newBalance;
 		String accountType;
-		changeAmount = Integer.parseInt(transaction.getAmount());
+		changeAmount = Float.parseFloat(transaction.getAmount());
 		
 		/*
 		if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
@@ -443,9 +443,9 @@ public class TransactionForm extends Activity implements InputValidator {
 			changeAmount = -changeAmount;
 		}
 		
-		oldBalance = Integer.parseInt(account1.getBalance());
+		oldBalance = Float.parseFloat(account1.getBalance());
 		newBalance = oldBalance - changeAmount;
-		account1.setBalance(String.valueOf(newBalance));
+		account1.setBalance(String.format("%.2f",newBalance));
 		db.updateAccount(account1);
 		amountChange = null;
 		if (T_EDIT) transaction.setChange(amountChange);

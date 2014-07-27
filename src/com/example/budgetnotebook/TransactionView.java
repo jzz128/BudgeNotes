@@ -247,14 +247,14 @@ public class TransactionView extends Activity {
 	}
 	
 	//Update the account if this is an edit. Essentially reversing the original transaction
-	//TODO update with new transaction method.
+	//TODO update with new transaction method. -> Migrate to DBHelper
 		private void reverseTransaction() {		
-			int oldBalance;
-			int changeAmount;
-			int newBalance;
+			float oldBalance;
+			float changeAmount;
+			float newBalance;
 			String accountType;
 			
-			changeAmount = Integer.parseInt(transaction.getAmount());
+			changeAmount = Float.parseFloat(transaction.getAmount());
 			
 			/*
 			if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
@@ -273,9 +273,9 @@ public class TransactionView extends Activity {
 				changeAmount = -changeAmount;
 			}
 			
-			oldBalance = Integer.parseInt(account.getBalance());
+			oldBalance = Float.parseFloat(account.getBalance());
 			newBalance = oldBalance - changeAmount;
-			account.setBalance(String.valueOf(newBalance));
+			account.setBalance(String.format("%.2f",newBalance));
 			if(transaction.getAccounted()) db.updateAccount(account);
 			
 		}
