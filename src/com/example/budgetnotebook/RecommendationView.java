@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,7 +66,6 @@ public class RecommendationView extends Activity {
 	// 
 		@SuppressWarnings("deprecation")
 		private void populateRecTable() {
-			Recommendation rec;
 			String query;
 			String recQuery;
 			
@@ -96,7 +96,9 @@ public class RecommendationView extends Activity {
 			
 			// Get the total unique categories and recommendations
 			catCount = reportCursor.getCount();
+			Log.d("catCount", Integer.toString(catCount));
 			recCount = recCursor.getCount();
+			Log.d("recCount", Integer.toString(recCount));
 			
 			recs = db.getListAllRecs();
 			i = 0;

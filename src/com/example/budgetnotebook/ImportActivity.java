@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import android.R.bool;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -66,6 +65,7 @@ public class ImportActivity extends Activity {
 	};
 
 	private class importOperation extends AsyncTask<String, Void, String> {
+		@SuppressWarnings("unused")
 		private final ProgressDialog dialog = new ProgressDialog(
 				ImportActivity.this);
 		boolean fileErr = false;
@@ -92,6 +92,7 @@ public class ImportActivity extends Activity {
 							importFileStr));
 
 					String[] nextLine;
+					@SuppressWarnings("unused")
 					int rowNumber = 0;
 					int transAccountI;
 					String transCategoryS;

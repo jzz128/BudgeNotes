@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,6 +33,7 @@ public class ExportActivity extends Activity {
 	String currentDateString;
 	File exportDir;
 
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class ExportActivity extends Activity {
 	};
 
 	private class exportOperation extends AsyncTask<String, Void, String> {
+		@SuppressWarnings("unused")
 		private final ProgressDialog dialog = new ProgressDialog(
 				ExportActivity.this);
 		boolean memoryErr = false;

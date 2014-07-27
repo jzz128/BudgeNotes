@@ -1,7 +1,5 @@
 package com.example.budgetnotebook;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,7 +21,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class TransactionView extends Activity {
@@ -139,6 +136,7 @@ public class TransactionView extends Activity {
 		//TODO Do Something when Transaction Icon clicked. Or Nothing.
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void dateClickHandler(View v) {
 		showDialog(0);
 	}

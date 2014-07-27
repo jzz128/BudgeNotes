@@ -59,7 +59,7 @@
                 		android:layout_height="wrap_content"
                 		android:layout_width="fill_parent"                
             			android:id="@+id/profileBirthday"
-            			android:maxWidth="140sp" />
+            			android:inputType="text"/>
             		<ImageButton
 		            android:id="@+id/profileButtonCalendar"
 		            android:layout_width="wrap_content"

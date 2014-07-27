@@ -1,7 +1,5 @@
 package com.example.budgetnotebook;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import android.app.Activity;
@@ -9,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Toast;
 
 public class TransactionForm extends Activity implements InputValidator {
 
@@ -183,7 +181,7 @@ public class TransactionForm extends Activity implements InputValidator {
             
             String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
             
-            //Swets the day value to two digit format for sorting.
+            //Sets the day value to two digit format for sorting.
             String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
            
             if (cal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
@@ -209,6 +207,7 @@ public class TransactionForm extends Activity implements InputValidator {
 					transAmountS = transAmount.getText().toString().trim();
 					transCategoryS = String.valueOf(transCategory.getSelectedItemPosition()) + " - " + seperatedCategory[1].toString().trim();
 					transCategoryVal = seperatedCategory[0].toString().trim();
+					Log.d("transCategoryVal", transCategoryVal);
 					transTypeS = transTypeSelection.getText().toString().trim();
 					transIntervalS = String.valueOf(transInterval.getSelectedItemPosition()) + " - " + transInterval.getSelectedItem().toString();
 					transDescriptionS = transDescription.getText().toString().trim();
@@ -362,6 +361,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		}
 	};
 	
+	@SuppressWarnings("static-access")
 	private void addTransaction() {
 		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted, amountChange));
 		T_ID = db.lastRowID("SELECT " + db.T_ID + " from " + db.TRANSACTION_TABLE + " order by " + db.T_ID + " DESC limit 1");
@@ -474,8 +474,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		
 		// Description not empty
 		if(transDescriptionS.length() == 0){
-			transDescription.setError("Input is required");
-			valid = false;
+			// Description field not required
 		}
 		
 		return valid;

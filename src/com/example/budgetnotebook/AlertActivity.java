@@ -54,6 +54,7 @@ public class AlertActivity extends ListActivity {
 		private TextView name = null;
 		private TextView description = null;
 		private TextView date = null;
+		@SuppressWarnings("unused")
 		private View row = null;
 
 		AlertHolder(View row) {

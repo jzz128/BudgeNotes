@@ -7,14 +7,13 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -745,6 +744,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 		
 		// Check if a transaction date is on or before today.
+		@SuppressLint("SimpleDateFormat")
 		public boolean checkAccountedDate(String transDate, String against) {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
@@ -1122,6 +1122,7 @@ public class DBHelper extends SQLiteOpenHelper {
 						query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = " + a_id;
 						//Returns the total count of transactions associated with the current account.
 						numTran = queryCount(query);
+						Log.d("numTran", Integer.toString(numTran));
 						//Returns a sum of all Transactions that are currently accounted for.
 						tranSum = querySum(query + " AND " + TRANSACTION_ACCOUNTED + " = " + 1);
 						//Returns the base (beginning) balance of the current account.
@@ -1221,6 +1222,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			}		
 		}
 		
+		@SuppressLint("SimpleDateFormat")
 		public void createReccTransactions (int interval, String transDateS, int T_ID) {
 			Transaction transaction = getTransaction(T_ID);
 			int recDayInt = 0;
