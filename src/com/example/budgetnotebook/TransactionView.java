@@ -8,8 +8,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class TransactionView extends Activity {
@@ -224,8 +227,8 @@ public class TransactionView extends Activity {
                 		reverseTransaction();
                 		db.deleteTransaction(transaction);
                 	} else {
-                		db.deleteReccTransactions(transaction);
-                		db.cleanTransactions(getBaseContext());
+                		checkAgain();
+                		break;
                 	}
                 	loadAccountSpinnerData();
                 	S_A_ID = A_ID - lowestID + 1 ;
@@ -241,7 +244,34 @@ public class TransactionView extends Activity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete transaction?").setPositiveButton("Yes", dialogClickListener)
-            .setNegativeButton("No", dialogClickListener).show();
+            .setNegativeButton("No", dialogClickListener).show();      
+	}
+	
+	private void checkAgain() {
+		DialogInterface.OnClickListener dialogClickListener2 = new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					db.deleteReccTransactions(transaction);
+            		db.cleanTransactions(getBaseContext());
+            		break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					reverseTransaction();
+            		db.deleteTransaction(transaction);
+                    break;
+				}
+				
+			}
+			
+			
+		};
+		
+		
+        AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+		builder2.setMessage("Delete all recurring transactions associated as well?").setPositiveButton("Yes", dialogClickListener2)
+            .setNegativeButton("No", dialogClickListener2).show();
 	}
 	
 	//Update the account if this is an edit. Essentially reversing the original transaction
@@ -311,7 +341,7 @@ public class TransactionView extends Activity {
 				);
 		ListView transactionList = (ListView) findViewById(R.id.listViewTrans);
 		transactionList.setAdapter(myCursorAdapter);
-		
+
 	}
 	
 	public void setViewAccount(int id) {

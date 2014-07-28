@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 public class Report extends Activity {
-	ListView reportTable;
+	ListView reportTableCount;
+	ListView reportTableAmount;
+	
 	Spinner transAccount;
 	String[] seperatedAccount;
 	int A_ID;
@@ -40,7 +44,9 @@ public class Report extends Activity {
 		// Load the spinner data.
 		loadAccountSpinnerData();
 		
-		populateReportTable();
+		populateReportCountTable();
+		populateReportAmountCTable();
+		populateReportAmountDTable();
 		
 		//Set listener for Account Spinner selection.
 				transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -50,7 +56,9 @@ public class Report extends Activity {
 						///Get the Account spinner data and put it in a string array.
 						seperatedAccount = transAccount.getSelectedItem().toString().split(" ");
 						A_ID = Integer.parseInt(seperatedAccount[0]);
-						populateReportTable();
+						populateReportCountTable();
+						populateReportAmountCTable();
+						populateReportAmountDTable();
 					}
 
 					@Override
@@ -60,42 +68,68 @@ public class Report extends Activity {
 				});
 	}
 	
-	// This method uses the Cursor getAllGoals and populates the ListView on the view_goals layout with a list of template_list_goal (layouts)
-		@SuppressWarnings("deprecation")
-		private void populateReportTable() {
+	// 
+	@SuppressWarnings("deprecation")
+	private void populateReportCountTable() {
 
-			String query;
+		String query;
+		Cursor cursor;
+		Cursor cCursor;
+			
+		int count;
+			
+		cCursor = db.getAllTransactions(A_ID);
+		count = cCursor.getCount();
+			
+		query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+			
+		cursor = db.dbQuery(query);
+		cursor.moveToFirst();
+			
+		//startManagingCursor(cursor);
+			
+		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
+		// Updated for new transaction method.
+		String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
+		int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
+		
+		// 
+		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+				this,
+				R.layout.template_row_report,
+				cursor,
+				transFieldNames,
+				toViewIDs
+				);
+		reportTableCount = (ListView) findViewById(R.id.reportTableCount);
+		reportTableCount.setAdapter(myCursorAdapter); 
+	}
+	
+	// 
+		@SuppressWarnings("deprecation")
+		private void populateReportAmountCTable() {
+
+			String query, sumQuery, transTypeS;
 			Cursor cursor;
-			Cursor cCursor;
+				
+			float count;
+
+			transTypeS = String.valueOf(R.drawable.credit1);
+			//transTypeS = String.valueOf(R.drawable.debit1);
 			
-			int count;
+			sumQuery = "SELECT * FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS;
+			count = db.querySum(sumQuery);
 			
-			cCursor = db.getAllTransactions(A_ID);
-			count = cCursor.getCount();
-			
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
-			
+			query = "SELECT *, SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)), (SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+						
 			cursor = db.dbQuery(query);
+			
 			cursor.moveToFirst();
-			
-			//Toast.makeText(this, cursor.getString(5), Toast.LENGTH_LONG).show();
-			/*
-			if (cursor != null) {
-		        cursor.moveToFirst();
-				Toast.makeText(this, cursor.getString(0), Toast.LENGTH_LONG).show();
-				Toast.makeText(this, cursor.getString(1), Toast.LENGTH_LONG).show();
-				Toast.makeText(this, cursor.getColumnName(0), Toast.LENGTH_LONG).show();
-				Toast.makeText(this, cursor.getColumnName(1), Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(this, "No Transactions!", Toast.LENGTH_LONG).show();
-			} */
-			//startManagingCursor(cursor);
-			
-			// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
+				
 			// Updated for new transaction method.
 			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
-			int[] toViewIDs = new int[] {R.id.catName, R.id.catCount, R.id.catPercent};
-		
+			int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
+			
 			// Fills the ListView with all the Goals in the Table.
 			SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
 					this,
@@ -104,9 +138,46 @@ public class Report extends Activity {
 					transFieldNames,
 					toViewIDs
 					);
-			reportTable = (ListView) findViewById(R.id.reportTable);
-			reportTable.setAdapter(myCursorAdapter); 
-	}
+			reportTableAmount = (ListView) findViewById(R.id.reportTableAmountC);
+			reportTableAmount.setAdapter(myCursorAdapter); 
+		}
+
+		// 
+		@SuppressWarnings("deprecation")
+		private void populateReportAmountDTable() {
+
+			String query, sumQuery, transTypeS;
+			Cursor cursor;
+				
+			float count;
+					
+			// transTypeS = String.valueOf(R.drawable.credit1);
+			transTypeS = String.valueOf(R.drawable.debit1);
+					
+			sumQuery = "SELECT * FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS;
+			count = db.querySum(sumQuery);
+					
+			query = "SELECT *, SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)), (SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+								
+			cursor = db.dbQuery(query);
+					
+			cursor.moveToFirst();
+						
+			// Updated for new transaction method.
+			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
+			int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
+					
+			// Fills the ListView with all the Goals in the Table.
+			SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(
+					this,
+					R.layout.template_row_report,
+					cursor,
+					transFieldNames,
+					toViewIDs
+					);
+			reportTableAmount = (ListView) findViewById(R.id.reportTableAmountD);
+			reportTableAmount.setAdapter(myCursorAdapter); 
+		}
 		
 	private void loadAccountSpinnerData() {
 		List<String> list = db.getAllStringAccounts();

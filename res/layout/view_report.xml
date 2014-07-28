@@ -12,16 +12,52 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#EBEBE0"
         android:text="@string/category_count_percentage"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
+<ListView
+    android:id="@+id/reportTableCount"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:background="#FFFFC2"
+    android:orientation="vertical"
+    android:stretchColumns="*" >
+
+</ListView>
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#EBEBE0"
+    android:text="@string/category_amountC_percentage"
+    android:textAppearance="?android:attr/textAppearanceMedium" />
 
 <ListView
-	android:id="@+id/reportTable"          	
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:stretchColumns="*">
-</ListView>  
+    android:id="@+id/reportTableAmountC"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:background="#FFFFC2"
+    android:orientation="vertical"
+    android:stretchColumns="*" >
+
+</ListView>
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#EBEBE0"
+    android:text="@string/category_amountD_percentage"
+    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+<ListView
+    android:id="@+id/reportTableAmountD"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFC2"
+    android:orientation="vertical"
+    android:stretchColumns="*" >
+
+</ListView>
 
 </LinearLayout>

@@ -97,7 +97,7 @@
         android:layout_toLeftOf="@+id/transChangeAmount"
         android:text="$"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#0000ff"
+        android:textColor="#000066"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -109,7 +109,7 @@
         android:layout_toLeftOf="@+id/transactionEditButton"
         android:text="Delta$"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#0000ff"
+        android:textColor="#000066"
         tools:ignore="HardcodedText" />
 
 </RelativeLayout>

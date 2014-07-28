@@ -68,22 +68,26 @@ public class RecommendationView extends Activity {
 		private void populateRecTable() {
 			String query;
 			String recQuery;
+			String transTypeS, sumQuery;
 			
 			Cursor reportCursor;
 			Cursor recCursor;
 			Cursor cCursor;
 			List<Recommendation> recs;
 			
-			int count;
+			float count;
 			int catCount;
 			int recCount;
 			int i;
-			// Get the count of total transactions.
-			cCursor = db.getAllTransactions(A_ID);
-			count = cCursor.getCount();
 			
+			transTypeS = String.valueOf(R.drawable.debit1);
+			
+			// Get the count of total transactions.
+			sumQuery = "SELECT * FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS;
+			count = db.querySum(sumQuery);
+						
 			// Set the query to get stats on the transactions for the current account.
-			query = "SELECT *, COUNT(*),(CAST (COUNT(*) AS FLOAT) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
+			query = "SELECT *, SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)), (SUM(CAST (" + DBHelper.TRANSACTION_AMOUNT + " AS FLOAT)) / " + count + ") * 100 AS PERCENTAGE FROM " + DBHelper.TRANSACTION_TABLE + " WHERE " + DBHelper.T_A_ID + " = " + A_ID + " AND " + DBHelper.TRANSACTION_ACCOUNTED + " = " + 1 + " AND " + DBHelper.TRANSACTION_TYPE + " = " + transTypeS + " GROUP BY " + DBHelper.TRANSACTION_CATEGORY;
 			
 			// Set the recQuery to get the true recommendations when needed.
 			recQuery = "SELECT * FROM " + DBHelper.REC_TABLE + " WHERE " + DBHelper.R_IS_VALID + " = 1";

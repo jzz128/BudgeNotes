@@ -123,5 +123,7 @@
     <string name="add_goal">ADD GOAL</string>
     <string name="edit_profile">EDIT PROFILE</string>
     <string name="category_count_percentage">Category  \u0020 \u0020 \u0020 \u0020 \u0020 Count \u0020 \u0020 \u0020 \u0020 \u0020 Percentage</string>
+    <string name="category_amountC_percentage">Category  \u0020 \u0020 \u0020 \u0020 Amount(+) \u0020 \u0020 Percentage</string>
+    <string name="category_amountD_percentage">Category  \u0020 \u0020 \u0020 \u0020 Amount(-) \u0020 \u0020 Percentage</string>
 
 </resources>
