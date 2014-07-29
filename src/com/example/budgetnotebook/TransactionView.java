@@ -52,6 +52,7 @@ public class TransactionView extends Activity {
 	
 	String[] interval;
 	int intVal;
+	Intent newIntent;
 	
 	//Perform operations when class created.
 	@Override
@@ -183,8 +184,8 @@ public class TransactionView extends Activity {
         a_id = Integer.parseInt((child2.getText().toString().trim()));
         
         try {
-        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
-        	Intent newIntent = new Intent(TransactionView.this,clickedClass);
+           	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
+        	newIntent = new Intent(TransactionView.this,clickedClass);
 
 			// Brings us back to the root activity, where exit functions properly.
 			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -193,7 +194,31 @@ public class TransactionView extends Activity {
         	newIntent.putExtra("A_ID", a_id);
         	newIntent.putExtra("T_ID", t_id);
         	newIntent.putExtra("T_EDIT", true);
-        	startActivity(newIntent);
+        	
+        	// Alert dialog to affirm delete.
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                    case 0:      	
+                    	newIntent.putExtra("E_SCOPE", 0);
+                    	startActivity(newIntent);
+                        break;
+
+                    case 1:
+                    	newIntent.putExtra("E_SCOPE", 1);
+                    	startActivity(newIntent);
+                        break;
+                    case 2:
+                    	newIntent.putExtra("E_SCOPE", 2);
+                    	startActivity(newIntent);
+                        break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.pick_scope).setItems(R.array.scope_array, dialogClickListener).show();      
 		
         } catch(ClassNotFoundException e) {
         	e.printStackTrace();

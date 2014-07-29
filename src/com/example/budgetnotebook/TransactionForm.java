@@ -3,8 +3,10 @@ package com.example.budgetnotebook;
 import java.util.Calendar;
 import java.util.List;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,11 +66,15 @@ public class TransactionForm extends Activity implements InputValidator {
 	int T_ID;
 	int S_A_ID;
 	boolean T_EDIT;
+	int E_SCOPE;
 	
 	Transaction transaction;
 	String formatMonth;
 	String formatDay;
 	
+	String[] interval;
+	int intVal;
+	int baseTranID;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,6 +88,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		A_ID = intent.getIntExtra("A_ID",0);
 		T_ID = intent.getIntExtra("T_ID", 0);
 		T_EDIT = intent.getBooleanExtra("T_EDIT", false);
+		E_SCOPE = intent.getIntExtra("E_SCOPE", 0);
 		
         int lowestID;
         lowestID = db.lowestAccountID();
@@ -228,10 +235,13 @@ public class TransactionForm extends Activity implements InputValidator {
 						if (T_EDIT) {
 							// Update the account balance and then update the transaction record.
 							fillTransObject();
-							if (prevAccounted) reverseTransaction();
-							//
-							if (transAccounted) updateAccount();
-							db.updateTransaction(transaction);
+							
+							//Get the interval option ID.
+							interval = transaction.getInterval().split(" - ");
+					        intVal = Integer.parseInt(interval[0]);
+							
+							// Give the user options for editing the transaction.
+							if (intVal != 0) getScope(E_SCOPE);
 						} else {
 							// Call the add transaction method to add the transaction to the database and update the account balance!
 							//
@@ -257,6 +267,43 @@ public class TransactionForm extends Activity implements InputValidator {
 			}				
 		});
 	}
+	
+	//Ask if the user wants to delete associated transactions or just the selected one.
+	public void getScope(int which) {
+
+				switch (which) {
+					case 0:
+						if (prevAccounted) reverseTransaction();
+						//
+						if (transAccounted) updateAccount();
+						db.updateTransaction(transaction);
+						break;
+					case 1:
+						//Update all transactions associated.
+						if(transaction.getName().toString().contains("-")) {
+							String[] nSplit = new String[2];
+							nSplit = transaction.getName().toString().split("-");
+							baseTranID = Integer.parseInt(nSplit[1].toString());
+							Log.d("Edit all Transactions with ID->", nSplit[1].toString());
+						} else {
+							baseTranID = transaction.getId();
+						}
+						db.editReccTransactions(transaction, baseTranID, false);
+						break;
+					case 2:
+						//Update subsequent transactions.
+						if(transaction.getName().toString().contains("-")) {
+							String[] nSplit = new String[2];
+							nSplit = transaction.getName().toString().split("-");
+							baseTranID = Integer.parseInt(nSplit[1].toString());
+							Log.d("Edit all Transactions with ID->", nSplit[1].toString());
+						} else {
+							baseTranID = transaction.getId();
+						}
+						db.editReccTransactions(transaction, baseTranID, true);
+						break;
+				}			
+			}
 	
 	// Fill the transaction variable with updated information.
 	private void fillTransObject() {
