@@ -1389,56 +1389,68 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Edit recurring transactions spawned from passed transaction object and original transaction object.
-		public void editReccTransactions(Transaction transaction, int id, boolean subsTransOnly) {
-			Transaction baseTran = getTransaction(id);
-			int nLen = baseTran.getName().length() + 2;
-			String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + id + "'";
+	public void editReccTransactions(Transaction transaction, int id, boolean subsTransOnly) {
+		// Create an object for the initially generated transaction.
+		Transaction baseTran = getTransaction(id);
+		// Set the name offset length so transactions can be queried
+		int nLen = baseTran.getName().length() + 2;
+		// Set the query to be every associated transaction or subsequent only transactions according to the passed boolean.
+		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + id + "'";	
+		if (subsTransOnly)
+			query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + id + "' AND " + T_ID + " >= " + transaction.getId();
+		// Place holder object for the query results	
+		Transaction recTran;
+		// Open the database and fill a cursor with the query results.	
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+		// Place holders for the account delta amounts.	
+		float changeAmount = 0;
+		float changeBackAmount = 0;
+		// Object for the associated account.	
+		Account account;
+		account = getAccount(transaction.getAID());
+		//Update transactions in the query and generate the changeAmount / changeBackAmount counter	
+		if (cursor.moveToFirst()) {
+			do {
+				recTran = getTransaction(cursor.getInt(0));
+				transaction.setId(recTran.getId());
+				transaction.setName(recTran.getName());
+				transaction.setDate(recTran.getDate());
+				transaction.setAccounted(recTran.getAccounted());
+				// Stores the transaction amount if previously accounted and increments the counter.	
+				if (transaction.getAccounted()) {
+					changeAmount = changeAmount + Float.parseFloat(recTran.getAmount());
+					changeBackAmount = changeBackAmount + 1;
+				}
+				updateTransaction(transaction);
+			} while (cursor.moveToNext());
+		}
 			
-			if (subsTransOnly)
-				query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + id + "' AND " + T_ID + " >= " + transaction.getId();
-			
-			Transaction recTran;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			float changeAmount = 0;
-			float changeBackAmount;
-			if (transaction.getAccounted()) changeAmount = 1;
-			
-			Account account;
-			account = getAccount(transaction.getAID());
-			
-			if (cursor.moveToFirst()) {
-				do {
-					recTran = getTransaction(cursor.getInt(0));
-					transaction.setId(recTran.getId());
-					transaction.setName(recTran.getName());
-					transaction.setDate(recTran.getDate());
-					transaction.setAccounted(recTran.getAccounted());
-					
-					if (transaction.getAccounted()) changeAmount = changeAmount + 1;
-					updateTransaction(transaction);
-				} while (cursor.moveToNext());
-			}
-			
-			// !!! **************************************************************************************************************************************
-			//TODO The Math here is off.  It needs to be fixed.
-			// !!! **************************************************************************************************************************************
-			
+		// !!! **************************************************************************************************************************************
+		//TODO The Math here is off.  It needs to be fixed.
+		// !!! **************************************************************************************************************************************
+		
+		// Handles the base transaction like above if the scope is all associated transactions.
+		if(!subsTransOnly) {
 			transaction.setId(baseTran.getId());
 			transaction.setName(baseTran.getName());
 			transaction.setDate(baseTran.getDate());
 			transaction.setAccounted(baseTran.getAccounted());
-			
+			if (transaction.getAccounted()) {
+				changeAmount = changeAmount + Float.parseFloat(baseTran.getAmount());
+				changeBackAmount = changeBackAmount + 1;
+			}
 			updateTransaction(transaction);
-			
-			changeBackAmount = changeAmount * Float.parseFloat(transaction.getAmount());
-			changeAmount = changeAmount * Float.parseFloat(baseTran.getAmount());
-			changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;
-			changeAmount = changeAmount + changeBackAmount;
-			account.setBalance(String.format("%.2f",changeAmount));
-			updateAccount(account);
 		}
+		
+		//Reverses all previously accounted transactions and stores the new amount
+		changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;
+		// Sets the new delta amount using the counter and passed transaction amount
+		changeBackAmount = changeBackAmount * Float.parseFloat(transaction.getAmount());
+		// Set teh new account balance
+		changeAmount = changeAmount + changeBackAmount;
+		account.setBalance(String.format("%.2f",changeAmount));
+		updateAccount(account);
+	}
 		
 }

@@ -241,7 +241,7 @@ public class TransactionForm extends Activity implements InputValidator {
 					        intVal = Integer.parseInt(interval[0]);
 							
 							// Give the user options for editing the transaction.
-							if (intVal != 0) getScope(E_SCOPE);
+					        updateScope(E_SCOPE);
 						} else {
 							// Call the add transaction method to add the transaction to the database and update the account balance!
 							//
@@ -269,41 +269,44 @@ public class TransactionForm extends Activity implements InputValidator {
 	}
 	
 	//Ask if the user wants to delete associated transactions or just the selected one.
-	public void getScope(int which) {
-
-				switch (which) {
-					case 0:
-						if (prevAccounted) reverseTransaction();
-						//
-						if (transAccounted) updateAccount();
-						db.updateTransaction(transaction);
-						break;
-					case 1:
-						//Update all transactions associated.
-						if(transaction.getName().toString().contains("-")) {
-							String[] nSplit = new String[2];
-							nSplit = transaction.getName().toString().split("-");
-							baseTranID = Integer.parseInt(nSplit[1].toString());
-							Log.d("Edit all Transactions with ID->", nSplit[1].toString());
-						} else {
-							baseTranID = transaction.getId();
-						}
-						db.editReccTransactions(transaction, baseTranID, false);
-						break;
-					case 2:
-						//Update subsequent transactions.
-						if(transaction.getName().toString().contains("-")) {
-							String[] nSplit = new String[2];
-							nSplit = transaction.getName().toString().split("-");
-							baseTranID = Integer.parseInt(nSplit[1].toString());
-							Log.d("Edit all Transactions with ID->", nSplit[1].toString());
-						} else {
-							baseTranID = transaction.getId();
-						}
-						db.editReccTransactions(transaction, baseTranID, true);
-						break;
-				}			
-			}
+	public void updateScope(int which) {
+		//update the transaction(s) based on the user selected scope
+		switch (which) {
+			// The user wishes only to update the current transaction, or this is a non-recurring transaction.
+			case 0:
+				if (prevAccounted) reverseTransaction();
+				//
+				if (transAccounted) updateAccount();
+				db.updateTransaction(transaction);
+				break;
+			//The user wishes to update all recurring transactions associated with the current transaction.
+			case 1:
+				//Update all transactions associated.
+				if(transaction.getName().toString().contains("-")) {
+					String[] nSplit = new String[2];
+					nSplit = transaction.getName().toString().split("-");
+					baseTranID = Integer.parseInt(nSplit[1].toString());
+					Log.d("Edit all Transactions with ID->", nSplit[1].toString());
+				} else {
+					baseTranID = transaction.getId();
+				}
+				db.editReccTransactions(transaction, baseTranID, false);
+				break;
+			//The user wishes to update the current transaction and all subsequent transactions.
+			case 2:
+				//Update subsequent transactions.
+				if(transaction.getName().toString().contains("-")) {
+					String[] nSplit = new String[2];
+					nSplit = transaction.getName().toString().split("-");
+					baseTranID = Integer.parseInt(nSplit[1].toString());
+					Log.d("Edit all Transactions with ID->", nSplit[1].toString());
+				} else {
+					baseTranID = transaction.getId();
+				}
+				db.editReccTransactions(transaction, baseTranID, true);
+				break;
+		}			
+	}
 	
 	// Fill the transaction variable with updated information.
 	private void fillTransObject() {
