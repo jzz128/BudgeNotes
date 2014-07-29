@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * AccountForm.java
+ * 
+ * Form activity for adding and editing data in the DB Account Table.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;
@@ -11,6 +27,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class AccountForm extends Activity implements InputValidator{
+	//Class variable definitions.
 	Button saveAccount = null;
 	DBHelper db;
 	
@@ -28,7 +45,8 @@ public class AccountForm extends Activity implements InputValidator{
 	int A_ID;
 	boolean A_EDIT;
 	Account account;
-		
+	
+	//Perform operations when the class is created.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,7 +70,7 @@ public class AccountForm extends Activity implements InputValidator{
 		accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeChecking);
 		accountTypeSelection.setChecked(true);
 		
-		// Auto fill the form if this is an edit.
+		// Auto fill the form if this is an edit using the Account ID passed from the previous activity..
 		if (A_EDIT) {
 			account = db.getAccount(A_ID);
 			populateForm();
@@ -67,7 +85,7 @@ public class AccountForm extends Activity implements InputValidator{
 			@Override
 			public void onClick(View v) {
 				try{
-					
+					//Stores the id of the checked account type selection.
 					accountTypeSelection = (RadioButton)findViewById(accountType.getCheckedRadioButtonId());
 										
 					// Transfer edit text to ACCOUNT_TABLE attribute types.
@@ -76,21 +94,23 @@ public class AccountForm extends Activity implements InputValidator{
 					accountTypeS = accountTypeSelection.getText().toString().trim();
 					accountBalanceS = accountBalance.getText().toString().trim();
 					
+					//Validate the input before proceeding.
 					if(inputsValid()){
-						
+						// Update account if this is an edit.
 						if (A_EDIT) {
 							fillAccountObject();
 							db.updateAccount(account);
 						} else {
-							// Call the add account method to add the account to the database!
+							// Call the add account method to add the account to the database.
 							addAccount();
 						}
-							Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountView");
-							Intent newIntent = new Intent(AccountForm.this, clickedClass);
+						//Take us back to the AccountView after the click operation is complete.	
+						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountView");
+						Intent newIntent = new Intent(AccountForm.this, clickedClass);
 
-							// Brings us back to the root activity, where exit functions properly.
-							newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(newIntent);
+						// Brings us back to the root activity, where exit functions properly.
+						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(newIntent);
 					}
 				} catch(ClassNotFoundException e) {
 					e.printStackTrace();
@@ -100,10 +120,12 @@ public class AccountForm extends Activity implements InputValidator{
 		
 	};
 	
+	//Private method used to add an account within this class.
 	private void addAccount() {
 		db.addAccount(new Account(accountNameS, accountNumberS, accountTypeS, accountBalanceS));
 	}
 
+	//Fill an Account object with the form data.
 	private void fillAccountObject() {
 		account.setName(accountNameS);
 		account.setNumber(accountNumberS);
@@ -111,6 +133,7 @@ public class AccountForm extends Activity implements InputValidator{
 		account.setBalance(accountBalanceS);
 	}
 	
+	//Populate the form with existing account data.
 	private void populateForm() {
 		accountName.setText(account.getName());
 		accountNumber.setText(account.getNumber());
@@ -132,6 +155,7 @@ public class AccountForm extends Activity implements InputValidator{
 		accountBalance.setText(account.getBalance());
 	}
 	
+	//Check if the input is valid.
 	@Override
 	public boolean inputsValid() {
 		boolean valid = true;

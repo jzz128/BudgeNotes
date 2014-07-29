@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,14 +28,14 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class TransactionView extends Activity {
-	// An id for the account transactions to view.
-	// It must be set by the calling class, or it will show all transactions.
+
 	int A_ID;
 	int S_A_ID;
 	int lowestID;
 	
 	Account account;
 	Transaction transaction;
+	Transaction trans2;
 	
 	Spinner transAccount;
 	String[] seperated;
@@ -52,6 +53,7 @@ public class TransactionView extends Activity {
 	String[] interval;
 	int intVal;
 	
+	//Perform operations when class created.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,21 +137,25 @@ public class TransactionView extends Activity {
 		
 	}
 	
+	//Perform operations when the icon button is cliacked.
 	public void iconClickHandler(View v) {
 		//TODO Do Something when Transaction Icon clicked. Or Nothing.
 	}
 	
+	// Show the date picker when the date picker icon is clicked.
 	@SuppressWarnings("deprecation")
 	public void dateClickHandler(View v) {
 		showDialog(0);
 	}
 	
+	//Make the date picker dialog.
 	@Override
 	@Deprecated
 	protected Dialog onCreateDialog(int id) {
 		return new DatePickerDialog(this, datePickerListener, year, month, day);
 	}
 
+	//Listener for date picker set button.
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 					spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
@@ -159,9 +165,8 @@ public class TransactionView extends Activity {
 					populateListViewTransactions(A_ID);
 		}
 	};
-	
-	
-	
+		
+	//Perform operations when the edit button is clicked.
 	public void editClickHandler(View v) {
 		int t_id;
 		int a_id;
@@ -173,7 +178,7 @@ public class TransactionView extends Activity {
         TextView child = (TextView)vwParentRow.getChildAt(1);
         TextView child2 = (TextView)vwParentRow.getChildAt(2);
         
-     // Store the account and transaction id in the variable integers.
+        // Store the account and transaction id in the variable integers.
         t_id = Integer.parseInt((child.getText().toString().trim()));
         a_id = Integer.parseInt((child2.getText().toString().trim()));
         
@@ -195,6 +200,7 @@ public class TransactionView extends Activity {
         }
 	}
 	
+	//Perform operations when the delete button is clicked.
 	public void deleteClickHandler(View v) {
 		int t_id;
 		int a_id;
@@ -228,7 +234,6 @@ public class TransactionView extends Activity {
                 		db.deleteTransaction(transaction);
                 	} else {
                 		checkAgain();
-                		break;
                 	}
                 	loadAccountSpinnerData();
                 	S_A_ID = A_ID - lowestID + 1 ;
@@ -247,13 +252,23 @@ public class TransactionView extends Activity {
             .setNegativeButton("No", dialogClickListener).show();      
 	}
 	
+	//Ask if the user wants to delete associated transactions or just the selected one.
 	private void checkAgain() {
+		
 		DialogInterface.OnClickListener dialogClickListener2 = new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
+					if(transaction.getName().toString().contains("-")) {
+						String[] nSplit = new String[2];
+						nSplit = transaction.getName().toString().split("-");
+						Log.d(nSplit[1].toString(), nSplit[1].toString());
+						transaction = db.getTransaction(Integer.parseInt(nSplit[1].toString()));
+					} else {
+						//Do Nothing.
+					}
 					db.deleteReccTransactions(transaction);
             		db.cleanTransactions(getBaseContext());
             		break;
@@ -263,8 +278,7 @@ public class TransactionView extends Activity {
                     break;
 				}
 				
-			}
-			
+			}	
 			
 		};
 		
@@ -275,38 +289,27 @@ public class TransactionView extends Activity {
 	}
 	
 	//Update the account if this is an edit. Essentially reversing the original transaction
-	//TODO update with new transaction method. -> Migrate to DBHelper
-		private void reverseTransaction() {		
-			float oldBalance;
-			float changeAmount;
-			float newBalance;
-			String accountType;
+	private void reverseTransaction() {		
+		float oldBalance;
+		float changeAmount;
+		float newBalance;
+		String accountType;
 			
-			changeAmount = Float.parseFloat(transaction.getAmount());
+		changeAmount = Float.parseFloat(transaction.getAmount());
 			
-			/*
-			if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
-				changeAmount = - changeAmount;
-			} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
-				//changeAmount = changeAmount;
-			}else {
-				//Do nothing for now.
-			}
-			*/
+		// Reverses amount if this is a credit card.
+		accountType = account.getType();
 			
-			// Reverses amount if this is a credit card.
-			accountType = account.getType();
-			
-			if (new String("CR").equals(accountType)) {
-				changeAmount = -changeAmount;
-			}
-			
-			oldBalance = Float.parseFloat(account.getBalance());
-			newBalance = oldBalance - changeAmount;
-			account.setBalance(String.format("%.2f",newBalance));
-			if(transaction.getAccounted()) db.updateAccount(account);
-			
+		if (new String("CR").equals(accountType)) {
+			changeAmount = -changeAmount;
 		}
+			
+		oldBalance = Float.parseFloat(account.getBalance());
+		newBalance = oldBalance - changeAmount;
+		account.setBalance(String.format("%.2f",newBalance));
+		if(transaction.getAccounted()) db.updateAccount(account);
+		
+	}
 	
 	// Populate the spinner with account numbers
 	private void loadAccountSpinnerData() {
@@ -344,6 +347,7 @@ public class TransactionView extends Activity {
 
 	}
 	
+	//Set the value of the currently viewed account id.
 	public void setViewAccount(int id) {
 		A_ID = id;
 	}

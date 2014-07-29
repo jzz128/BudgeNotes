@@ -1,6 +1,22 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Goal.java
+ * 
+ * DBHelper adapter for modifying DB data associated with the Goal Table.
+ **/
+
 package com.example.budgetnotebook;
 
 public class Goal {
+	//Class variable definitions.
 	private int _id;
 	private int g_id;
 	private String goal_name;
@@ -10,9 +26,9 @@ public class Goal {
 	private String goal_delta_amount;
 	private String goal_end_date;
 
+	//Initializers --------------------------------------------------------------
 	public Goal(){}
 	
-	// Method to create Goal object 
 	public Goal(int g_id, String name, String description, String type, String start_amount, String delta_amount, String end_date) {
 		super();
 		this.g_id = g_id;

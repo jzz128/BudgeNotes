@@ -1,3 +1,20 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * DBHelper.java
+ * 
+ * Database helper file for creating / adding / updating / querying DB data.
+ * Implemented by Form and View activities.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.text.ParseException;
@@ -121,6 +138,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
 			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
 			+ " END";
+	
 	//SQL Statement for creating the Alert Table.
 	//private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT, " + "FOREIGN KEY (" + AT_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + AT_ID + "));";
 	private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT);";
@@ -162,1117 +180,1163 @@ public class DBHelper extends SQLiteOpenHelper {
         this.onCreate(db);
 	}
 
-		// ---------------------------------------------------------------------------------------------------------------------
-		//TODO Generic Query methods !!! This is probably not safe and should be controlled further with predefined queries. !!!
-		// ---------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+	//TODO Generic Query methods !!! This is probably not safe and should be controlled further with predefined queries. !!!
+	// ---------------------------------------------------------------------------------------------------------------------
 	
-		public Cursor dbQuery(String query){
+	//Returns a cursor filled with the result of the passed query string.
+	public Cursor dbQuery(String query){
 			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
 				
-			return cursor;
-		}
-		
-		public int queryCount(String query) {
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-				
-			return cursor.getCount();
-		}
-		
-		public float querySum(String query) {
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			if(cursor != null)
-				cursor.moveToFirst();
-			float sum = 0;
-			for (int i = 0; i < cursor.getCount(); i++) {
-				sum += Float.parseFloat(cursor.getString(4));
-				cursor.moveToNext();
-			}
-			
-			return sum;
-		}
-		
-		public int lastRowID (String query) {
-			SQLiteDatabase db = this.getWritableDatabase();
-			int lastId = 0;
-			Cursor c = db.rawQuery(query, null);
-			if (c != null && c.moveToFirst()) {
-			    lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
-			}
-			return lastId;
-		}
-		// ---------------------------------------------------------------------------------------------------------------------
-		// ---------------------------------------------------------------------------------------------------------------------
-				
-		// Recommendation Methods
-		public Cursor getRcommendations() {
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			String query = "SELECT * FROM " + REC_TABLE;
-			
-			Cursor cursor = db.rawQuery(query, null);
-			
-			return cursor;
-		}
-		
-		public Recommendation getRec(int id) {
-			SQLiteDatabase db = this.getReadableDatabase();
-			
-			Cursor cursor =
-					db.query(REC_TABLE, REC_FIELDS, R_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-			
-			if (cursor != null)
-		        cursor.moveToFirst();
-			
-			Recommendation rec = new Recommendation();
-			rec.setId(Integer.parseInt(cursor.getString(0)));
-			rec.setC1(cursor.getString(1));
-			rec.setC2(cursor.getString(2));
-			rec.setC3(cursor.getString(3));
-			rec.setC4(cursor.getString(4));
-			rec.setC5(cursor.getString(5));
-			 
-			 Log.d("getRec("+id+")", rec.toString());
-			 
-			 return rec;
-		}
-		
-		public int updateRec(Recommendation rec) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(R_CRITERIA_1,  rec.getC1());
-			values.put(R_CRITERIA_2, rec.getC2());
-			values.put(R_CRITERIA_3, rec.getC3());
-			values.put(R_CRITERIA_4, rec.getC4());
-			values.put(R_CRITERIA_5, rec.getC5());
-			values.put(R_IS_VALID, rec.getIV());
-			
-			int i = db.update(REC_TABLE, values, R_ID + " = ?", new String[] { String.valueOf(rec.getId()) });
-			
-			db.close();
-			
-			return i;
-		}
-		
-		public List<Recommendation> getListAllRecs() {
-			List<Recommendation> recs = new LinkedList<Recommendation>();
-			
-			String query = "SELECT * FROM " + REC_TABLE;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			Recommendation rec = null;
-			if (cursor.moveToFirst()) {
-				do {
-					rec = new Recommendation();
-					rec.setId(Integer.parseInt(cursor.getString(0)));
-					rec.setC1(cursor.getString(1));
-					rec.setC2(cursor.getString(2));
-					rec.setC3(cursor.getString(3));
-					rec.setC4(cursor.getString(4));
-					rec.setC5(cursor.getString(5));
-					rec.setIV(Boolean.parseBoolean(cursor.getString(6)));
-					
-					recs.add(rec);
-				} while (cursor.moveToNext());
-			}
-			
-			return recs;
-		}
-		
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-		// Add a single Goal.
-		public void addGoal(Goal goal){
-			Log.d("addGoal", goal.toString());
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(G_A_ID, goal.getAId());
-			values.put(GOAL_NAME, goal.getName());
-			values.put(GOAL_DESCRIPTION, goal.getDescription());
-			values.put(GOAL_TYPE, goal.getType());
-			values.put(GOAL_START_AMOUNT, goal.getStartAmount());
-			values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
-			values.put(GOAL_END_DATE, goal.getEndDate());
-			
-			db.insert(GOAL_TABLE, null, values);
-			
-			db.close();
-		}
-		
-		// Get a single Goal.
-		public Goal getGoal(int id){
-			SQLiteDatabase db = this.getReadableDatabase();
-			
-			Cursor cursor =
-					db.query(GOAL_TABLE, GOAL_FIELDS, G_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-			
-			if (cursor != null)
-		        cursor.moveToFirst();
-			
-			Goal goal = new Goal();
-			 goal.setId(Integer.parseInt(cursor.getString(0)));
-			 goal.setAId(Integer.parseInt(cursor.getString(1)));
-			 goal.setName(cursor.getString(2));
-			 goal.setDescription(cursor.getString(3));
-			 goal.setType(cursor.getString(4));
-			 goal.setStartAmount(cursor.getString(5));
-			 goal.setDeltaAmount(cursor.getString(6));
-			 goal.setEndDate(cursor.getString(7));
-			 
-			 Log.d("getGoal("+id+")", goal.toString());
-			 
-			 return goal;
-		}
-		
-		// Get a list of all Goals. 
-		public List<Goal> getListAllGoals() {
-			List<Goal> goals = new LinkedList<Goal>();
-			
-			String query = "SELECT * FROM " + GOAL_TABLE;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			Goal goal = null;
-			if (cursor.moveToFirst()) {
-				do {
-					goal = new Goal();
-					goal.setId(Integer.parseInt(cursor.getString(0)));
-					goal.setAId(Integer.parseInt(cursor.getString(1)));
-					goal.setName(cursor.getString(2));
-					goal.setDescription(cursor.getString(3));
-					goal.setType(cursor.getString(4));
-					goal.setStartAmount(cursor.getString(5));
-					goal.setDeltaAmount(cursor.getString(6));
-					goal.setEndDate(cursor.getString(7));
-					
-					goals.add(goal);
-				} while (cursor.moveToNext());
-			}
-			
-			Log.d("getAllGoals()", goals.toString());
-			
-			return goals;
-		}
-		
-		// For List population of Goal
-		public Cursor getAllGoals() {
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			String where = null;
-			Cursor cursor = db.query(true, GOAL_TABLE, GOAL_FIELDS,  where,  null, null,  null, null, null);
-			
-			if (cursor != null) {
-				cursor.moveToFirst();
-			}
-			
-			return cursor;
-		}
-		
-		//TODO Toast all Goals -- REMOVE AFTER TESTING --
-		public void toastGoal(Context context){
-			String query = "SELECT * FROM " + GOAL_TABLE;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			if (cursor.moveToFirst()) {
-				do {
-					Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
-					
-				} while (cursor.moveToNext());
-			}
-			else {
-				Toast.makeText(context, "No Goals yet!", Toast.LENGTH_LONG).show();
-			}
-		}
-		
-		// Update a single Goal.
-		public int updateGoal(Goal goal) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(G_A_ID,  goal.getAId());
-			values.put(GOAL_NAME, goal.getName());
-			values.put(GOAL_DESCRIPTION, goal.getDescription());
-			values.put(GOAL_TYPE, goal.getType());
-			values.put(GOAL_START_AMOUNT, goal.getStartAmount());
-			values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
-			values.put(GOAL_END_DATE, goal.getEndDate());
-			
-			int i = db.update(GOAL_TABLE, values, G_ID + " = ?", new String[] { String.valueOf(goal.getId()) });
-			
-			db.close();
-			
-			return i;
-		}
-		
-		// Delete a single Goal.
-		public void deleteGoal(Goal goal) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			db.delete(GOAL_TABLE, G_ID+"= ?", new String[] { String.valueOf(goal.getId()) });
-			
-			db.close();
-			
-		}
-		
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Profile methods ------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		return cursor;
+	}
 	
-		// Add the Profile.
-		public void addProfile(Profile profile){
-			Log.d("addProfile", profile.toString());
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(FIRST_NAME, profile.getFirstName());
-			values.put(LAST_NAME, profile.getLastName());
-			values.put(GENDER, profile.getGender());
-			values.put(BIRTHDAY, profile.getBirthday());
-			values.put(CITY, profile.getCity());
-			values.put(EMAIL, profile.getEmail());
-			
-			db.insert(PROFILE_TABLE, null, values);
-			
-			db.close();
+	// Returns an integer result of the passed query string.
+	public int queryCount(String query) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+				
+		return cursor.getCount();
+	}
+	
+	//Returns the sum of the transaction amounts of the passed query string.
+	public float querySum(String query) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+		if(cursor != null)
+			cursor.moveToFirst();
+		float sum = 0;
+		for (int i = 0; i < cursor.getCount(); i++) {
+			sum += Float.parseFloat(cursor.getString(4));
+			cursor.moveToNext();
 		}
-		
-		// Get the Profile.
-		public Profile getProfile(int id){
-			SQLiteDatabase db = this.getReadableDatabase();
 			
-			Cursor cursor =
-					db.query(PROFILE_TABLE, PROFILE_FIELDS, P_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+		return sum;
+	}
+	
+	//Returns the id of the first element in the passed query string.  Used with a limit 1 query to return the ID of the last created record.
+	public int lastRowID (String query) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		int lastId = 0;
+		Cursor c = db.rawQuery(query, null);
+		if (c != null && c.moveToFirst()) {
+		    lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
+		}
+		return lastId;
+	}
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	// Recommendation methods ----------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------
+				
+	// Returns a cursor filled with all the recommendations.
+	public Cursor getRcommendations() {
+		SQLiteDatabase db = this.getWritableDatabase();
 			
-			if (cursor != null) {
-		        cursor.moveToFirst();
+		String query = "SELECT * FROM " + REC_TABLE;
 			
-			Profile profile = new Profile();
-			profile.setId(Integer.parseInt(cursor.getString(0)));
-			profile.setFirstName(cursor.getString(1));
-			profile.setLastName(cursor.getString(2));
-			profile.setGender(cursor.getString(3));
-			profile.setBirthday(cursor.getString(4));
-			profile.setCity(cursor.getString(5));
-			profile.setEmail(cursor.getString(6));
+		Cursor cursor = db.rawQuery(query, null);
+			
+		return cursor;
+	}
+	
+	//Returns a Recommendation object with the passed id.
+	public Recommendation getRec(int id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		Cursor cursor =
+				db.query(REC_TABLE, REC_FIELDS, R_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+		if (cursor != null)
+	        cursor.moveToFirst();
+			
+		Recommendation rec = new Recommendation();
+		rec.setId(Integer.parseInt(cursor.getString(0)));
+		rec.setC1(cursor.getString(1));
+		rec.setC2(cursor.getString(2));
+		rec.setC3(cursor.getString(3));
+		rec.setC4(cursor.getString(4));
+		rec.setC5(cursor.getString(5));
 			 
-			 Log.d("getProfile("+id+")", profile.toString());
-			 
-			 return profile;
-			} else {
-				return null;
-			}
-		}
-		
-		public int checkProfileExists() {
-			String query = "SELECT * FROM " + PROFILE_TABLE;
+		 Log.d("getRec("+id+")", rec.toString());
+		 
+		 return rec;
+	}
+	
+	//Updates the recommendation with the id of the passed object with the attributes of the passed object.
+	public int updateRec(Recommendation rec) {
 			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+		SQLiteDatabase db = this.getWritableDatabase();
 			
-			return cursor.getCount();
-		}
-		
-		//TODO Toast profile  -- REMOVE AFTER TESTING --
-		public void toastProfile(Context context){
-			String query = "SELECT * FROM " + PROFILE_TABLE;
+		ContentValues values = new ContentValues();
+		values.put(R_CRITERIA_1,  rec.getC1());
+		values.put(R_CRITERIA_2, rec.getC2());
+		values.put(R_CRITERIA_3, rec.getC3());
+		values.put(R_CRITERIA_4, rec.getC4());
+		values.put(R_CRITERIA_5, rec.getC5());
+		values.put(R_IS_VALID, rec.getIV());
 			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+		int i = db.update(REC_TABLE, values, R_ID + " = ?", new String[] { String.valueOf(rec.getId()) });
 			
-			if (cursor.moveToFirst()) {
-				do {
-					Toast.makeText(context, cursor.getString(1), Toast.LENGTH_LONG).show();		
+		db.close();
+			
+		return i;
+	}
+	
+	//Returns a list of Recommendation objects for all records in the Recommendation table.
+	public List<Recommendation> getListAllRecs() {
+		List<Recommendation> recs = new LinkedList<Recommendation>();
+			
+		String query = "SELECT * FROM " + REC_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		Recommendation rec = null;
+		if (cursor.moveToFirst()) {
+			do {
+				rec = new Recommendation();
+				rec.setId(Integer.parseInt(cursor.getString(0)));
+				rec.setC1(cursor.getString(1));
+				rec.setC2(cursor.getString(2));
+				rec.setC3(cursor.getString(3));
+				rec.setC4(cursor.getString(4));
+				rec.setC5(cursor.getString(5));
+				rec.setIV(Boolean.parseBoolean(cursor.getString(6)));
 					
-				} while (cursor.moveToNext());
-			}
-			else {
-				Toast.makeText(context, "No Profile yet!", Toast.LENGTH_LONG).show();
-			}
+				recs.add(rec);
+			} while (cursor.moveToNext());
 		}
+			
+		return recs;
+	}
 		
-		// Update the Profile.
-		public int updateProfile(Profile profile) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(FIRST_NAME, profile.getFirstName());
-			values.put(LAST_NAME, profile.getLastName());
-			values.put(GENDER, profile.getGender());
-			values.put(BIRTHDAY, profile.getBirthday());
-			values.put(CITY, profile.getCity());
-			values.put(EMAIL, profile.getEmail());
-			
-			int i = db.update(PROFILE_TABLE, values, P_ID + " = ?", new String[] { String.valueOf(profile.getId()) });
-			
-			db.close();
-			
-			return i;
-		}
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		// Delete the Profile.
-		public void deleteProfile(Profile profile) {
+	// Add a single Goal.
+	public void addGoal(Goal goal){
+		Log.d("addGoal", goal.toString());
 			
-			SQLiteDatabase db = this.getWritableDatabase();
+		SQLiteDatabase db = this.getWritableDatabase();
 			
-			db.delete(PROFILE_TABLE, P_ID+"= ?", new String[] { String.valueOf(profile.getId()) });
+		ContentValues values = new ContentValues();
+		values.put(G_A_ID, goal.getAId());
+		values.put(GOAL_NAME, goal.getName());
+		values.put(GOAL_DESCRIPTION, goal.getDescription());
+		values.put(GOAL_TYPE, goal.getType());
+		values.put(GOAL_START_AMOUNT, goal.getStartAmount());
+		values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
+		values.put(GOAL_END_DATE, goal.getEndDate());
 			
-			db.close();		
-		}
+		db.insert(GOAL_TABLE, null, values);
+			
+		db.close();
+	}
 		
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Account methods ------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Get a single Goal. Returns Goal object.
+	public Goal getGoal(int id){
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		Cursor cursor =
+				db.query(GOAL_TABLE, GOAL_FIELDS, G_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+		if (cursor != null)
+	        cursor.moveToFirst();
+			
+		Goal goal = new Goal();
+		 goal.setId(Integer.parseInt(cursor.getString(0)));
+		 goal.setAId(Integer.parseInt(cursor.getString(1)));
+		 goal.setName(cursor.getString(2));
+		 goal.setDescription(cursor.getString(3));
+		 goal.setType(cursor.getString(4));
+		 goal.setStartAmount(cursor.getString(5));
+		 goal.setDeltaAmount(cursor.getString(6));
+		 goal.setEndDate(cursor.getString(7));
+		 
+		 Log.d("getGoal("+id+")", goal.toString());
+		 
+		 return goal;
+	}
 		
-		// Check if any Accounts exist.
-		public boolean checkAccountExists() {
-			String query = "SELECT * FROM " + ACCOUNT_TABLE;
+	// Get a list of all Goals. Returns a list of Goal objects for each record in the Goal table.
+	public List<Goal> getListAllGoals() {
+		List<Goal> goals = new LinkedList<Goal>();
 			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+		String query = "SELECT * FROM " + GOAL_TABLE;
 			
-			if (cursor.getCount() < 1) {
-				return false;
-			} else {
-				return true;
-			}
-		}
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
 		
-		// Add a single Account.
-		public void addAccount(Account account){
-			Log.d("addAccount", account.toString());
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(ACCOUNT_NAME, account.getName());
-			values.put(ACCOUNT_NUMBER, account.getNumber());
-			values.put(ACCOUNT_TYPE, account.getType());
-			values.put(BALANCE, account.getBalance());
-			
-			db.insert(ACCOUNT_TABLE, null, values);
-			
-			db.close();
-		}
-		
-		// Get a single Account.
-		public Account getAccount(int id){
-			SQLiteDatabase db = this.getReadableDatabase();
-			
-			Cursor cursor =
-					db.query(ACCOUNT_TABLE, ACCOUNT_FIELDS, A_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-			
-			if (cursor != null)
-		        cursor.moveToFirst();
-			
-			Account account = new Account();
-			account.setId(Integer.parseInt(cursor.getString(0)));
-			account.setName(cursor.getString(1));
-			account.setNumber(cursor.getString(2));
-			account.setType(cursor.getString(3));
-			account.setBalance(cursor.getString(4));
-
-			 
-			 Log.d("getAccount("+id+")", account.toString());
-			 
-			 return account;
-		}
-		
-		// Get a list of all Accounts as Account Objects.
-		public List<Account> getListAllAccounts() {
-			List<Account> accounts = new LinkedList<Account>();
-			
-			String query = "SELECT * FROM " + ACCOUNT_TABLE;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			Account account = null;
-			if (cursor.moveToFirst()) {
-				do {
-					account = new Account();
-					account.setId(Integer.parseInt(cursor.getString(0)));
-					account.setName(cursor.getString(1));
-					account.setNumber(cursor.getString(2));
-					account.setType(cursor.getString(3));
-					account.setBalance(cursor.getString(4));
+		Goal goal = null;
+		if (cursor.moveToFirst()) {
+			do {
+				goal = new Goal();
+				goal.setId(Integer.parseInt(cursor.getString(0)));
+				goal.setAId(Integer.parseInt(cursor.getString(1)));
+				goal.setName(cursor.getString(2));
+				goal.setDescription(cursor.getString(3));
+				goal.setType(cursor.getString(4));
+				goal.setStartAmount(cursor.getString(5));
+				goal.setDeltaAmount(cursor.getString(6));
+				goal.setEndDate(cursor.getString(7));
 					
-					accounts.add(account);
-				} while (cursor.moveToNext());
-			}
-			
-			Log.d("getListAllAccounts()", accounts.toString());
-			
-			return accounts;
+				goals.add(goal);
+			} while (cursor.moveToNext());
 		}
+			
+		Log.d("getAllGoals()", goals.toString());
+			
+		return goals;
+	}
 		
-		// Get a list of all Accounts as Strings.
-		public List<String> getAllStringAccounts(){
-	        List<String> accounts = new ArrayList<String>();
+	// For List population of Goal. Returns cursor for Goal Table.
+	public Cursor getAllGoals() {
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		String where = null;
+		Cursor cursor = db.query(true, GOAL_TABLE, GOAL_FIELDS,  where,  null, null,  null, null, null);
+			
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+			
+		return cursor;
+	}
+		
+	//TODO Toast all Goals -- REMOVE AFTER TESTING --
+	public void toastGoal(Context context){
+		String query = "SELECT * FROM " + GOAL_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
+					
+			} while (cursor.moveToNext());
+		}
+		else {
+			Toast.makeText(context, "No Goals yet!", Toast.LENGTH_LONG).show();
+		}
+	}
+		
+	// Update a single Goal.
+	public int updateGoal(Goal goal) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(G_A_ID,  goal.getAId());
+		values.put(GOAL_NAME, goal.getName());
+		values.put(GOAL_DESCRIPTION, goal.getDescription());
+		values.put(GOAL_TYPE, goal.getType());
+		values.put(GOAL_START_AMOUNT, goal.getStartAmount());
+		values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
+		values.put(GOAL_END_DATE, goal.getEndDate());
+			
+		int i = db.update(GOAL_TABLE, values, G_ID + " = ?", new String[] { String.valueOf(goal.getId()) });
+			
+		db.close();
+			
+		return i;
+	}
+		
+	// Delete a single Goal.
+	public void deleteGoal(Goal goal) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		db.delete(GOAL_TABLE, G_ID+"= ?", new String[] { String.valueOf(goal.getId()) });
+			
+		db.close();
+			
+	}
+		
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Profile methods ------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	// Add the Profile.
+	public void addProfile(Profile profile){
+		Log.d("addProfile", profile.toString());
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(FIRST_NAME, profile.getFirstName());
+		values.put(LAST_NAME, profile.getLastName());
+		values.put(GENDER, profile.getGender());
+		values.put(BIRTHDAY, profile.getBirthday());
+		values.put(CITY, profile.getCity());
+		values.put(EMAIL, profile.getEmail());
+		
+		db.insert(PROFILE_TABLE, null, values);
+			
+		db.close();
+	}
+		
+	// Get the Profile.
+	public Profile getProfile(int id){
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		Cursor cursor =
+				db.query(PROFILE_TABLE, PROFILE_FIELDS, P_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+		if (cursor != null) {
+	        cursor.moveToFirst();
+			
+		Profile profile = new Profile();
+		profile.setId(Integer.parseInt(cursor.getString(0)));
+		profile.setFirstName(cursor.getString(1));
+		profile.setLastName(cursor.getString(2));
+		profile.setGender(cursor.getString(3));
+		profile.setBirthday(cursor.getString(4));
+		profile.setCity(cursor.getString(5));
+		profile.setEmail(cursor.getString(6));
+			 
+		 Log.d("getProfile("+id+")", profile.toString());
+			 
+		 return profile;
+		} else {
+			return null;
+		}
+	}
+		
+	//Check if a Profile record is created yet.
+	public int checkProfileExists() {
+		String query = "SELECT * FROM " + PROFILE_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		return cursor.getCount();
+	}
+		
+	//TODO Toast profile  -- REMOVE AFTER TESTING --
+	public void toastProfile(Context context){
+		String query = "SELECT * FROM " + PROFILE_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(1), Toast.LENGTH_LONG).show();		
+					
+			} while (cursor.moveToNext());
+		}
+		else {
+			Toast.makeText(context, "No Profile yet!", Toast.LENGTH_LONG).show();
+		}
+	}
+		
+	// Update the Profile.
+	public int updateProfile(Profile profile) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(FIRST_NAME, profile.getFirstName());
+		values.put(LAST_NAME, profile.getLastName());
+		values.put(GENDER, profile.getGender());
+		values.put(BIRTHDAY, profile.getBirthday());
+		values.put(CITY, profile.getCity());
+		values.put(EMAIL, profile.getEmail());
+		
+		int i = db.update(PROFILE_TABLE, values, P_ID + " = ?", new String[] { String.valueOf(profile.getId()) });
+			
+		db.close();
+			
+		return i;
+	}
+		
+	//TODO Delete the Profile. -- REMOVE AFTER TESTING -- NOT NEEDED.
+	public void deleteProfile(Profile profile) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		db.delete(PROFILE_TABLE, P_ID+"= ?", new String[] { String.valueOf(profile.getId()) });
+			
+		db.close();		
+	}
+		
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Account methods ------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+	// Check if any Accounts exist.
+	public boolean checkAccountExists() {
+		String query = "SELECT * FROM " + ACCOUNT_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		if (cursor.getCount() < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+		
+	// Add a single Account.
+	public void addAccount(Account account){
+		Log.d("addAccount", account.toString());
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(ACCOUNT_NAME, account.getName());
+		values.put(ACCOUNT_NUMBER, account.getNumber());
+		values.put(ACCOUNT_TYPE, account.getType());
+		values.put(BALANCE, account.getBalance());
+			
+		db.insert(ACCOUNT_TABLE, null, values);
+			
+		db.close();
+	}
+		
+	// Get a single Account.
+	public Account getAccount(int id){
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		Cursor cursor =
+				db.query(ACCOUNT_TABLE, ACCOUNT_FIELDS, A_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+		if (cursor != null)
+	        cursor.moveToFirst();
+			
+		Account account = new Account();
+		account.setId(Integer.parseInt(cursor.getString(0)));
+		account.setName(cursor.getString(1));
+		account.setNumber(cursor.getString(2));
+		account.setType(cursor.getString(3));
+		account.setBalance(cursor.getString(4));
+		 
+		 Log.d("getAccount("+id+")", account.toString());
+			 
+		 return account;
+	}
+		
+	// Get a list of all Accounts as Account Objects.
+	public List<Account> getListAllAccounts() {
+		List<Account> accounts = new LinkedList<Account>();
+			
+		String query = "SELECT * FROM " + ACCOUNT_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		Account account = null;
+		if (cursor.moveToFirst()) {
+			do {
+				account = new Account();
+				account.setId(Integer.parseInt(cursor.getString(0)));
+				account.setName(cursor.getString(1));
+				account.setNumber(cursor.getString(2));
+				account.setType(cursor.getString(3));
+				account.setBalance(cursor.getString(4));
+					
+				accounts.add(account);
+			} while (cursor.moveToNext());
+		}
+			
+		Log.d("getListAllAccounts()", accounts.toString());
+			
+		return accounts;
+	}
+		
+	// Get a list of all Accounts as Strings.
+	public List<String> getAllStringAccounts(){
+		List<String> accounts = new ArrayList<String>();
 	         
-	        // Select All Query
-	        String selectQuery = "SELECT  * FROM " + ACCOUNT_TABLE;
+	    // Select All Query
+	    String selectQuery = "SELECT  * FROM " + ACCOUNT_TABLE;
 	      
-	        SQLiteDatabase db = this.getReadableDatabase();
-	        Cursor cursor = db.rawQuery(selectQuery, null);
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor cursor = db.rawQuery(selectQuery, null);
 	      
-	        // looping through all rows and adding to list
-	        if (cursor.moveToFirst()) {
-	            do {
-	            	accounts.add(cursor.getString(0) + " " + cursor.getString(1) + " $" + cursor.getString(4));
-	            } while (cursor.moveToNext());
-	        }
-	         
-	        // closing connection
-	        cursor.close();
-	        db.close();
-	         
-	        // returning accounts
-	        return accounts;
+	    // looping through all rows and adding to list
+	    if (cursor.moveToFirst()) {
+	        do {
+	         	accounts.add(cursor.getString(0) + " " + cursor.getString(1) + " $" + cursor.getString(4));
+	        } while (cursor.moveToNext());
 	    }
+	         
+	    // closing connection
+	    cursor.close();
+	    db.close();
+	         
+	    // returning accounts
+	    return accounts;
+	}
 		
-		// For List population of Account ListView
-		public Cursor getAllAccounts() {
-			SQLiteDatabase db = this.getWritableDatabase();
+	// For List population of Account ListView. Returns a cursor for the Accounts Table.
+	public Cursor getAllAccounts() {
+		SQLiteDatabase db = this.getWritableDatabase();
 			
-			String where = null;
-			Cursor cursor = db.query(true, ACCOUNT_TABLE, ACCOUNT_FIELDS,  where,  null, null,  null, null, null);
+		String where = null;
+		Cursor cursor = db.query(true, ACCOUNT_TABLE, ACCOUNT_FIELDS,  where,  null, null,  null, null, null);
 			
-			if (cursor != null) {
-				cursor.moveToFirst();
-			}
-			
-			return cursor;
+		if (cursor != null) {
+			cursor.moveToFirst();
 		}
+			
+		return cursor;
+	}
 		
-		//TODO Toast all Accounts -- REMOVE AFTER TESTING --
-		public void toastAccount(Context context){
-			String query = "SELECT * FROM " + ACCOUNT_TABLE;
+	//TODO Toast all Accounts -- REMOVE AFTER TESTING --
+	public void toastAccount(Context context){
+		String query = "SELECT * FROM " + ACCOUNT_TABLE;
 			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
 			
-			if (cursor.moveToFirst()) {
-				do {
-					Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
 					
-				} while (cursor.moveToNext());
-			}
-			else {
-				Toast.makeText(context, "No Accounts yet!", Toast.LENGTH_LONG).show();
-			}
+			} while (cursor.moveToNext());
 		}
-		
-		// Update a single Account.
-		public int updateAccount(Account account) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(ACCOUNT_NAME, account.getName());
-			values.put(ACCOUNT_NUMBER, account.getNumber());
-			values.put(ACCOUNT_TYPE, account.getType());
-			values.put(BALANCE, account.getBalance());
-			
-			int i = db.update(ACCOUNT_TABLE, values, A_ID + " = ?", new String[] { String.valueOf(account.getId()) });
-			
-			db.close();
-			
-			return i;
+		else {
+			Toast.makeText(context, "No Accounts yet!", Toast.LENGTH_LONG).show();
 		}
+	}
 		
-		// Delete a single Account.
-		public void deleteAccount(Account account) {
+	// Update a single Account.
+	public int updateAccount(Account account) {
 			
-			SQLiteDatabase db = this.getWritableDatabase();
+		SQLiteDatabase db = this.getWritableDatabase();
 			
-			db.delete(ACCOUNT_TABLE, A_ID+"= ?", new String[] { String.valueOf(account.getId()) });
+		ContentValues values = new ContentValues();
+		values.put(ACCOUNT_NAME, account.getName());
+		values.put(ACCOUNT_NUMBER, account.getNumber());
+		values.put(ACCOUNT_TYPE, account.getType());
+		values.put(BALANCE, account.getBalance());
 			
-			db.close();
+		int i = db.update(ACCOUNT_TABLE, values, A_ID + " = ?", new String[] { String.valueOf(account.getId()) });
 			
+		db.close();
+			
+		return i;
+	}
+		
+	// Delete a single Account.
+	public void deleteAccount(Account account) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		db.delete(ACCOUNT_TABLE, A_ID+"= ?", new String[] { String.valueOf(account.getId()) });
+			
+		db.close();
+			
+	}
+		
+	// Return the lowest id in the table
+	public int lowestAccountID () {
+		String query = "SELECT * FROM " + ACCOUNT_TABLE + " ORDER BY " + A_ID + " ASC LIMIT 1";
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		if (cursor.moveToFirst()) {
+			//Toast.makeText(context, cursor.getString(0), Toast.LENGTH_LONG).show();
+			return Integer.parseInt(cursor.getString(0).trim());
 		}
-		
-		// Return the lowest id in the table
-		public int lowestAccountID () {
-			String query = "SELECT * FROM " + ACCOUNT_TABLE + " ORDER BY " + A_ID + " ASC LIMIT 1";
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			if (cursor.moveToFirst()) {
-				//Toast.makeText(context, cursor.getString(0), Toast.LENGTH_LONG).show();
-				return Integer.parseInt(cursor.getString(0).trim());
-			}
-			else {
-				return 0;
-			}
+		else {
+			return 0;
 		}
+	}
 		
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Transaction methods ---------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Transaction methods ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		// Check if any Accounts exist.
-			public boolean checkTransExists() {
-				String query = "SELECT * FROM " + TRANSACTION_TABLE;
+	// Check if any Transactions exist.
+	public boolean checkTransExists() {
+		String query = "SELECT * FROM " + TRANSACTION_TABLE;
 					
-				SQLiteDatabase db = this.getWritableDatabase();
-				Cursor cursor = db.rawQuery(query, null);
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
 					
-				if (cursor.getCount() < 1) {
-					return false;
-				} else {
-					return true;
+		if (cursor.getCount() < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+		
+	// Check if a transaction date is on or before the date stored ed in the passed string 'against'.
+	@SuppressLint("SimpleDateFormat")
+	public boolean checkAccountedDate(String transDate, String against) {
+			
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+		java.util.Date today = null;
+		String currentDate;
+			
+		if (against.equals("now")) {
+			java.util.Date d = Calendar.getInstance().getTime(); // Current time
+			currentDate = sdf.format(d); // Get Date String according to date format
+		} else {
+			currentDate = against;
+		}
+		java.util.Date date = null;
+					
+		try {
+	        date = sdf.parse(transDate);
+	        today = sdf.parse(currentDate);
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+			
+		if (date.before(today) || date.equals(today)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	// Add a single Transaction.
+	public void addTransaction(Transaction transaction){
+		Log.d("addTransaction", transaction.toString());
+					
+		SQLiteDatabase db = this.getWritableDatabase();
+					
+		ContentValues values = new ContentValues();
+		values.put(T_A_ID, transaction.getAID());
+		values.put(TRANSACTION_NAME, transaction.getName());
+		values.put(TRANSACTION_DATE, transaction.getDate());
+		values.put(TRANSACTION_AMOUNT, transaction.getAmount());
+		values.put(TRANSACTION_CATEGORY, transaction.getCategory());
+		values.put(TRANSACTION_TYPE, transaction.getType());
+		values.put(TRANSACTION_INTERVAL, transaction.getInterval());
+		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
+		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
+		values.put(TRANSACTION_CHANGE, transaction.getChange());
+			
+		db.insert(TRANSACTION_TABLE, null, values);
+					
+		db.close();
+	}
+				
+	// Get a single Transaction.
+	public Transaction getTransaction(int id){
+		SQLiteDatabase db = this.getReadableDatabase();
+					
+		Cursor cursor =
+				db.query(TRANSACTION_TABLE, TRANSACTION_FIELDS, T_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+					
+		if (cursor != null)
+	        cursor.moveToFirst();
+			
+		// Set the Boolean
+		boolean accounted = false;
+		int x = cursor.getInt(9);
+		if (x == 1) accounted = true;
+			
+		Transaction transaction = new Transaction();
+		transaction.setId(Integer.parseInt(cursor.getString(0)));
+		transaction.setAId(Integer.parseInt(cursor.getString(1)));
+		transaction.setName(cursor.getString(2));
+		transaction.setDate(cursor.getString(3));
+		transaction.setAmount(cursor.getString(4));
+		transaction.setCategory(cursor.getString(5));
+		transaction.setType(cursor.getString(6));
+		transaction.setInterval(cursor.getString(7));
+		transaction.setDescription(cursor.getString(8));
+		transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
+		transaction.setChange(cursor.getString(10));
+				 
+		 Log.d("getTransaction("+id+")", transaction.toString());
+				 
+		 return transaction;
+	}
+				
+	// Get a list of all Transactions.
+	public List<Transaction> getAllListTransactions(int a_id) {
+		List<Transaction> transactions = new LinkedList<Transaction>();
+					
+		String where = null;
+		String having = null;
+		String order = null;
+			
+		if(a_id != 0) {
+			where = T_A_ID+"="+a_id;
+		}
+		
+		order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
+					
+		Transaction transaction = null;
+		boolean accounted;
+		int x;
+			
+		if (cursor.moveToFirst()) {
+				
+			do {
+				// Set the Boolean
+				accounted = false;
+				x = cursor.getInt(9);
+				if (x == 1) accounted = true;
+					
+				transaction = new Transaction();
+				transaction.setId(Integer.parseInt(cursor.getString(0)));
+				transaction.setAId(Integer.parseInt(cursor.getString(1)));
+				transaction.setName(cursor.getString(2));
+				transaction.setDate(cursor.getString(3));
+				transaction.setAmount(cursor.getString(4));
+				transaction.setCategory(cursor.getString(5));
+				transaction.setType(cursor.getString(6));
+				transaction.setInterval(cursor.getString(7));
+				transaction.setDescription(cursor.getString(8));
+				transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
+				transaction.setChange(cursor.getString(10));
+						
+				transactions.add(transaction);
+			} while (cursor.moveToNext());
+		}
+					
+		Log.d("getAllTransactions()", transactions.toString());
+				
+		return transactions;
+	}
+		
+	// For List population of Account ListView
+	public Cursor getAllTransactions(int a_id) {
+		SQLiteDatabase db = this.getWritableDatabase();
+					
+		String where = null;
+		String having = null;
+		String order = null;
+			
+		order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
+						
+		if(a_id != 0) {
+			where = T_A_ID + " = " + a_id + " AND " + TRANSACTION_ACCOUNTED + " = " + 1;
+		}
+		Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
+	
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+					
+		return cursor;
+	}
+	
+	//TODO Toast all Transaction dates -- REMOVE AFTER TESTING --
+	public void toastTranDates(Context context) {
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		String where = null;
+		String having = null;
+		String order = null;
+			
+		order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",4,2) || substr(" + TRANSACTION_DATE + ",1,2) ASC";
+
+		Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
+			
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
+							
+			} while (cursor.moveToNext());
+		}
+		else {
+			Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
+		}
+	}
+		
+	//TODO Toast all Transactions -- REMOVE AFTER TESTING --
+	public void toastTransaction(Context context){
+		String query = "SELECT * FROM " + TRANSACTION_TABLE;
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+					
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
+							
+			} while (cursor.moveToNext());
+		}
+		else {
+			Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
+		}
+	}
+				
+	// Update a single Transaction.
+	public int updateTransaction(Transaction transaction) {
+					
+		SQLiteDatabase db = this.getWritableDatabase();
+					
+		ContentValues values = new ContentValues();
+		values.put(T_A_ID, transaction.getAID());
+		values.put(TRANSACTION_NAME, transaction.getName());
+		values.put(TRANSACTION_DATE, transaction.getDate());
+		values.put(TRANSACTION_AMOUNT, transaction.getAmount());
+		values.put(TRANSACTION_CATEGORY, transaction.getCategory());
+		values.put(TRANSACTION_TYPE, transaction.getType());
+		values.put(TRANSACTION_INTERVAL, transaction.getInterval());
+		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
+		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
+		values.put(TRANSACTION_CHANGE, transaction.getChange());
+					
+		int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
+					
+		db.close();
+					
+		return i;
+	}
+				
+	// Delete a single Transaction.
+	public void deleteTransaction(Transaction transaction) {
+					
+		SQLiteDatabase db = this.getWritableDatabase();
+					
+		db.delete(TRANSACTION_TABLE, T_ID+"= ?", new String[] { String.valueOf(transaction.getId()) });
+					
+		db.close();
+					
+	}
+				
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Alert methods ---------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+	// Add a single Alert.
+	public void addAlert(Alert alert){
+		Log.d("addAlert", alert.toString());
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(AT_A_ID, alert.getAtId());
+		values.put(ALERT_NAME, alert.getName());
+		values.put(ALERT_DESCRIPTION, alert.getDescription());
+		values.put(ALERT_DUE_DATE, alert.getDueDate());
+			
+		db.insert(ALERT_TABLE, null, values);
+		
+		db.close();
+	}
+		
+	// Get a single Alert.
+	public Alert getAlert(int id){
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		Cursor cursor =
+				db.query(ALERT_TABLE, ALERT_FIELDS, AT_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
+			
+		if (cursor != null)
+	        cursor.moveToFirst();
+			
+		Alert alert = new Alert();
+		alert.setId(Integer.parseInt(cursor.getString(0)));
+		alert.setAId(Integer.parseInt(cursor.getString(1)));
+		alert.setName(cursor.getString(2));
+		alert.setDescription(cursor.getString(3));
+		alert.setDueDate(cursor.getString(4));
+			 
+		 Log.d("getAlert("+id+")", alert.toString());
+			 
+		 return alert;
+	}
+		
+	// Get a list of all Alerts. 
+	public List<Alert> getListAllAlerts() {
+		List<Alert> alerts = new LinkedList<Alert>();
+			
+		String query = "SELECT * FROM " + ALERT_TABLE;
+			
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		Alert alert = null;
+		if (cursor.moveToFirst()) {
+			do {
+				alert = new Alert();
+				alert.setId(Integer.parseInt(cursor.getString(0)));
+				alert.setAId(Integer.parseInt(cursor.getString(1)));
+				alert.setName(cursor.getString(2));
+				alert.setDescription(cursor.getString(3));
+				alert.setDueDate(cursor.getString(4));
+					
+				alerts.add(alert);
+			} while (cursor.moveToNext());
+		}
+			
+		Log.d("getAllAlerts()", alerts.toString());
+		
+		return alerts;
+	}
+		
+	// For List population of Alert
+	public Cursor getAllAlerts() {
+		SQLiteDatabase db = this.getReadableDatabase();
+			
+		String where = null;
+		Cursor cursor = db.query(true, ALERT_TABLE, ALERT_FIELDS,  where,  null, null,  null, null, null);
+			
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+			
+		return cursor;
+	}
+			
+	// Update a single Alert.
+	public int updateAlert(Alert alert) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		ContentValues values = new ContentValues();
+		values.put(AT_A_ID,  alert.getAtId());
+		values.put(ALERT_NAME, alert.getName());
+		values.put(ALERT_DESCRIPTION, alert.getDescription());
+		values.put(ALERT_DUE_DATE, alert.getDueDate());
+			
+		int i = db.update(ALERT_TABLE, values, AT_ID + " = ?", new String[] { String.valueOf(alert.getId()) });
+			
+		db.close();
+			
+		return i;
+	}
+		
+	// Delete a single Alert.
+	public void deleteAlert(Alert alert) {
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+			
+		db.delete(ALERT_TABLE, AT_ID+"= ?", new String[] { String.valueOf(alert.getId()) });
+			
+		db.close();
+			
+	}	
+
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	// Accounts for transactions that are on or before todays date
+	public void cleanTransactions(Context context) {
+			
+		int numAccounts;
+		int numTran = 0;
+		float tranSum = 0;
+		float accBase = 0;
+		int a_id;
+		String query;
+			
+		// Check if any accounts exist. Could be replaced with comparison based on a queryCount() call.
+		if (checkAccountExists()) {
+			// Get a list off all the accounts and a count of how many there are.
+			List<Account> accList = getListAllAccounts();
+			numAccounts = accList.size();				
+			
+			// Check if any transactions exist.
+			if(checkTransExists()) {
+				// Iterate through all accounts.
+				for (int i = 0; i < numAccounts; i++) {
+					// Get the _id of the current account.
+					a_id = accList.get(i).getId();
+					//Establish a base query returning all transactions associated with an account.
+					query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = " + a_id;
+					//Returns the total count of transactions associated with the current account.
+					numTran = queryCount(query);
+					Log.d("numTran", Integer.toString(numTran));
+					//Returns a sum of all Transactions that are currently accounted for.
+					tranSum = querySum(query + " AND " + TRANSACTION_ACCOUNTED + " = " + 1);
+					//Returns the base (beginning) balance of the current account.
+					accBase = Float.parseFloat((accList.get(i).getBalance())) - tranSum;
+					
+					// Reset the current account base balance.
+					accList.get(i).setBalance(String.format("%.2f",accBase));
+					updateAccount(accList.get(i));
+					
+					//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+					//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
+					//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
 				}
-			}
-		
-		// Check if a transaction date is on or before today.
-		@SuppressLint("SimpleDateFormat")
-		public boolean checkAccountedDate(String transDate, String against) {
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
-			java.util.Date today = null;
-			String currentDate;
-			
-			if (against.equals("now")) {
-				java.util.Date d = Calendar.getInstance().getTime(); // Current time
-				currentDate = sdf.format(d); // Get Date String according to date format
+				// Get a list of all the transactions and a count of how many there are.
+				List<Transaction> tranList = getAllListTransactions(0);
+				int count = tranList.size();
+				
+				Account account;
+				String currBalance;
+				String changeAmount;
+				float newBalance;
+				// Iterate through all the transactions
+				for (int i = 0; i < count; i++) {
+					//Get the current transaction Account and balance.
+					account = getAccount(tranList.get(i).getAID());
+					currBalance = account.getBalance();
+					// Set the accounted flag against today's date and update the transaction
+					tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), "now"));
+					updateTransaction(tranList.get(i));
+					//Get the transaction amount.
+					changeAmount = tranList.get(i).getAmount();
+					// If the transaction is accounted update the account balance.
+					if(tranList.get(i).getAccounted()) {
+						newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
+						account.setBalance(String.format("%.2f",newBalance));
+						updateAccount(account);
+						tranList.get(i).setChange(account.getBalance());
+						updateTransaction(tranList.get(i));
+					} else {
+						tranList.get(i).setChange(null);
+						updateTransaction(tranList.get(i));
+					}
+				}
 			} else {
-				currentDate = against;
+				Toast.makeText(context, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
 			}
-			java.util.Date date = null;
 			
+		} else {
+			Toast.makeText(context, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
+		}
+		
+	}
+		
+	// Set transactions to be accounted according to the date passed in the date String in the account passed by A_ID.
+	public void seeFuture (Context context, String date, int A_ID) {
+		
+		List<Transaction> tranList = getAllListTransactions(A_ID);
+		int numTrans = tranList.size();
+		Account account;
+		String currBalance;
+		String changeAmount;
+		float newBalance;
+		boolean pAccounted;
+					
+		for (int i = 0; i < numTrans; i++) {
+			account = getAccount(tranList.get(i).getAID());
+			currBalance = account.getBalance();
+			pAccounted = tranList.get(i).getAccounted();
+							
+			// Set the threshold date here -----------------------------------------------
+			tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), date));
+			// --------------------------------------------------------------------------
+				
+			updateTransaction(tranList.get(i));
+			//Toast.makeText(this, String.valueOf(pAccounted), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, String.valueOf(tranList.get(i).getAccounted()), Toast.LENGTH_LONG).show();
+				
+			if(!pAccounted && tranList.get(i).getAccounted()) {
+				changeAmount = tranList.get(i).getAmount();
+				newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
+				account.setBalance(String.format("%.2f",newBalance));				
+				updateAccount(account);
+				tranList.get(i).setChange(account.getBalance());
+				updateTransaction(tranList.get(i));
+			} else if (pAccounted && !tranList.get(i).getAccounted()) {
+				changeAmount = tranList.get(i).getAmount();
+				newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);
+				account.setBalance(String.format("%.2f",newBalance));				
+				updateAccount(account);
+				tranList.get(i).setChange(null);
+				updateTransaction(tranList.get(i));
+			} else if(pAccounted == tranList.get(i).getAccounted()) {
+				//Do Nothing.
+			} else {
+				Toast.makeText(context, "An Error has Occured!", Toast.LENGTH_LONG).show();
+			}
+		}		
+	}
+	
+	// Creates a years worth of recurring transactions according to the interval passed by interval.
+	@SuppressLint("SimpleDateFormat")
+	public void createReccTransactions (int interval, String transDateS, int T_ID) {
+		Transaction transaction = getTransaction(T_ID);
+		int recDayInt = 0;
+		int recMonInt = 0;
+		int recYerInt = 0;
+		int recCount = 0;
+			
+		Calendar intCal;
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+		java.util.Date date = null;
+		String intDate;
+		int iDay, iMonth, iYear;
+		String nDay, nMonth;
+			
+		//Handling the recurring transactions.
+		if (interval != 0) {
+				
+			switch (interval) {
+				case 1:
+					//Every two weeks transaction. Adds 26 extra transactions.
+					recDayInt = 14;
+					recMonInt = 0;
+					recYerInt = 0;
+					recCount = 26;
+					break;
+				case 2:
+					//Every month transaction. Adds 12 additional transactions.
+					recDayInt = 0;
+					recMonInt = 1;
+					recYerInt = 0;
+					recCount = 12;
+					break;
+				case 3:
+					//Every year transaction. Adds one additional transaction.
+					recDayInt = 0;
+					recMonInt = 0;
+					recYerInt = 1;
+					recCount = 1;
+					break;
+			}
 			
 			try {
-	            date = sdf.parse(transDate);
-	            today = sdf.parse(currentDate);
+				date = sdf.parse(transDateS);
 	        } catch (ParseException e) {
 	            e.printStackTrace();
 	        }
 			
-			if (date.before(today) || date.equals(today)) {
-				return true;
+			intCal = Calendar.getInstance();
+			intCal.setTime(date);
+			intCal.add(Calendar.DATE, recDayInt);
+			intCal.add(Calendar.MONTH, recMonInt);
+			intCal.add(Calendar.YEAR, recYerInt);
+			
+			iDay = intCal.get(Calendar.DAY_OF_MONTH);
+			iMonth = intCal.get(Calendar.MONTH);
+			iYear = intCal.get(Calendar.YEAR);
+			
+			if (iDay < 10) {
+				nDay = "0" + String.valueOf(iDay);
 			} else {
-				return false;
+				nDay = String.valueOf(iDay);
 			}
-		}
-		
-		// Add a single Transaction.
-		public void addTransaction(Transaction transaction){
-			Log.d("addTransaction", transaction.toString());
-					
-			SQLiteDatabase db = this.getWritableDatabase();
-					
-			ContentValues values = new ContentValues();
-			values.put(T_A_ID, transaction.getAID());
-			values.put(TRANSACTION_NAME, transaction.getName());
-			values.put(TRANSACTION_DATE, transaction.getDate());
-			values.put(TRANSACTION_AMOUNT, transaction.getAmount());
-			values.put(TRANSACTION_CATEGORY, transaction.getCategory());
-			values.put(TRANSACTION_TYPE, transaction.getType());
-			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
-			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
-			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
-			values.put(TRANSACTION_CHANGE, transaction.getChange());
-			
-			db.insert(TRANSACTION_TABLE, null, values);
-					
-			db.close();
-		}
-				
-		// Get a single Transaction.
-		public Transaction getTransaction(int id){
-			SQLiteDatabase db = this.getReadableDatabase();
-					
-			Cursor cursor =
-					db.query(TRANSACTION_TABLE, TRANSACTION_FIELDS, T_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-					
-			if (cursor != null)
-		        cursor.moveToFirst();
-			
-			// Set the Boolean
-			boolean accounted = false;
-			int x = cursor.getInt(9);
-			if (x == 1) accounted = true;
-			
-			Transaction transaction = new Transaction();
-			transaction.setId(Integer.parseInt(cursor.getString(0)));
-			transaction.setAId(Integer.parseInt(cursor.getString(1)));
-			transaction.setName(cursor.getString(2));
-			transaction.setDate(cursor.getString(3));
-			transaction.setAmount(cursor.getString(4));
-			transaction.setCategory(cursor.getString(5));
-			transaction.setType(cursor.getString(6));
-			transaction.setInterval(cursor.getString(7));
-			transaction.setDescription(cursor.getString(8));
-			transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
-			transaction.setChange(cursor.getString(10));
-					 
-			 Log.d("getTransaction("+id+")", transaction.toString());
-					 
-			 return transaction;
-		}
-				
-		// Get a list of all Transactions.
-		public List<Transaction> getAllListTransactions(int a_id) {
-			List<Transaction> transactions = new LinkedList<Transaction>();
-					
-			String where = null;
-			String having = null;
-			String order = null;
-			
-			if(a_id != 0) {
-				where = T_A_ID+"="+a_id;
-			}
-			
-			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
-					
-			Transaction transaction = null;
-			boolean accounted;
-			int x;
-			
-			if (cursor.moveToFirst()) {
-				
-				do {
-					// Set the Boolean
-					accounted = false;
-					x = cursor.getInt(9);
-					if (x == 1) accounted = true;
-					
-					transaction = new Transaction();
-					transaction.setId(Integer.parseInt(cursor.getString(0)));
-					transaction.setAId(Integer.parseInt(cursor.getString(1)));
-					transaction.setName(cursor.getString(2));
-					transaction.setDate(cursor.getString(3));
-					transaction.setAmount(cursor.getString(4));
-					transaction.setCategory(cursor.getString(5));
-					transaction.setType(cursor.getString(6));
-					transaction.setInterval(cursor.getString(7));
-					transaction.setDescription(cursor.getString(8));
-					transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
-					transaction.setChange(cursor.getString(10));
-							
-					transactions.add(transaction);
-				} while (cursor.moveToNext());
-			}
-					
-			Log.d("getAllTransactions()", transactions.toString());
-					
-			return transactions;
-		}
-		
-		// For List population of Account ListView
-		public Cursor getAllTransactions(int a_id) {
-			SQLiteDatabase db = this.getWritableDatabase();
-					
-			String where = null;
-			String having = null;
-			String order = null;
-			
-			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
-						
-			if(a_id != 0) {
-				where = T_A_ID + " = " + a_id + " AND " + TRANSACTION_ACCOUNTED + " = " + 1;
-			}
-			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
-	
-			if (cursor != null) {
-				cursor.moveToFirst();
-			}
-					
-			return cursor;
-		}
-		
-		public void toastTranDates(Context context) {
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			String where = null;
-			String having = null;
-			String order = null;
-			
-			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",4,2) || substr(" + TRANSACTION_DATE + ",1,2) ASC";
-
-			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
-			
-			if (cursor.moveToFirst()) {
-				do {
-					Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
-							
-				} while (cursor.moveToNext());
-			}
-			else {
-				Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
-			}
-		}
-		
-		//TODO Toast all Transactions -- REMOVE AFTER TESTING --
-		public void toastTransaction(Context context){
-			String query = "SELECT * FROM " + TRANSACTION_TABLE;
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-					
-			if (cursor.moveToFirst()) {
-				do {
-					Toast.makeText(context, cursor.getString(2), Toast.LENGTH_LONG).show();		
-							
-				} while (cursor.moveToNext());
-			}
-			else {
-				Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
-			}
-		}
-				
-		// Update a single Transaction.
-		public int updateTransaction(Transaction transaction) {
-					
-			SQLiteDatabase db = this.getWritableDatabase();
-					
-			ContentValues values = new ContentValues();
-			values.put(T_A_ID, transaction.getAID());
-			values.put(TRANSACTION_NAME, transaction.getName());
-			values.put(TRANSACTION_DATE, transaction.getDate());
-			values.put(TRANSACTION_AMOUNT, transaction.getAmount());
-			values.put(TRANSACTION_CATEGORY, transaction.getCategory());
-			values.put(TRANSACTION_TYPE, transaction.getType());
-			values.put(TRANSACTION_INTERVAL, transaction.getInterval());
-			values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
-			values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
-			values.put(TRANSACTION_CHANGE, transaction.getChange());
-					
-			int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
-					
-			db.close();
-					
-			return i;
-		}
-				
-		// Delete a single Transaction.
-		public void deleteTransaction(Transaction transaction) {
-					
-			SQLiteDatabase db = this.getWritableDatabase();
-					
-			db.delete(TRANSACTION_TABLE, T_ID+"= ?", new String[] { String.valueOf(transaction.getId()) });
-					
-			db.close();
-					
-		}
-				
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Alert methods ---------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-		// Add a single Alert.
-		public void addAlert(Alert alert){
-			Log.d("addAlert", alert.toString());
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(AT_A_ID, alert.getAtId());
-			values.put(ALERT_NAME, alert.getName());
-			values.put(ALERT_DESCRIPTION, alert.getDescription());
-			values.put(ALERT_DUE_DATE, alert.getDueDate());
-			
-			db.insert(ALERT_TABLE, null, values);
-		
-			db.close();
-		}
-		
-		// Get a single Alert.
-		public Alert getAlert(int id){
-			SQLiteDatabase db = this.getReadableDatabase();
-			
-			Cursor cursor =
-					db.query(ALERT_TABLE, ALERT_FIELDS, AT_ID + " = ?", new String[] {String.valueOf(id) }, null, null, null, null);
-			
-			if (cursor != null)
-		        cursor.moveToFirst();
-			
-			Alert alert = new Alert();
-			alert.setId(Integer.parseInt(cursor.getString(0)));
-			alert.setAId(Integer.parseInt(cursor.getString(1)));
-			alert.setName(cursor.getString(2));
-			alert.setDescription(cursor.getString(3));
-			alert.setDueDate(cursor.getString(4));
-			 
-			 Log.d("getAlert("+id+")", alert.toString());
-			 
-			 return alert;
-		}
-		
-		// Get a list of all Alerts. 
-		public List<Alert> getListAllAlerts() {
-			List<Alert> alerts = new LinkedList<Alert>();
-			
-			String query = "SELECT * FROM " + ALERT_TABLE;
-			
-			SQLiteDatabase db = this.getReadableDatabase();
-			Cursor cursor = db.rawQuery(query, null);
-			
-			Alert alert = null;
-			if (cursor.moveToFirst()) {
-				do {
-					alert = new Alert();
-					alert.setId(Integer.parseInt(cursor.getString(0)));
-					alert.setAId(Integer.parseInt(cursor.getString(1)));
-					alert.setName(cursor.getString(2));
-					alert.setDescription(cursor.getString(3));
-					alert.setDueDate(cursor.getString(4));
-					
-					alerts.add(alert);
-				} while (cursor.moveToNext());
-			}
-			
-			Log.d("getAllAlerts()", alerts.toString());
-			
-			return alerts;
-		}
-		
-		// For List population of Alert
-		public Cursor getAllAlerts() {
-			SQLiteDatabase db = this.getReadableDatabase();
-			
-			String where = null;
-			Cursor cursor = db.query(true, ALERT_TABLE, ALERT_FIELDS,  where,  null, null,  null, null, null);
-			
-			if (cursor != null) {
-				cursor.moveToFirst();
-			}
-			
-			return cursor;
-		}
-		
-		
-		// Update a single Alert.
-		public int updateAlert(Alert alert) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			ContentValues values = new ContentValues();
-			values.put(AT_A_ID,  alert.getAtId());
-			values.put(ALERT_NAME, alert.getName());
-			values.put(ALERT_DESCRIPTION, alert.getDescription());
-			values.put(ALERT_DUE_DATE, alert.getDueDate());
-
-			
-			int i = db.update(ALERT_TABLE, values, AT_ID + " = ?", new String[] { String.valueOf(alert.getId()) });
-			
-			db.close();
-			
-			return i;
-		}
-		
-		// Delete a single Alert.
-		public void deleteAlert(Alert alert) {
-			
-			SQLiteDatabase db = this.getWritableDatabase();
-			
-			db.delete(ALERT_TABLE, AT_ID+"= ?", new String[] { String.valueOf(alert.getId()) });
-			
-			db.close();
-			
-		}	
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
-		// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-		public void cleanTransactions(Context context) {
-			
-			int numAccounts;
-			int numTran = 0;
-			float tranSum = 0;
-			float accBase = 0;
-			int a_id;
-			String query;
-			
-			// Check if any accounts exist. Could be replaced with comparison based on a queryCount() call.
-			if (checkAccountExists()) {
-				// Get a list off all the accounts and a count of how many there are.
-				List<Account> accList = getListAllAccounts();
-				numAccounts = accList.size();				
-				
-				// Check if any transactions exist.
-				if(checkTransExists()) {
-					// Iterate through all accounts.
-					for (int i = 0; i < numAccounts; i++) {
-						// Get the _id of the current account.
-						a_id = accList.get(i).getId();
-						//Establish a base query returning all transactions associated with an account.
-						query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = " + a_id;
-						//Returns the total count of transactions associated with the current account.
-						numTran = queryCount(query);
-						Log.d("numTran", Integer.toString(numTran));
-						//Returns a sum of all Transactions that are currently accounted for.
-						tranSum = querySum(query + " AND " + TRANSACTION_ACCOUNTED + " = " + 1);
-						//Returns the base (beginning) balance of the current account.
-						accBase = Float.parseFloat((accList.get(i).getBalance())) - tranSum;
-						
-						// Reset the current account base balance.
-						accList.get(i).setBalance(String.format("%.2f",accBase));
-						updateAccount(accList.get(i));
-						
-						//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-						//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-						//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-					}
-					// Get a list of all the transactions and a count of how many there are.
-					List<Transaction> tranList = getAllListTransactions(0);
-					int count = tranList.size();
-					
-					Account account;
-					String currBalance;
-					String changeAmount;
-					float newBalance;
-					// Iterate through all the transactions
-					for (int i = 0; i < count; i++) {
-						//Get the current transaction Account and balance.
-						account = getAccount(tranList.get(i).getAID());
-						currBalance = account.getBalance();
-						// Set the accounted flag against today's date and update the transaction
-						tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), "now"));
-						updateTransaction(tranList.get(i));
-						//Get the transaction amount.
-						changeAmount = tranList.get(i).getAmount();
-						// If the transaction is accounted update the account balance.
-						if(tranList.get(i).getAccounted()) {
-							newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
-							account.setBalance(String.format("%.2f",newBalance));
-							updateAccount(account);
-							tranList.get(i).setChange(account.getBalance());
-							updateTransaction(tranList.get(i));
-						} else {
-							tranList.get(i).setChange(null);
-							updateTransaction(tranList.get(i));
-						}
-					}
-				} else {
-					Toast.makeText(context, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
-				}
-				
+			if (iMonth < 9) {
+				nMonth = "0" + String.valueOf(iMonth+1);
 			} else {
-				Toast.makeText(context, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
+				nMonth =String.valueOf(iMonth+1);
 			}
-		
-		}
-		
-		// Set transactions to be accounted according to the spinner date.
-		public void seeFuture (Context context, String date, int A_ID) {
-		
-			List<Transaction> tranList = getAllListTransactions(A_ID);
-			int numTrans = tranList.size();
-			Account account;
-			String currBalance;
-			String changeAmount;
-			float newBalance;
-			boolean pAccounted;
-					
-			for (int i = 0; i < numTrans; i++) {
-				account = getAccount(tranList.get(i).getAID());
-				currBalance = account.getBalance();
-				pAccounted = tranList.get(i).getAccounted();
-							
-				// Set the threshold date here -----------------------------------------------
-				tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), date));
-				// --------------------------------------------------------------------------
-				
-				updateTransaction(tranList.get(i));
-				//Toast.makeText(this, String.valueOf(pAccounted), Toast.LENGTH_LONG).show();
-				//Toast.makeText(this, String.valueOf(tranList.get(i).getAccounted()), Toast.LENGTH_LONG).show();
-				
-				if(!pAccounted && tranList.get(i).getAccounted()) {
-					changeAmount = tranList.get(i).getAmount();
-					newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
-					account.setBalance(String.format("%.2f",newBalance));				
-					updateAccount(account);
-					tranList.get(i).setChange(account.getBalance());
-					updateTransaction(tranList.get(i));
-				} else if (pAccounted && !tranList.get(i).getAccounted()) {
-					changeAmount = tranList.get(i).getAmount();
-					newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);
-					account.setBalance(String.format("%.2f",newBalance));				
-					updateAccount(account);
-					tranList.get(i).setChange(null);
-					updateTransaction(tranList.get(i));
-				} else if(pAccounted == tranList.get(i).getAccounted()) {
-					//Do Nothing.
-				} else {
-					Toast.makeText(context, "An Error has Occured!", Toast.LENGTH_LONG).show();
-				}
-			}		
-		}
-		
-		@SuppressLint("SimpleDateFormat")
-		public void createReccTransactions (int interval, String transDateS, int T_ID) {
-			Transaction transaction = getTransaction(T_ID);
-			int recDayInt = 0;
-			int recMonInt = 0;
-			int recYerInt = 0;
-			int recCount = 0;
 			
-			Calendar intCal;
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
-			java.util.Date date = null;
-			String intDate;
-			int iDay, iMonth, iYear;
-			String nDay, nMonth;
-			
-			//Handling the recurring transactions.
-			if (interval != 0) {
-				
-				switch (interval) {
-					case 1:
-						//Every two weeks transaction. Adds 26 extra transactions.
-						recDayInt = 14;
-						recMonInt = 0;
-						recYerInt = 0;
-						recCount = 26;
-						break;
-					case 2:
-						//Every month transaction. Adds 12 additional transactions.
-						recDayInt = 0;
-						recMonInt = 1;
-						recYerInt = 0;
-						recCount = 12;
-						break;
-					case 3:
-						//Every year transaction. Adds one additional transaction.
-						recDayInt = 0;
-						recMonInt = 0;
-						recYerInt = 1;
-						recCount = 1;
-						break;
-				}
+			intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
+			//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+			String tName = transaction.getName();
+			int tID = transaction.getId();
+			for (int i = 0; i < recCount; i++) {
+				transaction.setName(tName + "-" + String.valueOf(tID));
+				transaction.setDate(intDate);
+				transaction.setAccounted(false);
+				transaction.setChange(null);
+				addTransaction(transaction);
 				
 				try {
-					date = sdf.parse(transDateS);
+					date = sdf.parse(intDate);
 		        } catch (ParseException e) {
 		            e.printStackTrace();
 		        }
-				
-				intCal = Calendar.getInstance();
 				intCal.setTime(date);
-				intCal.add(Calendar.DATE, recDayInt);
+				if (interval == 1) intCal.add(Calendar.DATE, recDayInt);
 				intCal.add(Calendar.MONTH, recMonInt);
 				intCal.add(Calendar.YEAR, recYerInt);
 				
@@ -1293,46 +1357,11 @@ public class DBHelper extends SQLiteOpenHelper {
 				
 				intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
 				//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
-				String tName = transaction.getName();
-				int tID = transaction.getId();
-				for (int i = 0; i < recCount; i++) {
-					transaction.setName(tName + "-" + String.valueOf(tID));
-					transaction.setDate(intDate);
-					transaction.setAccounted(false);
-					transaction.setChange(null);
-					addTransaction(transaction);
-					
-					try {
-						date = sdf.parse(intDate);
-			        } catch (ParseException e) {
-			            e.printStackTrace();
-			        }
-					intCal.setTime(date);
-					if (interval == 1) intCal.add(Calendar.DATE, recDayInt);
-					intCal.add(Calendar.MONTH, recMonInt);
-					intCal.add(Calendar.YEAR, recYerInt);
-					
-					iDay = intCal.get(Calendar.DAY_OF_MONTH);
-					iMonth = intCal.get(Calendar.MONTH);
-					iYear = intCal.get(Calendar.YEAR);
-					
-					if (iDay < 10) {
-						nDay = "0" + String.valueOf(iDay);
-					} else {
-						nDay = String.valueOf(iDay);
-					}
-					if (iMonth < 9) {
-						nMonth = "0" + String.valueOf(iMonth+1);
-					} else {
-						nMonth =String.valueOf(iMonth+1);
-					}
-					
-					intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
-					//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
-				}
 			}
 		}
-		
+	}
+	
+	//Delete recurring transactions spawned from passed transaction object and original transaction object.
 	public void deleteReccTransactions(Transaction transaction) {
 		int nLen = transaction.getName().length() + 2;
 		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";

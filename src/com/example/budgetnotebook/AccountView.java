@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * AccountView.java
+ * 
+ * View activity for displaying records in the DB Account Table.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;
@@ -14,12 +30,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AccountView extends Activity {
+	//Class variable definitions.
 	Button addAccount;	
 	DBHelper db;
 	
 	RelativeLayout vwParentRow;
 	ListView accountList;
 	
+	//Perform operations when the class is created.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,40 +48,29 @@ public class AccountView extends Activity {
 						
 		// Populate the ListView
 		populateListViewAccounts();	
-		
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------
-		
+				
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		addAccount = (Button) findViewById(R.id.addAccount);
 		addAccount.setOnClickListener(new View.OnClickListener() {		
 						
 		@Override
-			public void onClick(View v) {
-				try{
-					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
-					Intent newIntent = new Intent(AccountView.this, clickedClass);
+		public void onClick(View v) {
+			try{
+				//Take us to the account form.
+				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+				Intent newIntent = new Intent(AccountView.this, clickedClass);
 					
-					// Brings us back to the root activity, where exit functions properly.
-					newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(newIntent);
-					} catch(ClassNotFoundException e) {
-						e.printStackTrace();
-					}
+				// Brings us back to the root activity, where exit functions properly.
+				newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(newIntent);
+				} catch(ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}				
 		});
 	};
 	
-	/*
-	// Close the Database on destroy.
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		db.close();
-		finish();
-	};
-	*/
-	
+	//Refresh the view on activity resume.
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -112,6 +119,7 @@ public class AccountView extends Activity {
         a_id = Integer.parseInt((child.getText().toString().trim()));
         
         try {
+        	//Take us to the transaction view on click.
         	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionView");
         	Intent newIntent = new Intent(AccountView.this,clickedClass);
 
@@ -126,84 +134,83 @@ public class AccountView extends Activity {
 	}
 	
 	// Set Edit Button click action.
-		public void editClickHandler(View v) {
+	public void editClickHandler(View v) {
 			
-			int a_id;
+		int a_id;
 					
-			// Get the row the clicked button is in
-	        vwParentRow = (RelativeLayout)v.getParent();
+		// Get the row the clicked button is in
+	       vwParentRow = (RelativeLayout)v.getParent();
 	        
-	        // Get the object that the account ID is stored in
-	        TextView child = (TextView)vwParentRow.getChildAt(1);
+	    // Get the object that the account ID is stored in
+	    TextView child = (TextView)vwParentRow.getChildAt(1);
 	        
 	     // Store the account id in the variable integer.
-	        a_id = Integer.parseInt((child.getText().toString().trim()));
+	     a_id = Integer.parseInt((child.getText().toString().trim()));
 	        
-	        try {
-	        	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
-	        	Intent newIntent = new Intent(AccountView.this,clickedClass);
+	     try {
+	       	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+	       	Intent newIntent = new Intent(AccountView.this,clickedClass);
 
-				// Brings us back to the root activity, where exit functions properly.
-				newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// Brings us back to the root activity, where exit functions properly.
+			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				
-				// Pass the extras to the intent on AccountForm.
-	        	newIntent.putExtra("A_ID", a_id);
-	        	newIntent.putExtra("A_EDIT", true);
-	        	startActivity(newIntent);
+			// Pass the extras to the intent on AccountForm.
+	       	newIntent.putExtra("A_ID", a_id);
+	       	newIntent.putExtra("A_EDIT", true);
+	       	startActivity(newIntent);
 			
-	        } catch(ClassNotFoundException e) {
-	        	e.printStackTrace();
-	        }
-		}
+	     } catch(ClassNotFoundException e) {
+	       	e.printStackTrace();
+	     }
+	}
 	
 	// Set Delete Button click action.
-		public void deleteClickHandler(View v) {
+	public void deleteClickHandler(View v) {
 			
-			int a_id;
-			String a_name;
+		int a_id;
+		String a_name;
 			
-			// Get the row the clicked button is in
-	        vwParentRow = (RelativeLayout)v.getParent();
+		// Get the row the clicked button is in
+	    vwParentRow = (RelativeLayout)v.getParent();
 	        
-	        // Get the object that the account ID is stored in
-	        TextView child = (TextView)vwParentRow.getChildAt(1);
+	    // Get the object that the account ID is stored in
+	    TextView child = (TextView)vwParentRow.getChildAt(1);
 	        
-	        // Get the object that the account name is stored in
-	        TextView child2 = (TextView)vwParentRow.getChildAt(2);
+	    // Get the object that the account name is stored in
+	    TextView child2 = (TextView)vwParentRow.getChildAt(2);
 	        
-	        // Store the account id in the variable integer.
-	        a_id = Integer.parseInt((child.getText().toString().trim()));
+	    // Store the account id in the variable integer.
+	    a_id = Integer.parseInt((child.getText().toString().trim()));
 	        
-	        // Get the account referenced by the variable integer.
-	        final Account account = db.getAccount(a_id);
+	    // Get the account referenced by the variable integer.
+	    final Account account = db.getAccount(a_id);
 	        
-	        // Store the account name in the variable string.
-	        a_name = child2.getText().toString().trim();
+	    // Store the account name in the variable string.
+	    a_name = child2.getText().toString().trim();
 	        
-	        // Alert dialog to affirm delete.
-	        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-	            @Override
-	            public void onClick(DialogInterface dialog, int which) {
-	                switch (which){
-	                case DialogInterface.BUTTON_POSITIVE:
-	                    db.deleteAccount(account);
+	    // Alert dialog to affirm delete.
+	    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+	    @Override
+	    public void onClick(DialogInterface dialog, int which) {
+	        switch (which){
+	        case DialogInterface.BUTTON_POSITIVE:
+	            db.deleteAccount(account);
 	                    
-	                 // Populate the ListView
-	            		populateListViewAccounts();	
-	                    
-	                    break;
+	            // Populate the ListView
+	            populateListViewAccounts();	
+	             break;
 
-	                case DialogInterface.BUTTON_NEGATIVE:
-	                    //Do Nothing.
-	                    break;
-	                }
-	            }
-	        };
+	        case DialogInterface.BUTTON_NEGATIVE:
+	        		//Do Nothing.
+	        		break;
+	        }
+	    }
+	};
 
-	        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        builder.setMessage("Are you sure you want to delete account, " +a_name+"?").setPositiveButton("Yes", dialogClickListener)
-	            .setNegativeButton("No", dialogClickListener).show();
+	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure you want to delete account, " +a_name+"?").setPositiveButton("Yes", dialogClickListener)
+		.setNegativeButton("No", dialogClickListener).show();
 	        
-		}
+	}
 }
 
