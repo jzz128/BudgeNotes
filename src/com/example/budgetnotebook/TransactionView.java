@@ -377,12 +377,12 @@ public class TransactionView extends Activity {
 				if (view.getId() == R.id.transChangeAmount)
                 { 
                   String s = cursor.getString(11);
-                  Log.d("cursor value =",String.valueOf(s));
+                  //Log.d("cursor value =",String.valueOf(s));
                   TextView tv = (TextView)view;
 
-                  tv.setTextColor(Color.parseColor(s));
+                  if(s != null) tv.setTextColor(Color.parseColor(s));
                   tv.setText(cursor.getString(10));
-                  Log.d("change amount=",cursor.getString(10));
+                  //Log.d("change amount=",cursor.getString(10));
                  return true;
 
             }
@@ -401,7 +401,7 @@ public class TransactionView extends Activity {
 		@Override
 		protected void onResume() {
 			super.onResume();
-			//db.cleanTransactions(this);
+			db.cleanTransactions(this);
 			populateListViewTransactions(A_ID);
 		};
 	
