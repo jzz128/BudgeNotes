@@ -115,7 +115,7 @@ public class RecommendationView extends Activity {
 				do {
 					if (recCursor.moveToFirst()) {
 						do {
-							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(12))) { // Updated to incorporate new transaction method.
+							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(13))) { // Updated to incorporate new transaction method.
 								// Set the Recommendation to True.
 								//Toast.makeText(this, "Recommendation found; " + i, Toast.LENGTH_LONG).show();
 								recs.get(i).setIV(true);

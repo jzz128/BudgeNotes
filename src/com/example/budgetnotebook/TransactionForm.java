@@ -59,6 +59,7 @@ public class TransactionForm extends Activity implements InputValidator {
 	private String transDescriptionS;
 	
 	private String amountChange;
+	private String changeColor;
 	private boolean transAccounted;
 	private boolean prevAccounted;
 	
@@ -320,7 +321,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		transaction.setDescription(transDescriptionS);
 		transaction.setAccounted(transAccounted);
 		transaction.setChange(null);
-
+		transaction.setCColor(null);
 	}
 	
 	// Fill the form fields with database data.
@@ -413,7 +414,7 @@ public class TransactionForm extends Activity implements InputValidator {
 	
 	@SuppressWarnings("static-access")
 	private void addTransaction() {
-		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted, amountChange));
+		db.addTransaction(new Transaction(transAccountI, transNameS, transDateS, transAmountS, transCategoryS, transTypeS, transIntervalS, transDescriptionS, transAccounted, amountChange, changeColor));
 		T_ID = db.lastRowID("SELECT " + db.T_ID + " from " + db.TRANSACTION_TABLE + " order by " + db.T_ID + " DESC limit 1");
 	}
 
@@ -426,25 +427,6 @@ public class TransactionForm extends Activity implements InputValidator {
 		String accountType;
 		
 		changeAmount = Float.parseFloat(transAmountS);
-		
-		//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
-		//Toast.makeText(this, "transAmountS="+transAmountS, Toast.LENGTH_LONG).show();
-		
-		/*
-		switch (transType.getCheckedRadioButtonId()) {
-		case R.id.transTypeCredit:
-			// Type is a Credit to the account
-			//changeAmount = changeAmount;
-			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
-			break;
-			
-		case R.id.transTypeDebit:
-			// Type is a Credit to the account
-			changeAmount = -changeAmount;
-			//Toast.makeText(this, "changeAmount="+changeAmount, Toast.LENGTH_LONG).show();
-			break;
-		}
-		*/
 		
 		// Update the value of the Account.
 		account = db.getAccount(accountId);
@@ -460,7 +442,13 @@ public class TransactionForm extends Activity implements InputValidator {
 		newBalance = oldBalance + changeAmount;
 		account.setBalance(String.format("%.2f",newBalance));
 		amountChange = String.format("%.2f",newBalance);
+		
+		if (newBalance > 100) {changeColor = String.valueOf(getResources().getColor(R.color.normal_balance));} else
+		if (0 <= newBalance  && newBalance <= 100) {changeColor = String.valueOf(getResources().getColor(R.color.below_threshhold));} else
+		if (newBalance < 0) {changeColor = String.valueOf(getResources().getColor(R.color.below_zero));}
+		
 		if (T_EDIT) transaction.setChange(amountChange);
+		if (T_EDIT) transaction.setCColor(changeColor);
 		db.updateAccount(account);
 	}
 
@@ -475,17 +463,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		float newBalance;
 		String accountType;
 		changeAmount = Float.parseFloat(transaction.getAmount());
-		
-		/*
-		if (transaction.getType().equals(String.valueOf(R.drawable.credit1))) {
-			changeAmount = - changeAmount;
-		} else if (transaction.getType().equals(String.valueOf(R.drawable.debit1))) {
-			//changeAmount = changeAmount;
-		}else {
-			//Do nothing for now.
-		}
-		*/
-		
+				
 		// Reverses amount if this is a credit card.
 		accountType = account1.getType();
 		
@@ -498,7 +476,9 @@ public class TransactionForm extends Activity implements InputValidator {
 		account1.setBalance(String.format("%.2f",newBalance));
 		db.updateAccount(account1);
 		amountChange = null;
+		changeColor = null;
 		if (T_EDIT) transaction.setChange(amountChange);
+		if (T_EDIT) transaction.setCColor(changeColor);
 	}
 	
 	public boolean inputsValid(){

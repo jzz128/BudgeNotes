@@ -13,6 +13,10 @@
     <string name="add_account">ADD ACCOUNT</string>
 	<string name="pick_scope">Pick the Scope of your Update:</string>
     
+	<color name="normal_balance">#006400</color>
+	<color name="below_threshhold">#DAA520</color>
+	<color name="below_zero">#FF0000</color>
+	
 	<string-array name="scope_array">
 	    <item>This Instance</item>
 	    <item>All Instances</item>

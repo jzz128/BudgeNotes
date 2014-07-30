@@ -90,7 +90,7 @@ public class Report extends Activity {
 			
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
 		// Updated for new transaction method.
-		String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
+		String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(12), cursor.getColumnName(13)};
 		int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
 		
 		// 
@@ -127,7 +127,7 @@ public class Report extends Activity {
 			cursor.moveToFirst();
 				
 			// Updated for new transaction method.
-			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
+			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(12), cursor.getColumnName(13)};
 			int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
 			
 			// Fills the ListView with all the Goals in the Table.
@@ -164,7 +164,7 @@ public class Report extends Activity {
 			cursor.moveToFirst();
 						
 			// Updated for new transaction method.
-			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(11), cursor.getColumnName(12)};
+			String[] transFieldNames = new String[] {DBHelper.TRANSACTION_CATEGORY, cursor.getColumnName(12), cursor.getColumnName(13)};
 			int[] toViewIDs = new int[] {R.id.catName, R.id.catStat, R.id.catPercent};
 					
 			// Fills the ListView with all the Goals in the Table.

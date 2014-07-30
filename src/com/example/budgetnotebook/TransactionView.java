@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +37,7 @@ public class TransactionView extends Activity {
 	Account account;
 	Transaction transaction;
 	Transaction trans2;
+	TextView tv;
 	
 	Spinner transAccount;
 	String[] seperated;
@@ -336,7 +338,7 @@ public class TransactionView extends Activity {
 		
 	}
 	
-	// Populate the spinner with account numbers
+	// Populate the spinner with account numbers	
 	private void loadAccountSpinnerData() {
 		List<String> list = db.getAllStringAccounts();
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
@@ -367,10 +369,41 @@ public class TransactionView extends Activity {
 				transactionFieldNames,
 				toViewIDs
 				);
+		
+		SimpleCursorAdapter.ViewBinder binder = new SimpleCursorAdapter.ViewBinder() {
+
+			@Override
+			public boolean setViewValue(View view, Cursor cursor, int columnUndex) {
+				if (view.getId() == R.id.transChangeAmount)
+                { 
+                  String s = cursor.getString(11);
+                  Log.d("cursor value =",String.valueOf(s));
+                  TextView tv = (TextView)view;
+
+                  tv.setTextColor(Color.parseColor(s));
+                  tv.setText(cursor.getString(10));
+                  Log.d("change amount=",cursor.getString(10));
+                 return true;
+
+            }
+              return false;
+            }
+			
+		};
+		myCursorAdapter.setViewBinder(binder);
+		
 		ListView transactionList = (ListView) findViewById(R.id.listViewTrans);
 		transactionList.setAdapter(myCursorAdapter);
 
 	}
+	
+	//Refresh the view on activity resume.
+		@Override
+		protected void onResume() {
+			super.onResume();
+			//db.cleanTransactions(this);
+			populateListViewTransactions(A_ID);
+		};
 	
 	//Set the value of the currently viewed account id.
 	public void setViewAccount(int id) {

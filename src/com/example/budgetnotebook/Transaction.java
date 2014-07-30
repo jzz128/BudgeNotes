@@ -12,10 +12,11 @@ public class Transaction {
 	private String transaction_description;
 	private boolean transaction_accounted;
 	private String transaction_change;
+	private String t_change_color;
 	
 	public Transaction(){}
 	
-	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description, boolean transaction_accounted, String transaction_change) {
+	public Transaction(int t_a_id, String transaction_name, String transaction_date, String transaction_amount, String transaction_category, String transaction_type, String transaction_interval, String transaction_description, boolean transaction_accounted, String transaction_change, String t_change_color) {
 		super();
 		this.t_a_id = t_a_id;
 		this.transaction_name = transaction_name;
@@ -27,11 +28,12 @@ public class Transaction {
 		this.transaction_description = transaction_description;
 		this.transaction_accounted = transaction_accounted;
 		this.transaction_change = transaction_change;
+		this.t_change_color = t_change_color;
 	}
 	
 	@Override
 	public String toString() {
-		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +", transaction_accounted=" + transaction_accounted + "transaction_change=" + transaction_change + "]";
+		return "Transaction [id=" + _id + ", t_a_id=" + t_a_id + ", transaction_name=" + transaction_name + ", transaction_date=" + transaction_date + ", transaction_amount=" + transaction_amount + ", transaction_category=" + transaction_category + ", transaction_type=" + transaction_type + ", transaction_interval=" + transaction_interval + ", transaction_description=" + transaction_description +", transaction_accounted=" + transaction_accounted + "transaction_change=" + transaction_change + "t_change_color=" + t_change_color + "]";
 	}
 	
 	//Getters --------------------------------------------------------------------
@@ -79,6 +81,10 @@ public class Transaction {
 		return transaction_change;
 	}
 	
+	public String getCColor() {
+		return t_change_color;
+	}
+	
 	//Setters --------------------------------------------------------------------	
 	public void setId(int id){
 		this._id = id;
@@ -124,4 +130,8 @@ public class Transaction {
 		this.transaction_change = transaction_change;
 	}
 
+	public void setCColor(String t_change_color) {
+		this.t_change_color = t_change_color;
+	}
+	
 }

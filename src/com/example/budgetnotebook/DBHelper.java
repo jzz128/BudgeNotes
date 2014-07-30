@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 4; // Updated Transaction Table. 22 July 2014 - DJM
+	public static final int VERSION = 5; // Updated Transaction Table. 22 July 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
@@ -74,8 +74,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String TRANSACTION_DESCRIPTION = "transaction_description";
 	public static final String TRANSACTION_ACCOUNTED = "transaction_accounted";
 	public static final String TRANSACTION_CHANGE = "transaction_change";
+	public static final String T_CHANGE_COLOR = "t_change_color";
 	// String for all TRANSACTION_TABLE field names.
-	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION, TRANSACTION_ACCOUNTED, TRANSACTION_CHANGE};
+	public static final String[] TRANSACTION_FIELDS = new String[] {T_ID, T_A_ID, TRANSACTION_NAME, TRANSACTION_DATE, TRANSACTION_AMOUNT, TRANSACTION_CATEGORY, TRANSACTION_TYPE, TRANSACTION_INTERVAL, TRANSACTION_DESCRIPTION, TRANSACTION_ACCOUNTED, TRANSACTION_CHANGE, T_CHANGE_COLOR};
 	
 	//Fields associated with the Goal Table.
 	public static final String GOAL_TABLE = "goal_table";
@@ -103,8 +104,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String[] REC_FIELDS = new String[] {R_ID, R_CRITERIA_1, R_CRITERIA_2, R_CRITERIA_3, R_CRITERIA_4, R_CRITERIA_5, R_IS_VALID};	
 	
 	//Values to use for the Recommendation table.
+	
+	//TODO Convert to string array resource.
 	private String[] cats = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
-
+	//TODO Convert to string array resource.
 	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
 	
 	//Fields associated with the Alert Table.
@@ -125,7 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createAccount = "CREATE TABLE IF NOT EXISTS " + ACCOUNT_TABLE + " ( " + A_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ACCOUNT_NAME + " TEXT, " + ACCOUNT_NUMBER + " TEXT, " + ACCOUNT_TYPE + " TEXT, " + BALANCE + " TEXT);";
 	
 	//SQL Statement for creating the Transaction Table.
-	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN, " + TRANSACTION_CHANGE + " TEXT);";
+	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN, " + TRANSACTION_CHANGE + " TEXT, " + T_CHANGE_COLOR + ");";
 	
 	//SQL Statement for creating the Goal Table.
 	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
@@ -138,6 +141,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
 			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
 			+ " END";
+	
+	//TODO Create triggers for Alert functionality
 	
 	//SQL Statement for creating the Alert Table.
 	//private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT, " + "FOREIGN KEY (" + AT_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + AT_ID + "));";
@@ -817,6 +822,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
 		values.put(TRANSACTION_CHANGE, transaction.getChange());
+		values.put(T_CHANGE_COLOR, transaction.getCColor());
 			
 		db.insert(TRANSACTION_TABLE, null, values);
 					
@@ -850,6 +856,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		transaction.setDescription(cursor.getString(8));
 		transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 		transaction.setChange(cursor.getString(10));
+		transaction.setCColor(cursor.getString(11));
 				 
 		 Log.d("getTransaction("+id+")", transaction.toString());
 				 
@@ -897,6 +904,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				transaction.setDescription(cursor.getString(8));
 				transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 				transaction.setChange(cursor.getString(10));
+				transaction.setCColor(cursor.getString(11));
 						
 				transactions.add(transaction);
 			} while (cursor.moveToNext());
@@ -986,6 +994,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
 		values.put(TRANSACTION_CHANGE, transaction.getChange());
+		values.put(T_CHANGE_COLOR, transaction.getCColor());
 					
 		int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
 					
@@ -1159,9 +1168,6 @@ public class DBHelper extends SQLiteOpenHelper {
 					accList.get(i).setBalance(String.format("%.2f",accBase));
 					updateAccount(accList.get(i));
 					
-					//Toast.makeText(this, "There are: " + String.valueOf(numTran) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-					//Toast.makeText(this, "There is a total sum of: " + String.valueOf(tranSum) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
-					//Toast.makeText(this, "There is a base balance of: " + String.valueOf(accBase) + " in Account with ID= " + a_id, Toast.LENGTH_LONG).show();
 				}
 				// Get a list of all the transactions and a count of how many there are.
 				List<Transaction> tranList = getAllListTransactions(0);
@@ -1187,9 +1193,15 @@ public class DBHelper extends SQLiteOpenHelper {
 						account.setBalance(String.format("%.2f",newBalance));
 						updateAccount(account);
 						tranList.get(i).setChange(account.getBalance());
+						
+						if (newBalance > 100) {tranList.get(i).setCColor("#006400");} else
+						if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setCColor("#DAA520");} else
+						if (newBalance < 0) {tranList.get(i).setCColor("#FF0000");}
+						
 						updateTransaction(tranList.get(i));
 					} else {
 						tranList.get(i).setChange(null);
+						tranList.get(i).setCColor(null);
 						updateTransaction(tranList.get(i));
 					}
 				}
@@ -1232,6 +1244,11 @@ public class DBHelper extends SQLiteOpenHelper {
 				newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
+				
+				if (newBalance > 100) {tranList.get(i).setCColor("#006400");} else
+				if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setCColor("#DAA520");} else
+				if (newBalance < 0) {tranList.get(i).setCColor("#FF0000");}
+				
 				tranList.get(i).setChange(account.getBalance());
 				updateTransaction(tranList.get(i));
 			} else if (pAccounted && !tranList.get(i).getAccounted()) {
@@ -1240,6 +1257,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
 				tranList.get(i).setChange(null);
+				tranList.get(i).setCColor(null);
 				updateTransaction(tranList.get(i));
 			} else if(pAccounted == tranList.get(i).getAccounted()) {
 				//Do Nothing.
@@ -1328,6 +1346,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				transaction.setDate(intDate);
 				transaction.setAccounted(false);
 				transaction.setChange(null);
+				transaction.setCColor(null);
 				addTransaction(transaction);
 				
 				try {
