@@ -72,7 +72,6 @@ public class RecommendationView extends Activity {
 			
 			Cursor reportCursor;
 			Cursor recCursor;
-			Cursor cCursor;
 			List<Recommendation> recs;
 			
 			float count;
