@@ -185,6 +185,11 @@ public class TransactionView extends Activity {
         t_id = Integer.parseInt((child.getText().toString().trim()));
         a_id = Integer.parseInt((child2.getText().toString().trim()));
         
+        transaction = db.getTransaction(t_id);
+        
+        interval = transaction.getInterval().split(" - ");
+        intVal = Integer.parseInt(interval[0]);
+        
         try {
            	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
         	newIntent = new Intent(TransactionView.this,clickedClass);
@@ -220,7 +225,12 @@ public class TransactionView extends Activity {
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.pick_scope).setItems(R.array.scope_array, dialogClickListener).show();      
+            if (intVal != 0) {
+            	builder.setTitle(R.string.pick_scope).setItems(R.array.scope_array, dialogClickListener).show();
+            } else {
+            	newIntent.putExtra("E_SCOPE", 0);
+            	startActivity(newIntent);
+            }
 		
         } catch(ClassNotFoundException e) {
         	e.printStackTrace();
