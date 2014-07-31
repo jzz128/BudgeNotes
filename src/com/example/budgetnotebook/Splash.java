@@ -12,11 +12,13 @@ public class Splash extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		// Display splash view then wait 1 second
 		setContentView(R.layout.splash);
 		
 		DBHelper db = new DBHelper(getBaseContext());
+		
+		UpdateDatabase inBack = new UpdateDatabase ();
+		inBack.execute(db);
 		
 		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {

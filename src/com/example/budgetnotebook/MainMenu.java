@@ -19,11 +19,7 @@ public class MainMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-		
-		DBHelper db = new DBHelper(this);
-		db.cleanTransactions(this);
-		db.close();
-		
+						
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +33,7 @@ public class MainMenu extends Activity {
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
 					}
+				MainMenu.this.setProgressBarIndeterminateVisibility(false);
 			}
 		});
 			
