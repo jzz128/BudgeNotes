@@ -7,17 +7,19 @@ import android.os.Bundle;
 // This method displays the splash screen briefly and then starts the main program
 
 public class Splash extends Activity {
-	boolean profile_exists;
+	boolean profile_exists, finished;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		// Display splash view then wait 1 second
 		setContentView(R.layout.splash);
 		
 		DBHelper db = new DBHelper(getBaseContext());
 		
 		UpdateDatabase inBack = new UpdateDatabase ();
+		inBack.setContext(this);
 		inBack.execute(db);
 		
 		// Check if a profile exists.
