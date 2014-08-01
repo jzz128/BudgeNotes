@@ -937,6 +937,95 @@ public class DBHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 	
+	// For List population of Account ListView
+		@SuppressLint("SimpleDateFormat")
+		public Cursor getAllTransactionsInRange(int a_id, String against) {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+			java.util.Date endDate = null;
+			String currentEnd;
+			String currentStart;
+			Calendar rngCal;
+			int iDay, iMonth, iYear;
+			String nDay, nMonth;
+			String rngDate;
+			
+			if (against.equals("now")) {
+				java.util.Date d = Calendar.getInstance().getTime(); // Current time
+				currentEnd = sdf.format(d); // Get Date String according to date format
+			} else {
+				currentEnd = against;
+			}
+
+			try {
+				endDate = sdf.parse(currentEnd);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			rngCal = Calendar.getInstance();
+			rngCal.setTime(endDate);
+			
+			iDay = rngCal.get(Calendar.DAY_OF_MONTH);
+			iMonth = rngCal.get(Calendar.MONTH);
+			iYear = rngCal.get(Calendar.YEAR);
+			
+			if (iDay < 10) {
+				nDay = "0" + String.valueOf(iDay);
+			} else {
+				nDay = String.valueOf(iDay);
+			}
+			if (iMonth < 9) {
+				nMonth = "0" + String.valueOf(iMonth+1);
+			} else {
+				nMonth =String.valueOf(iMonth+1);
+			}
+			
+			rngDate = String.valueOf(iYear) + nMonth + nDay;
+			
+			rngCal.add(Calendar.MONTH, -1);
+			
+			iDay = rngCal.get(Calendar.DAY_OF_MONTH);
+			iMonth = rngCal.get(Calendar.MONTH);
+			iYear = rngCal.get(Calendar.YEAR);
+			
+			if (iDay < 10) {
+				nDay = "0" + String.valueOf(iDay);
+			} else {
+				nDay = String.valueOf(iDay);
+			}
+			if (iMonth < 9) {
+				nMonth = "0" + String.valueOf(iMonth+1);
+			} else {
+				nMonth =String.valueOf(iMonth+1);
+			}
+			
+			currentStart = String.valueOf(iYear) + nMonth + nDay;
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+						
+			String where = null;
+			String having = null;
+			String order = null;
+				
+			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
+			
+			Log.d("Start=",currentStart);
+			Log.d("End=",rngDate);
+			
+			if(a_id != 0) {
+				where = T_A_ID + " = " + a_id + " AND " + TRANSACTION_ACCOUNTED + " = " + 1 + " AND CAST(" + order + " AS INTEGER) <= " + rngDate + " AND CAST(" + order + " AS INTEGER) >= " +  currentStart;
+			}
+			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
+		
+			if (cursor != null) {
+				cursor.moveToFirst();
+			}
+						
+			return cursor;
+		}
+	
 	//TODO Toast all Transaction dates -- REMOVE AFTER TESTING --
 	public void toastTranDates(Context context) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -1206,11 +1295,11 @@ public class DBHelper extends SQLiteOpenHelper {
 					}
 				}
 			} else {
-				Toast.makeText(context, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
+				//Toast.makeText(context, "No Transactions Exist to update!", Toast.LENGTH_LONG).show();
 			}
 			
 		} else {
-			Toast.makeText(context, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
+			//Toast.makeText(context, "No Accounts Exist to update!", Toast.LENGTH_LONG).show();
 		}
 		
 	}

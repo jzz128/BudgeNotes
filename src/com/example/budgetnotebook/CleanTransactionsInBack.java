@@ -3,16 +3,11 @@ package com.example.budgetnotebook;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class UpdateDatabase extends AsyncTask<DBHelper, String, Boolean> {
+public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean> {
 	Context context;
-	boolean finished = false;
 	
 	public void setContext(Context context) {
 		this.context = context;
-	}
-	
-	public boolean getProgress() {
-		return finished;
 	}
 	
 	@Override
@@ -38,7 +33,6 @@ public class UpdateDatabase extends AsyncTask<DBHelper, String, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
-		this.finished = true;
 	}
 	
 }

@@ -17,7 +17,9 @@ public class Splash extends Activity {
 		setContentView(R.layout.splash);
 		
 		DBHelper db = new DBHelper(getBaseContext());
-		db.cleanTransactions(getBaseContext());
+		CleanTransactionsInBack inBack = new CleanTransactionsInBack ();
+		inBack.setContext(getBaseContext());
+		inBack.execute(db);	
 		
 		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {

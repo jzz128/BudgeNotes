@@ -76,10 +76,26 @@ public class TransactionView extends Activity {
 		
 		// Set date to todays date
 		//cal= Calendar.getInstance();
-		String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+		String cal_for_month;
+		String cal_for_day;
+		if(cal.get(Calendar.MONTH)+1 < 10) {
+			cal_for_month = "0" + Integer.toString(cal.get(Calendar.MONTH)+1);
+		} else {
+			cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+		}
+		
+		if(cal.get(Calendar.DAY_OF_MONTH) < 10) {
+			cal_for_day = "0" + Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		} else {
+			cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		}
+		
 		String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
-		String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		
+		
 		String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+		//rngDate = cal_for_year + cal_for_month + cal_for_day;
+		spinDate = "now";
 		transDate.setText(todayAsString);
 		
 		// Add data to the spinner.
@@ -159,6 +175,7 @@ public class TransactionView extends Activity {
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 					spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
+					//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
 					transDate.setText(spinDate);
 					db.seeFuture(getBaseContext(),spinDate,A_ID);
 					loadAccountSpinnerData();
@@ -199,7 +216,7 @@ public class TransactionView extends Activity {
         	newIntent.putExtra("T_ID", t_id);
         	newIntent.putExtra("T_EDIT", true);
         	
-        	// Alert dialog to affirm delete.
+        	// 
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -311,7 +328,10 @@ public class TransactionView extends Activity {
             		db.deleteTransaction(transaction);
                     break;
 				}
-				
+				loadAccountSpinnerData();
+            	S_A_ID = A_ID - lowestID + 1 ;
+        		transAccount.setSelection(S_A_ID-1);
+
 			}	
 			
 		};
@@ -360,8 +380,8 @@ public class TransactionView extends Activity {
 	@SuppressWarnings("deprecation")
 	private void populateListViewTransactions(int A_ID) {
 		// Set a cursor with all the Transactions
-		Cursor cursor = db.getAllTransactions(A_ID);
-			
+		//Cursor cursor = db.getAllTransactions(A_ID);
+		Cursor cursor = db.getAllTransactionsInRange(A_ID, spinDate);
 		//startManagingCursor(cursor);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
