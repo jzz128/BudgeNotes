@@ -17,10 +17,7 @@ public class Splash extends Activity {
 		setContentView(R.layout.splash);
 		
 		DBHelper db = new DBHelper(getBaseContext());
-		
-		UpdateDatabase inBack = new UpdateDatabase ();
-		inBack.setContext(this);
-		inBack.execute(db);
+		db.cleanTransactions(getBaseContext());
 		
 		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {
@@ -46,13 +43,17 @@ public class Splash extends Activity {
 						//openMainActivity = new Intent("com.example.budgetnotebook.PROFILE");
 						openMainActivity = new Intent("com.example.budgetnotebook.PROFILEFORM");
 					}
+							
 					startActivity(openMainActivity);
 					
 				}
+				
+				
 			}
 		};
 		
 		timer.start();
+		
 	}
 	
 	@Override

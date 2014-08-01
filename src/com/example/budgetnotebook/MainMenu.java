@@ -19,7 +19,12 @@ public class MainMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_menu);
-						
+		
+		DBHelper db = new DBHelper(getBaseContext());
+		//UpdateDatabase inBack = new UpdateDatabase ();
+		//inBack.setContext(getBaseContext());
+		//inBack.execute(db);	
+		
 		//Set the VIEW ACCOUNT button to display the VIEW ACCOUNT page when clicked
 		view_account = (Button) findViewById(R.id.view_account);
 		view_account.setOnClickListener(new View.OnClickListener() {
