@@ -7,9 +7,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -52,10 +54,14 @@ public class GoalForm extends Activity implements InputValidator{
 	int S_A_ID; // This will be used to set the spinner for the account. It is set in the populate form method. - DJM
 	boolean G_EDIT;
 	Goal goal;
+	Alert alert;
+	String query, alt_id;
+	Cursor  cursor;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.form_goal);
 		
 		// Access the database.
@@ -84,7 +90,13 @@ public class GoalForm extends Activity implements InputValidator{
 				
 		// Auto fill the form if this is an edit.
 		if (G_EDIT) {
-			goal = db.getGoal(G_ID); // 
+			goal = db.getGoal(G_ID);
+			alt_id = String.valueOf(goal.getId());
+			query = "SELECT * FROM " + DBHelper.ALERT_TABLE + " WHERE substr(" + DBHelper.ALERT_NAME + ",6) LIKE " + alt_id;
+			cursor = db.dbQuery(query);
+			Log.d("CURSOR SIZE=",String.valueOf(cursor.getCount()));
+			if(cursor.moveToFirst())
+				alert = db.getAlert(cursor.getInt(0));
 			Log.d("G_ID", String.valueOf(G_ID));
 			populateForm();
 		} else {
@@ -153,10 +165,10 @@ public class GoalForm extends Activity implements InputValidator{
 								
 			@Override
 			public void onClick(View v) {
-				try{
-															
+				setProgressBarIndeterminateVisibility(true);
+				try{										
 					// Transfer edit text to GOAL_TABLE attribute types.
-					goalAccountI = Integer.parseInt(seperated[0]);
+					if(!G_EDIT) goalAccountI = Integer.parseInt(seperated[0]);
 					goalNameS = goalName.getText().toString().trim();
 					goalTypeS = goalType.getSelectedItem().toString().trim();
 					goalEndS = goalEnd.getText().toString().trim();
@@ -165,23 +177,31 @@ public class GoalForm extends Activity implements InputValidator{
 					goalDescriptionS = goalDescription.getText().toString().trim();
 					
 					goalStatus = String.valueOf(R.drawable.goal_prog);
-					
+										
 					// Validate inputs
 					if(inputsValid()){
 						
 						if (G_EDIT) {
 							// Update the goal record.
 							fillGoalObject();
+							fillAlertObject();
 							db.updateGoal(goal);
+							db.updateAlert(alert);
+							db.checkGoalStatus();
 						} else {
 							// Call the add goal method to add the goal to the database
 							addGoal();
+							alert = new Alert(goalAccountI, "GOAL-" + String.valueOf(G_ID), null, goalEndS);
+							db.addAlert(alert);
+							db.checkGoalStatus();
+
 						}
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalView");
 						Intent newIntent = new Intent(GoalForm.this, clickedClass);
 						
 						// Brings us back to the root activity, where exit functions properly.
 						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						
 						startActivity(newIntent);		
 					}
 
@@ -216,11 +236,18 @@ public class GoalForm extends Activity implements InputValidator{
 			goal.setStatus(goalStatus);
 		}
 		
+		// Fill the alert variable with updated information.
+		private void fillAlertObject() {
+			alert.setAId(goalAccountI);
+			alert.setDueDate(goalEndS);
+		}
+		
 		// Fill the form fields with database data.
 		private void populateForm() {	
 			//Toast.makeText(this, String.valueOf(goal.getStartAmount()), Toast.LENGTH_LONG).show();
 			// Set goal to account ID (subtract 1 because list is 0 based)
 			goalAccount.setSelection(S_A_ID-1, false);
+			goalAccountI = goal.getAId();
 			// Set goal name text
 			goalName.setText(goal.getName());
 			// Set goal type spinner
@@ -314,6 +341,7 @@ public class GoalForm extends Activity implements InputValidator{
 	
 	private void addGoal() {
 		db.addGoal(new Goal(goalAccountI, goalNameS, goalDescriptionS, goalTypeS, goalStartS, goalDeltaS, goalEndS, goalStatus));
+		G_ID = db.lastRowID("SELECT " + DBHelper.G_ID + " from " + DBHelper.GOAL_TABLE + " order by " + DBHelper.G_ID + " DESC limit 1");
 	}
 
 	private void loadAccountSpinnerData() {
@@ -336,6 +364,7 @@ public class GoalForm extends Activity implements InputValidator{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		setProgressBarIndeterminateVisibility(false);
 		db.close();
 		finish();
 	};

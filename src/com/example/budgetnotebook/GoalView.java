@@ -30,7 +30,7 @@ public class GoalView extends Activity{
 
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
-					
+		db.checkGoalStatus();			
 		// Populate the ListView
 		populateListViewGoals();	
 
@@ -61,8 +61,8 @@ public class GoalView extends Activity{
 		Cursor cursor = db.getAllGoals();
 		
 		// Map the GOAL_TABLE fields to the TextViews on the template_list_goal layout.
-		String[] goalFieldNames = new String[] {DBHelper.G_ID,DBHelper.G_A_ID, DBHelper.GOAL_NAME, DBHelper.GOAL_DESCRIPTION, DBHelper.GOAL_TYPE, DBHelper.GOAL_END_DATE};
-		int[] toViewIDs = new int[] {R.id.goalID,R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd};
+		String[] goalFieldNames = new String[] {DBHelper.G_ID,DBHelper.G_A_ID, DBHelper.GOAL_NAME, DBHelper.GOAL_DESCRIPTION, DBHelper.GOAL_TYPE, DBHelper.GOAL_END_DATE, DBHelper.GOAL_STATUS};
+		int[] toViewIDs = new int[] {R.id.goalID,R.id.goalAccount, R.id.goalName, R.id.goalDescription, R.id.goalType, R.id.goalEnd, R.id.goalIcon};
 	
 		// Fills the ListView with all the Goals in the Table.
 		SimpleCursorAdapter myCursorAdapter = new SimpleCursorAdapter(

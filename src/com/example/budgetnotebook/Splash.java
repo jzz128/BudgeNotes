@@ -16,14 +16,19 @@ public class Splash extends Activity {
 		// Display splash view then wait 1 second
 		setContentView(R.layout.splash);
 		
+		// Initialize an instance of the database.
 		DBHelper db = new DBHelper(getBaseContext());
+		
+		// Clean the transactions accounting through the current date.
 		CleanTransactionsInBack clean = new CleanTransactionsInBack ();
-		clean.setContext(getBaseContext());
+		clean.setContext(getApplicationContext());
 		clean.execute(db);	
 		
+		//Check the status of the Goals and adjust their icons.
 		CheckGoalStatus checkGoal = new CheckGoalStatus ();
+		checkGoal.setContext(getApplicationContext());
 		checkGoal.execute(db);	
-		//db.checkGoalStatus();
+
 		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {
 			profile_exists = false;

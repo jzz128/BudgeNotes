@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -77,6 +78,7 @@ public class TransactionForm extends Activity implements InputValidator {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.form_transaction);
 		
 		// Access the database.
@@ -202,6 +204,7 @@ public class TransactionForm extends Activity implements InputValidator {
 								
 			@Override
 			public void onClick(View v) {
+				setProgressBarIndeterminateVisibility(true);
 				try{
 					
 					transTypeSelection = (RadioButton)findViewById(transType.getCheckedRadioButtonId());
@@ -375,6 +378,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		@Override
 		protected void onDestroy() {
 			super.onDestroy();
+			setProgressBarIndeterminateVisibility(false);
 			db.close();
 			finish();
 		};
