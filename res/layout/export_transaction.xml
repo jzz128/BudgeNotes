@@ -32,4 +32,12 @@
             android:text="@string/start_exporting" />
     </TableLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBarExport"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="120dp"
+        android:visibility="invisible" />
+
 </LinearLayout>

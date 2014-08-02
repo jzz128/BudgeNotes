@@ -13,9 +13,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +35,16 @@ public class ExportActivity extends Activity {
 	DBHelper db;
 	String currentDateString;
 	File exportDir;
+	//private static int progress = 0x1;
+	private ProgressBar mProgress;
+	//private Handler mHandler= new Handler();
 
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.export_transaction);
+		mProgress = (ProgressBar) findViewById(R.id.progressBarExport);
 		currentDateString = new SimpleDateFormat("ddMMyyyyhhmmss")
 				.format(new java.util.Date());
 		exportDir = new File(Environment.getExternalStorageDirectory()
@@ -59,12 +66,14 @@ public class ExportActivity extends Activity {
 			switch (view.getId()) {
 			case R.id.executeExport:
 				new exportOperation().execute("");
+				mProgress.setVisibility(View.VISIBLE);
+			//	mProgress.setProgress(progress);
 				break;
 			}
 		}
 	};
 
-	private class exportOperation extends AsyncTask<String, Void, String> {
+	private class exportOperation extends AsyncTask<String, Integer, String> {
 		@SuppressWarnings("unused")
 		private final ProgressDialog dialog = new ProgressDialog(
 				ExportActivity.this);
@@ -122,6 +131,15 @@ public class ExportActivity extends Activity {
 									t.getInterval(), t.getDescription() };
 
 							csvWrite.writeNext(arrStr);
+						// TODO: adding percentage number info
+						//	progress += 100/listdata.size();
+							
+						//	mHandler.post(new Runnable() {
+						//		public void run(){
+						//			mProgress.setProgress(progress);
+						//		}
+						//	});
+
 						}
 						success = "true";
 
@@ -154,15 +172,16 @@ public class ExportActivity extends Activity {
 				}
 			}
 			toast.show();
+			mProgress.setVisibility(View.GONE);
 		}
 
 		@Override
 		protected void onPreExecute() {
 		}
 
-		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(Integer... values) {
 		}
+
 	}
 
 }

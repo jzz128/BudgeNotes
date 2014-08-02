@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +33,13 @@ public class ImportActivity extends Activity {
 	DBHelper db;
 	String currentDateString;
 	File importDir;
+	private ProgressBar mProgress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.import_transaction);
+		mProgress = (ProgressBar) findViewById(R.id.progressBarImport);
 
 		importDir = new File(Environment.getExternalStorageDirectory()
 				+ File.separator + FILE_DIR_NAME, "");
@@ -59,6 +62,7 @@ public class ImportActivity extends Activity {
 			switch (view.getId()) {
 			case R.id.executeImport:
 				new importOperation().execute("");
+				mProgress.setVisibility(View.VISIBLE);
 				break;
 			}
 		}
@@ -108,11 +112,7 @@ public class ImportActivity extends Activity {
 
 					while ((nextLine = reader.readNext()) != null) {
 						rowNumber++;
-						for (int i = 0; i < nextLine.length; i++) {
-							// retrieve CSV values
-							System.out.println("Cell column index: " + i);
-							System.out.println("Cell Value: " + nextLine[i]);
-							System.out.println("---");
+
 							transAccountI = Integer.valueOf(nextLine[0]);
 							transNameS = nextLine[1];
 							transDateS = nextLine[2];
@@ -129,7 +129,7 @@ public class ImportActivity extends Activity {
 									transNameS, transDateS, transAmountS,
 									transCategoryS, transTypeS, transIntervalS,
 									transDescriptionS, transAccounted, transChange, transCColor));
-						}
+
 					}
 					success = "true";
 					reader.close();
@@ -165,6 +165,7 @@ public class ImportActivity extends Activity {
 				}
 			}
 			toast.show();
+			mProgress.setVisibility(View.GONE);
 		}
 
 		@Override

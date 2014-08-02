@@ -45,5 +45,14 @@
             android:background="@drawable/styledbutton"
             android:text="@string/import_csv_file" />
     </TableLayout> 
+    
+    <ProgressBar
+        android:id="@+id/progressBarImport"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="120dp"
+        android:visibility="invisible" />
 
 </LinearLayout>
