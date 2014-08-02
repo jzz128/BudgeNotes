@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 5; // Updated Transaction Table. 22 July 2014 - DJM
+	public static final int VERSION = 6; // Updated Goal Table. 1 Aug 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
@@ -88,8 +88,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_START_AMOUNT = "goal_start_amount";
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
+	public static final String GOAL_STATUS = "goal_status";
 	// String for all GOAL_TABLE field names.
-	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE};
+	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE, GOAL_STATUS};
 	
 	//Fields associated with the Rec Table.
 	public static final String REC_TABLE = "recommendation_table";
@@ -131,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String createTransaction = "CREATE TABLE IF NOT EXISTS " + TRANSACTION_TABLE + " ( " + T_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + T_A_ID + " INTEGER, " + TRANSACTION_NAME + " TEXT, " + TRANSACTION_DATE + " TEXT, " + TRANSACTION_AMOUNT + " TEXT, " + TRANSACTION_CATEGORY + " TEXT, " + TRANSACTION_TYPE + " TEXT, " + TRANSACTION_INTERVAL + " TEXT, " + TRANSACTION_DESCRIPTION + " TEXT, " + TRANSACTION_ACCOUNTED + " BOOLEAN, " + TRANSACTION_CHANGE + " TEXT, " + T_CHANGE_COLOR + ");";
 	
 	//SQL Statement for creating the Goal Table.
-	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
+	private final String createGoal = "CREATE TABLE IF NOT EXISTS " + GOAL_TABLE + " ( " + G_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + G_A_ID + " INTEGER, " + GOAL_NAME + " TEXT, " + GOAL_DESCRIPTION + " TEXT, " + GOAL_TYPE + " TEXT, " + GOAL_START_AMOUNT + " TEXT, " + GOAL_DELTA_AMOUNT + " TEXT, " + GOAL_END_DATE + " TEXT, " + GOAL_STATUS + " TEXT, " + "FOREIGN KEY (" + G_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + A_ID + "));";
 	
 	//SQL Statement for creating the Rec Table.
 	private final String createRec = "CREATE TABLE IF NOT EXISTS " + REC_TABLE + " ( " + R_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + R_CRITERIA_1 + " TEXT, " + R_CRITERIA_2 + " TEXT, " + R_CRITERIA_3 + " TEXT, " + R_CRITERIA_4 + " TEXT, " + R_CRITERIA_5 + " TEXT, " + R_IS_VALID + " BOOLEAN);";
@@ -321,7 +322,69 @@ public class DBHelper extends SQLiteOpenHelper {
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	@SuppressLint("SimpleDateFormat")
+	public void checkGoalStatus() {
+		List<Goal> goalList = getListAllGoals();	
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+		java.util.Date today = null;
+		java.util.Date date = null;
 		
+		String currentDate;
+		
+		int count = goalList.size();
+		long todayMilli, goalMilli, diffInDays;
+		
+		Goal goal;
+		Account account;
+		
+		java.util.Date d = Calendar.getInstance().getTime(); // Current time
+		currentDate = sdf.format(d); // Get Date String according to date format
+		
+		float start, delta, end, check;
+		
+		Calendar todayCal = Calendar.getInstance();
+		Calendar goalCal = Calendar.getInstance();
+		
+		try {
+	        today = sdf.parse(currentDate);
+	        todayCal.setTime(today);
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+		
+		todayMilli = todayCal.getTimeInMillis();
+		
+		for(int i = 0; i < count; i++) {
+			goal = goalList.get(i);
+			account = getAccount(goal.getAId());
+			check = Float.parseFloat(account.getBalance());
+			start = Float.parseFloat(goal.getStartAmount());
+			delta = Float.parseFloat(goal.getDeltaAmount());
+			end = start + delta;
+			
+			try {
+		        date = sdf.parse(goal.getEndDate());
+		        goalCal.setTime(date);
+		    } catch (ParseException e) {
+		        e.printStackTrace();
+		    }
+			
+			goalMilli = goalCal.getTimeInMillis();
+			
+			diffInDays = (todayMilli - goalMilli)/(24*60*60*1000);
+			
+			if(diffInDays > 3) {goal.setStatus(String.valueOf(R.drawable.goal_prog));} else
+			if(diffInDays <= 3 && diffInDays > 0) {goal.setStatus(String.valueOf(R.drawable.goal_jep));} else
+			if(diffInDays >= 0) {	
+				if(end >= check) {goal.setStatus(String.valueOf(R.drawable.goal_success));} else
+				if(end < check) {goal.setStatus(String.valueOf(R.drawable.goal_fail));}
+			}
+			updateGoal(goal);
+		}
+	}
+	
 	// Add a single Goal.
 	public void addGoal(Goal goal){
 		Log.d("addGoal", goal.toString());
@@ -336,6 +399,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(GOAL_START_AMOUNT, goal.getStartAmount());
 		values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
 		values.put(GOAL_END_DATE, goal.getEndDate());
+		values.put(GOAL_STATUS, goal.getStatus());
 			
 		db.insert(GOAL_TABLE, null, values);
 			
@@ -361,6 +425,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		 goal.setStartAmount(cursor.getString(5));
 		 goal.setDeltaAmount(cursor.getString(6));
 		 goal.setEndDate(cursor.getString(7));
+		 goal.setStatus(cursor.getString(8));
 		 
 		 Log.d("getGoal("+id+")", goal.toString());
 		 
@@ -388,6 +453,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				goal.setStartAmount(cursor.getString(5));
 				goal.setDeltaAmount(cursor.getString(6));
 				goal.setEndDate(cursor.getString(7));
+				goal.setStatus(cursor.getString(8));
 					
 				goals.add(goal);
 			} while (cursor.moveToNext());
@@ -443,6 +509,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(GOAL_START_AMOUNT, goal.getStartAmount());
 		values.put(GOAL_DELTA_AMOUNT, goal.getDeltaAmount());
 		values.put(GOAL_END_DATE, goal.getEndDate());
+		values.put(GOAL_STATUS, goal.getStatus());
 			
 		int i = db.update(GOAL_TABLE, values, G_ID + " = ?", new String[] { String.valueOf(goal.getId()) });
 			

@@ -44,15 +44,19 @@ public final class R {
         public static final int edit1=0x7f020009;
         public static final int goal1=0x7f02000a;
         public static final int goal2=0x7f02000b;
-        public static final int ic_launcher=0x7f02000c;
-        public static final int income=0x7f02000d;
-        public static final int list=0x7f02000e;
-        public static final int other1=0x7f02000f;
-        public static final int run=0x7f020010;
-        public static final int spend=0x7f020011;
-        public static final int splash=0x7f020012;
-        public static final int styledbutton=0x7f020013;
-        public static final int toast=0x7f020014;
+        public static final int goal_fail=0x7f02000c;
+        public static final int goal_jep=0x7f02000d;
+        public static final int goal_prog=0x7f02000e;
+        public static final int goal_success=0x7f02000f;
+        public static final int ic_launcher=0x7f020010;
+        public static final int income=0x7f020011;
+        public static final int list=0x7f020012;
+        public static final int other1=0x7f020013;
+        public static final int run=0x7f020014;
+        public static final int spend=0x7f020015;
+        public static final int splash=0x7f020016;
+        public static final int styledbutton=0x7f020017;
+        public static final int toast=0x7f020018;
     }
     public static final class id {
         public static final int accountBalance=0x7f0a0056;

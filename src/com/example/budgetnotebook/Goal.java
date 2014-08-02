@@ -25,11 +25,12 @@ public class Goal {
 	private String goal_start_amount;
 	private String goal_delta_amount;
 	private String goal_end_date;
+	private String goal_status;
 
 	//Initializers --------------------------------------------------------------
 	public Goal(){}
 	
-	public Goal(int g_id, String name, String description, String type, String start_amount, String delta_amount, String end_date) {
+	public Goal(int g_id, String name, String description, String type, String start_amount, String delta_amount, String end_date, String goal_status) {
 		super();
 		this.g_id = g_id;
 		this.goal_name = name;
@@ -38,12 +39,13 @@ public class Goal {
 		this.goal_start_amount = start_amount;
 		this.goal_delta_amount = delta_amount;
 		this.goal_end_date = end_date;
+		this.goal_status = goal_status;
 	}
 	
 	// Return Goal object as a string
 	@Override
 	public String toString() {
-		return "Goal [id=" + _id + ", g_id=" + g_id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"]";
+		return "Goal [id=" + _id + ", g_id=" + g_id + ", name=" + goal_name + ", description=" + goal_description + ", type=" + goal_type + ", start_amount=" + goal_start_amount + ", delta_amount=" + goal_delta_amount + ", end_date=" + goal_end_date +"goal_status=" + goal_status + "]";
 	}
 	
 	//Getters --------------------------------------------------------------------
@@ -79,6 +81,10 @@ public class Goal {
 		return goal_end_date;
 	}
 	
+	public String getStatus() {
+		return goal_status;
+	}
+	
 	//Setters --------------------------------------------------------------------
 	public void setId(int id){
 		this._id = id;
@@ -111,4 +117,9 @@ public class Goal {
 	public void setEndDate(String end_date){
 		this.goal_end_date = end_date;
 	}
+	
+	public void setStatus(String goal_status) {
+		this.goal_status = goal_status;
+	}
+	
 }

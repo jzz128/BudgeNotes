@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:padding="5dp"
-        android:src="@drawable/goal2"
+        android:src="@drawable/goal_prog"
         android:contentDescription="@string/goal_icon" /> 
 
     <TextView

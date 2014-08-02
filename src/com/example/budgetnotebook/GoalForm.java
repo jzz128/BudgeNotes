@@ -44,6 +44,7 @@ public class GoalForm extends Activity implements InputValidator{
 	private String goalStartS;
 	private String goalDeltaS;
 	private String goalDescriptionS;
+	private String goalStatus;
 	
 	int G_ID;
 	int A_ID;
@@ -157,6 +158,8 @@ public class GoalForm extends Activity implements InputValidator{
 					goalDeltaS = goalDelta.getText().toString().trim();
 					goalDescriptionS = goalDescription.getText().toString().trim();
 					
+					goalStatus = String.valueOf(R.drawable.goal_prog);
+					
 					// Validate inputs
 					if(inputsValid()){
 						
@@ -204,6 +207,7 @@ public class GoalForm extends Activity implements InputValidator{
 			goal.setStartAmount(goalStartS);
 			goal.setDeltaAmount(goalDeltaS);
 			goal.setEndDate(goalEndS);
+			goal.setStatus(goalStatus);
 		}
 		
 		// Fill the form fields with database data.
@@ -230,6 +234,8 @@ public class GoalForm extends Activity implements InputValidator{
 			//Toast.makeText(this, goalStart.getText(), Toast.LENGTH_LONG).show();
 			// Set goal description text
 			goalDescription.setText(goal.getDescription());
+			
+			goalStatus = goal.getStatus();
 		}
 	
 	
@@ -288,7 +294,7 @@ public class GoalForm extends Activity implements InputValidator{
 	}
 	
 	private void addGoal() {
-		db.addGoal(new Goal(goalAccountI, goalNameS, goalDescriptionS, goalTypeS, goalStartS, goalDeltaS, goalEndS));
+		db.addGoal(new Goal(goalAccountI, goalNameS, goalDescriptionS, goalTypeS, goalStartS, goalDeltaS, goalEndS, goalStatus));
 	}
 
 	private void loadAccountSpinnerData() {

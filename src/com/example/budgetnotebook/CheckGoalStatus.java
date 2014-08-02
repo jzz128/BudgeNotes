@@ -12,10 +12,9 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(DBHelper... arguments) {
-		@SuppressWarnings("unused")
 		DBHelper db = arguments[0];
 		//TODO Check the status of goals and update them.
-		// This Method should be added to DBHelper Class.
+		db.checkGoalStatus();
 		return true;
 	}
 	
