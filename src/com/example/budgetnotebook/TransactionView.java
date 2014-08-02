@@ -46,7 +46,7 @@ public class TransactionView extends Activity {
 	
 	TextView transDate, transDateEnd;
 	private Calendar cal;
-	private int day, month, year;
+	private int day,last_month,next_month, year;
 	private String spinDate, spinDateEnd;
 	
 	String[] interval;
@@ -54,6 +54,8 @@ public class TransactionView extends Activity {
 	Intent newIntent;
 	
 	boolean start;
+	
+	DatePicker startDate, endDate;
 	
 	//Perform operations when class created.
 	@Override
@@ -74,34 +76,38 @@ public class TransactionView extends Activity {
 		// Initialize the calendar.
 		cal = Calendar.getInstance();
 		day = cal.get(Calendar.DAY_OF_MONTH);
-		month = cal.get(Calendar.MONTH);
+		last_month = cal.get(Calendar.MONTH)-1;
+		next_month = cal.get(Calendar.MONTH)+1;
 		year = cal.get(Calendar.YEAR);
 		
 		// Set date to todays date
-		//cal= Calendar.getInstance();
-		String cal_for_month;
+		String cal_for_month_today, cal_for_last_month, cal_for_next_month;
 		String cal_for_day;
-		/*if(cal.get(Calendar.MONTH)+1 < 10) {
-			cal_for_month = "0" + Integer.toString(cal.get(Calendar.MONTH)+1);
-		} else {*/
-			cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
-		//}
 		
-		/*if(cal.get(Calendar.DAY_OF_MONTH) < 10) {
-			cal_for_day = "0" + Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-		} else {*/
-			cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-		//}
-		
+		// Set month values to string
+		cal_for_month_today = Integer.toString(cal.get(Calendar.MONTH)+1);
+		cal_for_last_month = Integer.toString(cal.get(Calendar.MONTH));
+		cal_for_next_month = Integer.toString(cal.get(Calendar.MONTH)+2);
+		// Set day value to string
+		cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+
+		// Set year value to string
 		String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
+
+		// Combine strings to get today, one month ago and one month in the future strings
+		String todayAsString = cal_for_month_today + "/" + cal_for_day + "/" + cal_for_year;
+		Log.d("Today=",todayAsString);
+		String oneMonthAgo = cal_for_last_month + "/" + cal_for_day + "/" + cal_for_year;
+		Log.d("One Month Ago=",oneMonthAgo);
+		String oneMonthInTheFuture = cal_for_next_month + "/" + cal_for_day + "/" + cal_for_year;
+		Log.d("One Month Ahead=",oneMonthInTheFuture);
 		
-		
-		String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
-		//rngDate = cal_for_year + cal_for_month + cal_for_day;
-		spinDate = "now";
-		transDate.setText(todayAsString);
-		transDateEnd.setText(todayAsString);
-		
+		// Set default to be one month before and after current date
+		spinDate = oneMonthAgo;
+		spinDateEnd = oneMonthInTheFuture;
+		transDate.setText(oneMonthAgo);
+		transDateEnd.setText(oneMonthInTheFuture);
+
 		// Add data to the spinner.
 		loadAccountSpinnerData();
 		
@@ -110,7 +116,7 @@ public class TransactionView extends Activity {
 		A_ID = intent.getIntExtra("A_ID",0);
         lowestID = db.lowestAccountID();
         S_A_ID = A_ID - lowestID + 1 ;
-		
+                        
 		transAccount.setSelection(S_A_ID-1,false);
 		// Set a listener for the Account spinner selection.
 		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -180,34 +186,30 @@ public class TransactionView extends Activity {
 	@Override
 	@Deprecated
 	protected Dialog onCreateDialog(int id) {
-		return new DatePickerDialog(this, datePickerListener, year, month, day);
+		if (start == true) {
+			return new DatePickerDialog(this, datePickerListener, year, last_month, day);
+		} else	{
+			return new DatePickerDialog(this, datePickerListener, year, next_month, day);
+		}
 	}
 
-	//Listener for start date picker set button.
+	//Listener for date picker set button.
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 			if (start == true) {		
 				spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
-				//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
 				transDate.setText(spinDate);
-				db.seeFuture(getBaseContext(),spinDate,A_ID);
-				loadAccountSpinnerData();
-				populateListViewTransactions(A_ID);
-				
 			} else	{
 				spinDateEnd = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
-				//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
 				transDateEnd.setText(spinDateEnd);
-				//db.seeFuture(getBaseContext(),spinDate,A_ID);
-				//loadAccountSpinnerData();
-				//populateListViewTransactions(A_ID);
 			}
+			db.seeFuture(getBaseContext(),spinDateEnd,A_ID);
+			loadAccountSpinnerData();
+			populateListViewTransactions(A_ID);
 		
 		}
 	};
 	
-
-		
 	//Perform operations when the edit button is clicked.
 	public void editClickHandler(View v) {
 		int t_id;
@@ -356,11 +358,8 @@ public class TransactionView extends Activity {
 				loadAccountSpinnerData();
             	S_A_ID = A_ID - lowestID + 1 ;
         		transAccount.setSelection(S_A_ID-1);
-
-			}	
-			
+			}			
 		};
-		
 		
         AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
 		builder2.setMessage("Delete all recurring transactions associated as well?").setPositiveButton("Yes", dialogClickListener2)
@@ -405,9 +404,7 @@ public class TransactionView extends Activity {
 	@SuppressWarnings("deprecation")
 	private void populateListViewTransactions(int A_ID) {
 		// Set a cursor with all the Transactions
-		//Cursor cursor = db.getAllTransactions(A_ID);
-		Cursor cursor = db.getAllTransactionsInRange(A_ID, spinDate);
-		//startManagingCursor(cursor);
+		Cursor cursor = db.getAllTransactionsInRange(A_ID, spinDate, spinDateEnd);
 				
 		// Map the TRANSACTION_TABLE fields to the TextViews on the template_list_transaction layout.
 		String[] transactionFieldNames = new String[] {DBHelper.T_ID, DBHelper.T_A_ID, DBHelper.TRANSACTION_NAME, DBHelper.TRANSACTION_DATE, DBHelper.TRANSACTION_AMOUNT, DBHelper.TRANSACTION_TYPE, DBHelper.TRANSACTION_CHANGE};
@@ -429,12 +426,10 @@ public class TransactionView extends Activity {
 				if (view.getId() == R.id.transChangeAmount)
                 { 
                   String s = cursor.getString(11);
-                  //Log.d("cursor value =",String.valueOf(s));
                   TextView tv = (TextView)view;
 
                   if(s != null) tv.setTextColor(Color.parseColor(s));
                   tv.setText(cursor.getString(10));
-                  //Log.d("change amount=",cursor.getString(10));
                  return true;
 
             }

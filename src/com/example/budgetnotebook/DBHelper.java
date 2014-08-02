@@ -1044,52 +1044,72 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// For List population of Account ListView
 		@SuppressLint("SimpleDateFormat")
-		public Cursor getAllTransactionsInRange(int a_id, String against) {
+		public Cursor getAllTransactionsInRange(int a_id, String start, String end) {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 			java.util.Date endDate = null;
+			java.util.Date startDate = null;
 			String currentEnd;
 			String currentStart;
 			Calendar rngCal;
 			int iDay, iMonth, iYear;
 			String nDay, nMonth;
-			String rngDate;
+			String rngDateEnd, rngDateStart;
 			
-			if (against.equals("now")) {
+			//**************START DATE*********************
+			// Convert date string to date format
+			if (start.equals("now")) {
+				java.util.Date d = Calendar.getInstance().getTime(); // Current time
+				currentStart = sdf.format(d); // Get Date String according to date format
+			} else {
+				currentStart = start;
+			}
+
+			try {
+				startDate = sdf.parse(currentStart);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			rngCal = Calendar.getInstance();
+			rngCal.setTime(startDate);
+			
+			
+			iDay = rngCal.get(Calendar.DAY_OF_MONTH);
+			iMonth = rngCal.get(Calendar.MONTH);
+			iYear = rngCal.get(Calendar.YEAR);
+			
+			if (iDay < 10) {
+				nDay = "0" + String.valueOf(iDay);
+			} else {
+				nDay = String.valueOf(iDay);
+			}
+			if (iMonth < 10) {
+				nMonth = "0" + String.valueOf(iMonth+1);
+			} else {
+				nMonth =String.valueOf(iMonth+1);
+			}
+			
+			rngDateStart = String.valueOf(iYear) + nMonth + nDay;
+			//**************START DATE*********************
+			
+			//**************END DATE*********************
+			if (end.equals("now")) {
 				java.util.Date d = Calendar.getInstance().getTime(); // Current time
 				currentEnd = sdf.format(d); // Get Date String according to date format
 			} else {
-				currentEnd = against;
+				currentEnd = end;
 			}
 
 			try {
 				endDate = sdf.parse(currentEnd);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			rngCal = Calendar.getInstance();
 			rngCal.setTime(endDate);
 			
-			iDay = rngCal.get(Calendar.DAY_OF_MONTH);
-			iMonth = rngCal.get(Calendar.MONTH);
-			iYear = rngCal.get(Calendar.YEAR);
-			
-			if (iDay < 10) {
-				nDay = "0" + String.valueOf(iDay);
-			} else {
-				nDay = String.valueOf(iDay);
-			}
-			if (iMonth < 9) {
-				nMonth = "0" + String.valueOf(iMonth+1);
-			} else {
-				nMonth =String.valueOf(iMonth+1);
-			}
-			
-			rngDate = String.valueOf(iYear) + nMonth + nDay;
-			
-			rngCal.add(Calendar.MONTH, -1);
 			
 			iDay = rngCal.get(Calendar.DAY_OF_MONTH);
 			iMonth = rngCal.get(Calendar.MONTH);
@@ -1100,14 +1120,18 @@ public class DBHelper extends SQLiteOpenHelper {
 			} else {
 				nDay = String.valueOf(iDay);
 			}
-			if (iMonth < 9) {
+			if (iMonth < 10) {
 				nMonth = "0" + String.valueOf(iMonth+1);
 			} else {
 				nMonth =String.valueOf(iMonth+1);
 			}
 			
-			currentStart = String.valueOf(iYear) + nMonth + nDay;
+			rngDateEnd = String.valueOf(iYear) + nMonth + nDay;
+			//**************END DATE*********************
 			
+			
+			
+					
 			SQLiteDatabase db = this.getWritableDatabase();
 						
 			String where = null;
@@ -1116,11 +1140,11 @@ public class DBHelper extends SQLiteOpenHelper {
 				
 			order = "substr(" + TRANSACTION_DATE + ",7) || substr(" + TRANSACTION_DATE + ",1,2) || substr(" + TRANSACTION_DATE + ",4,2)";
 			
-			Log.d("Start=",currentStart);
-			Log.d("End=",rngDate);
+			Log.d("Start=",rngDateStart);
+			Log.d("End=",rngDateEnd);
 			
 			if(a_id != 0) {
-				where = T_A_ID + " = " + a_id + " AND " + TRANSACTION_ACCOUNTED + " = " + 1 + " AND CAST(" + order + " AS INTEGER) <= " + rngDate + " AND CAST(" + order + " AS INTEGER) >= " +  currentStart;
+				where = T_A_ID + " = " + a_id + " AND " + TRANSACTION_ACCOUNTED + " = " + 1 + " AND CAST(" + order + " AS INTEGER) <= " + rngDateEnd + " AND CAST(" + order + " AS INTEGER) >= " +  rngDateStart;
 			}
 			Cursor cursor = db.query(true, TRANSACTION_TABLE, TRANSACTION_FIELDS,  where,  null, null,  having, order, null);
 		
