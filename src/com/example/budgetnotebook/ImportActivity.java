@@ -122,8 +122,8 @@ public class ImportActivity extends Activity {
 							transIntervalS = nextLine[6];
 							transDescriptionS = nextLine[7];
 							transAccounted = Boolean.parseBoolean(nextLine[8]);
-							transChange = nextLine[9];
-							transCColor = nextLine[10];
+							transChange = null;
+							transCColor = null;
 							
 							db.addTransaction(new Transaction(transAccountI,
 									transNameS, transDateS, transAmountS,
