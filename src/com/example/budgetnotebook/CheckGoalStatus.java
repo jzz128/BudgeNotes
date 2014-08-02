@@ -1,9 +1,14 @@
 package com.example.budgetnotebook;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
-
+	Context context;
+	DBHelper db;
+	public void setContext(Context context) {
+		this.context = context;
+	}
 	@Override
 	protected void onPreExecute() {
 		// TODO Auto-generated method stub
@@ -12,7 +17,7 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(DBHelper... arguments) {
-		DBHelper db = arguments[0];
+		db = arguments[0];
 		//TODO Check the status of goals and update them.
 		db.checkGoalStatus();
 		return true;
@@ -28,6 +33,7 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		db.toastAlerts(context);
 	}
 	
 }

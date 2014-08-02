@@ -323,7 +323,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	
+	// Checking the status of t he gaols, setting thei r icon color and generating the alert message.
 	@SuppressLint("SimpleDateFormat")
 	public void checkGoalStatus() {
 		List<Goal> goalList = getListAllGoals();	
@@ -332,12 +332,16 @@ public class DBHelper extends SQLiteOpenHelper {
 		java.util.Date date = null;
 		
 		String currentDate;
+		String newStatus = null, newDescription = null;
+		String query, alt_id;
+		Cursor cursor;
 		
 		int count = goalList.size();
 		long todayMilli, goalMilli, diffInDays;
 		
 		Goal goal;
 		Account account;
+		Alert alert = new Alert();
 		
 		java.util.Date d = Calendar.getInstance().getTime(); // Current time
 		currentDate = sdf.format(d); // Get Date String according to date format
@@ -358,6 +362,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		for(int i = 0; i < count; i++) {
 			goal = goalList.get(i);
+			alt_id = String.valueOf(goal.getId());
+			query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",6) LIKE " + alt_id;
+			cursor = dbQuery(query);
+			if(cursor.moveToFirst())
+				alert = getAlert(cursor.getInt(0));
 			account = getAccount(goal.getAId());
 			check = Float.parseFloat(account.getBalance());
 			start = Float.parseFloat(goal.getStartAmount());
@@ -373,18 +382,46 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			goalMilli = goalCal.getTimeInMillis();
 			
-			diffInDays = (todayMilli - goalMilli)/(24*60*60*1000);
+			diffInDays = (goalMilli- todayMilli)/(24*60*60*1000);
 			
-			if(diffInDays > 3) {goal.setStatus(String.valueOf(R.drawable.goal_prog));} else
-			if(diffInDays <= 3 && diffInDays > 0) {goal.setStatus(String.valueOf(R.drawable.goal_jep));} else
-			if(diffInDays >= 0) {	
-				if(end >= check) {goal.setStatus(String.valueOf(R.drawable.goal_success));} else
-				if(end < check) {goal.setStatus(String.valueOf(R.drawable.goal_fail));}
+			if(diffInDays > 3) {Log.d("OPTION 1: ", "-"); newStatus =String.valueOf(R.drawable.goal_prog);} else
+			if(diffInDays <= 3 && diffInDays > 0) {Log.d("OPTION 2: ", "-"); newStatus = String.valueOf(R.drawable.goal_jep); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
+			if(diffInDays <= 0) {	
+				if(check >= end) {Log.d("OPTION 3.1: ", "-"); newStatus = String.valueOf(R.drawable.goal_success); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' was achieved!";} else
+				if(check < end) {Log.d("OPTION 3.2: ", "-"); newStatus = String.valueOf(R.drawable.goal_fail); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' failed!";}
 			}
+			
+			Log.d("the status is: ", newStatus);
+			
+			goal.setStatus(newStatus);
+			alert.setDescription(newDescription);
 			updateGoal(goal);
+			updateAlert(alert);
+			
+			Log.d("the goal was updated!: ", "-");
 			Log.d("the difference is: ", String.valueOf(diffInDays));
+			Log.d("the end is: ", String.valueOf(end));
+			Log.d("the check is: ", String.valueOf(check));
+			Log.d("the status is: ", goal.getStatus());
 		}
 	}
+	
+	public void toastAlerts(Context context){
+		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_DESCRIPTION + " IS NOT NULL";
+			
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(query, null);
+			
+		if (cursor.moveToFirst()) {
+			do {
+				Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
+					
+			} while (cursor.moveToNext());
+		}
+		else {
+			//Toast.makeText(context, "No Goals yet!", Toast.LENGTH_LONG).show();
+		}
+	} 
 	
 	// Add a single Goal.
 	public void addGoal(Goal goal){
