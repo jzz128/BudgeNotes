@@ -73,7 +73,7 @@
     <string name="sav">SAV</string>
     <string name="cr">CR</string>
     <string name="save">Save</string>
-    <string name="end_date">End Date</string>
+    <string name="end_date">End Date: \u0020</string>
     <string name="delta_amount">Delta Amount</string>
     <string name="what_is_the_goal_value_">What is the Goal Value?</string>
     <string name="current_amount">Current Amount</string>
@@ -136,5 +136,6 @@
     <string name="category_count_percentage">Category  \u0020 \u0020 \u0020 \u0020 \u0020 Count \u0020 \u0020 \u0020 \u0020 \u0020 Percentage</string>
     <string name="category_amountC_percentage">Category  \u0020 \u0020 \u0020 \u0020 Amount(+) \u0020 \u0020 Percentage</string>
     <string name="category_amountD_percentage">Category  \u0020 \u0020 \u0020 \u0020 Amount(-) \u0020 \u0020 Percentage</string>
+    <string name="start_date">Start Date:</string>
 
 </resources>

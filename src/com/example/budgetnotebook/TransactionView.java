@@ -44,14 +44,16 @@ public class TransactionView extends Activity {
 	RelativeLayout vwParentRow;
 	ListView transactionList;
 	
-	TextView transDate;
+	TextView transDate, transDateEnd;
 	private Calendar cal;
 	private int day, month, year;
-	private String spinDate;
+	private String spinDate, spinDateEnd;
 	
 	String[] interval;
 	int intVal;
 	Intent newIntent;
+	
+	boolean start;
 	
 	//Perform operations when class created.
 	@Override
@@ -67,6 +69,7 @@ public class TransactionView extends Activity {
 		
 		// Initialize date field.
 		transDate = (TextView) findViewById(R.id.tranViewSpinner);
+		transDateEnd = (TextView) findViewById(R.id.tranViewSpinnerEnd);
 		
 		// Initialize the calendar.
 		cal = Calendar.getInstance();
@@ -78,17 +81,17 @@ public class TransactionView extends Activity {
 		//cal= Calendar.getInstance();
 		String cal_for_month;
 		String cal_for_day;
-		if(cal.get(Calendar.MONTH)+1 < 10) {
+		/*if(cal.get(Calendar.MONTH)+1 < 10) {
 			cal_for_month = "0" + Integer.toString(cal.get(Calendar.MONTH)+1);
-		} else {
+		} else {*/
 			cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
-		}
+		//}
 		
-		if(cal.get(Calendar.DAY_OF_MONTH) < 10) {
+		/*if(cal.get(Calendar.DAY_OF_MONTH) < 10) {
 			cal_for_day = "0" + Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-		} else {
+		} else {*/
 			cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-		}
+		//}
 		
 		String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
 		
@@ -97,6 +100,7 @@ public class TransactionView extends Activity {
 		//rngDate = cal_for_year + cal_for_month + cal_for_day;
 		spinDate = "now";
 		transDate.setText(todayAsString);
+		transDateEnd.setText(todayAsString);
 		
 		// Add data to the spinner.
 		loadAccountSpinnerData();
@@ -153,15 +157,23 @@ public class TransactionView extends Activity {
 		
 	}
 	
-	//Perform operations when the icon button is cliacked.
+	//Perform operations when the icon button is clicked.
 	public void iconClickHandler(View v) {
 		//TODO Do Something when Transaction Icon clicked. Or Nothing.
 	}
 	
-	// Show the date picker when the date picker icon is clicked.
+	// Show the date picker when the start date picker icon is clicked.
 	@SuppressWarnings("deprecation")
 	public void dateClickHandler(View v) {
+		start = true;
 		showDialog(0);
+	}
+	
+	// Show the date picker when the end date picker icon is clicked.
+	@SuppressWarnings("deprecation")
+	public void dateClickHandlerEnd(View v) {
+		start = false;
+		showDialog(1);
 	}
 	
 	//Make the date picker dialog.
@@ -171,17 +183,30 @@ public class TransactionView extends Activity {
 		return new DatePickerDialog(this, datePickerListener, year, month, day);
 	}
 
-	//Listener for date picker set button.
+	//Listener for start date picker set button.
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-					spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
-					//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
-					transDate.setText(spinDate);
-					db.seeFuture(getBaseContext(),spinDate,A_ID);
-					loadAccountSpinnerData();
-					populateListViewTransactions(A_ID);
+			if (start == true) {		
+				spinDate = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
+				//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
+				transDate.setText(spinDate);
+				db.seeFuture(getBaseContext(),spinDate,A_ID);
+				loadAccountSpinnerData();
+				populateListViewTransactions(A_ID);
+				
+			} else	{
+				spinDateEnd = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
+				//rngDate = Integer.toString(selectedYear) + Integer.toString((selectedMonth + 1)) + Integer.toString(selectedDay);
+				transDateEnd.setText(spinDateEnd);
+				//db.seeFuture(getBaseContext(),spinDate,A_ID);
+				//loadAccountSpinnerData();
+				//populateListViewTransactions(A_ID);
+			}
+		
 		}
 	};
+	
+
 		
 	//Perform operations when the edit button is clicked.
 	public void editClickHandler(View v) {
