@@ -382,6 +382,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				if(end < check) {goal.setStatus(String.valueOf(R.drawable.goal_fail));}
 			}
 			updateGoal(goal);
+			Log.d("the difference is: ", String.valueOf(diffInDays));
 		}
 	}
 	

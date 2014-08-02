@@ -397,7 +397,7 @@ public class TransactionForm extends Activity implements InputValidator {
 					if (selectedMonth < 9) {
 						formatMonth = "0" + String.valueOf(selectedMonth + 1);
 					} else {
-						formatMonth = String.valueOf(selectedMonth);
+						formatMonth = String.valueOf(selectedMonth + 1);
 					}
 					
 					if (selectedDay < 10) {

@@ -45,6 +45,7 @@ public class GoalForm extends Activity implements InputValidator{
 	private String goalDeltaS;
 	private String goalDescriptionS;
 	private String goalStatus;
+	private String formatMonth, formatDay;
 	
 	int G_ID;
 	int A_ID;
@@ -89,9 +90,14 @@ public class GoalForm extends Activity implements InputValidator{
 		} else {
 			// Set date to todays date
 			cal= Calendar.getInstance();
+			
 		    String cal_for_month = Integer.toString(cal.get(Calendar.MONTH)+1);
+		    if (cal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
+		    
 		    String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
 		    String cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		    if (cal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
+		    
 			String todayAsString = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
 			goalEnd.setText(todayAsString);
 		}
@@ -258,7 +264,20 @@ public class GoalForm extends Activity implements InputValidator{
 		private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		
 			public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-				goalEnd.setText((selectedMonth + 1) + " / " + selectedDay + " / " + selectedYear);
+				
+				if (selectedMonth < 9) {
+					formatMonth = "0" + String.valueOf(selectedMonth + 1);
+				} else {
+					formatMonth = String.valueOf(selectedMonth + 1);
+				}
+				
+				if (selectedDay < 10) {
+					formatDay = "0" + String.valueOf(selectedDay);
+				} else {
+					formatDay = String.valueOf(selectedDay);
+				}
+				
+				goalEnd.setText(formatMonth + "/" + formatDay + "/" + selectedYear);
 	}
 	};
 	

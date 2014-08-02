@@ -23,7 +23,7 @@ public class Splash extends Activity {
 		
 		CheckGoalStatus checkGoal = new CheckGoalStatus ();
 		checkGoal.execute(db);	
-		
+		//db.checkGoalStatus();
 		// Check if a profile exists.
 		if (db.checkProfileExists() == 0) {
 			profile_exists = false;
