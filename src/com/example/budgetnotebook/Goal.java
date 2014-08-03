@@ -120,6 +120,5 @@ public class Goal {
 	
 	public void setStatus(String goal_status) {
 		this.goal_status = goal_status;
-	}
-	
+	}	
 }

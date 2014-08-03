@@ -19,6 +19,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class ProfileForm extends Activity implements InputValidator {
+	// UI Components
 	Button save_profile;
 	EditText profileFirstName;
 	EditText profileLastName;
@@ -30,9 +31,10 @@ public class ProfileForm extends Activity implements InputValidator {
 	EditText profileCity;
 	EditText profileEmail;
 	
+	// UI Backing Variables
 	private Calendar cal;
 	private int day, month, year;
-	
+
 	String profileFirstNameString;
 	String profileLastNameString;
 	String profileGenderString;
@@ -81,39 +83,37 @@ public class ProfileForm extends Activity implements InputValidator {
 			
 		// Set the SAVE button to commit to the database and then display the main menu when clicked
 		save_profile = (Button) findViewById(R.id.save_profile);
-		save_profile.setOnClickListener(new View.OnClickListener() {				
-		
-					@Override
-					public void onClick(View v) {
-						try{
-							profileGenderSelection = (RadioButton)findViewById(profileGender.getCheckedRadioButtonId());
-							// Transfer edit text to PROFILE_TABLE attribute types.	
-							fillProfileVariables();
-							if(inputsValid()){
-								if (profile_exists) {
-									// Populate profile object
-									fillProfileObject();
-									// Write to database
-									db.updateProfile(profile);
-									// Finish activity to return to main menu
-									finish();
-								} else {
-									// Write to profile to database									
-									addProfile();
-									// Display Main Menu after profile is created
-									Class<?> clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
-									Intent newIntent = new Intent(ProfileForm.this, clickedClass);
-									startActivity(newIntent);
-									
-									}
-								}
-							} catch(ClassNotFoundException e) {
-								e.printStackTrace();
-							}
+		save_profile.setOnClickListener(new View.OnClickListener() {						
+			@Override
+			public void onClick(View v) {
+				try{
+					profileGenderSelection = (RadioButton)findViewById(profileGender.getCheckedRadioButtonId());
+					// Transfer edit text to PROFILE_TABLE attribute types.	
+					fillProfileVariables();
+					if(inputsValid()){
+						if (profile_exists) {
+							// Populate profile object
+							fillProfileObject();
+							// Write to database
+							db.updateProfile(profile);
+							// Finish activity to return to main menu
+							finish();
+						} else {
+							// Write to profile to database									
+							addProfile();
+							// Display Main Menu after profile is created
+							Class<?> clickedClass = Class.forName("com.example.budgetnotebook.MainMenu");
+							Intent newIntent = new Intent(ProfileForm.this, clickedClass);
+							startActivity(newIntent);
 							
-					}				
-				});
-		
+							}
+						}
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+						
+				}				
+			});		
 	}
 	
 	// Save all fields to strings
@@ -191,7 +191,6 @@ public class ProfileForm extends Activity implements InputValidator {
 
 	// Sets form text to the selected date after DONE is pressed
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-	
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 			String dayString = Integer.toString(selectedDay);
 			String monthString = Integer.toString(selectedMonth+1);
@@ -386,5 +385,4 @@ public class ProfileForm extends Activity implements InputValidator {
 		  return false;
 	     }			    
 	   }
-	  
 }

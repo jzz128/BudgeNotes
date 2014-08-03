@@ -249,7 +249,7 @@ public class TransactionForm extends Activity implements InputValidator {
 							//
 							if (transAccounted) updateAccount();
 							addTransaction();
-							db.createReccTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
+							db.createRecommendationTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
 							db.cleanTransactions(getBaseContext(), "now");
 						}
 						
@@ -306,9 +306,9 @@ public class TransactionForm extends Activity implements InputValidator {
 					baseTranID = transaction.getId();
 				}
 				
-				db.editReccTransactions(transaction, baseTranID, false);
+				db.editRecommendationTransactions(transaction, baseTranID, false);
 				db.recalcAlert(transaction);
-				db.checkTranStatus();
+				db.checkTransactionStatus();
 				break;
 			//The user wishes to update the current transaction and all subsequent transactions.
 			case 2:
@@ -321,9 +321,9 @@ public class TransactionForm extends Activity implements InputValidator {
 				} else {
 					baseTranID = transaction.getId();
 				}
-				db.editReccTransactions(transaction, baseTranID, true);
+				db.editRecommendationTransactions(transaction, baseTranID, true);
 				db.recalcAlert(transaction);
-				db.checkTranStatus();
+				db.checkTransactionStatus();
 				break;
 		}
 		
@@ -341,7 +341,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		transaction.setDescription(transDescriptionS);
 		transaction.setAccounted(transAccounted);
 		transaction.setChange(null);
-		transaction.setCColor(null);
+		transaction.setChangeColor(null);
 	}
 	
 	// Fill the form fields with database data.
@@ -469,7 +469,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		if (newBalance < 0) {changeColor = String.valueOf(getResources().getColor(R.color.below_zero));}
 		
 		if (T_EDIT) transaction.setChange(amountChange);
-		if (T_EDIT) transaction.setCColor(changeColor);
+		if (T_EDIT) transaction.setChangeColor(changeColor);
 		db.updateAccount(account);
 	}
 
@@ -499,7 +499,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		amountChange = null;
 		changeColor = null;
 		if (T_EDIT) transaction.setChange(amountChange);
-		if (T_EDIT) transaction.setCColor(changeColor);
+		if (T_EDIT) transaction.setChangeColor(changeColor);
 	}
 	
 	public boolean inputsValid(){

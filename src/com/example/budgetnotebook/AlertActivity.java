@@ -13,10 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AlertActivity extends Activity{
-	// Setup global variables
+	// UI Components
 	Button addGoal;
 	DBHelper db;
-	
 	RelativeLayout vwParentRow;
 	ListView alertList;
 	Alert alert;
@@ -86,11 +85,13 @@ public class AlertActivity extends Activity{
 	                    break;
 	                 // No Clicked
 	                case DialogInterface.BUTTON_NEGATIVE:
-	                    //Do Nothing.
+	                default:
+	                	//Do Nothing.
 	                    break;
                 }
             }
         };
+        
         // Alert Dialog Popup
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete alert? \n ** THIS CAN NOT BE UNDONE!").setPositiveButton("Yes", dialogClickListener)

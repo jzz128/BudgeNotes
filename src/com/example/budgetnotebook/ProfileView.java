@@ -48,22 +48,21 @@ public class ProfileView extends Activity {
 		
 		
 		// Set the EDIT BUTTON to display the profile form when clicked
-				edit_profile = (Button) findViewById(R.id.editProfile);
-				edit_profile.setOnClickListener(new View.OnClickListener() {			
-					
-					@Override
-					public void onClick(View v) {
-						try{
-							// Finish the Profile activity and start the Profile Form activity
-							finish();
-							Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
-							Intent newIntent = new Intent(ProfileView.this, clickedClass);
-							startActivity(newIntent);
-							} catch(ClassNotFoundException e) {
-								e.printStackTrace();
-							}
-					}				
-				});
-		
+		edit_profile = (Button) findViewById(R.id.editProfile);
+		edit_profile.setOnClickListener(new View.OnClickListener() {			
+			
+			@Override
+			public void onClick(View v) {
+				try{
+					// Finish the Profile activity and start the Profile Form activity
+					finish();
+					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ProfileForm");
+					Intent newIntent = new Intent(ProfileView.this, clickedClass);
+					startActivity(newIntent);
+					} catch(ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+			}				
+		});		
 	}	
 }

@@ -42,7 +42,9 @@ public class ResultSetHelperService implements ResultSetHelper {
 	private static final int NCLOB = 2011;
 
     public String[] getColumnNames(ResultSet rs) throws SQLException {
-        List<String> names = new ArrayList<String>();
+        // Get an array containing the names of all columns, based on 
+    	// resultset metadata.
+    	List<String> names = new ArrayList<String>();
         ResultSetMetaData metadata = rs.getMetaData();
 
         for (int i = 0; i < metadata.getColumnCount(); i++) {
@@ -54,7 +56,7 @@ public class ResultSetHelperService implements ResultSetHelper {
     }
 
     public String[] getColumnValues(ResultSet rs) throws SQLException, IOException {
-
+    	// Get an array of strings for column values in a result set.
         List<String> values = new ArrayList<String>();
         ResultSetMetaData metadata = rs.getMetaData();
 
@@ -161,14 +163,12 @@ public class ResultSetHelperService implements ResultSetHelper {
 				value = "";
 		}
 
-
 		if (value == null)
 		{
 			value = "";
 		}
 
 		return value;
-
     }
 
     private static String read(Clob c) throws SQLException, IOException

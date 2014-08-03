@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class GoalView extends Activity{
-	// Setup global variables
+	// UI Components
 	Button addGoal;
 	DBHelper db;
 	

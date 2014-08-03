@@ -23,20 +23,20 @@ import android.view.View;
 import android.widget.Button;
 
 public class AdvancedMenu extends Activity {
-	//Class variable definitions.
+	// UI components
 	Button vewReports;
 	Button viewRecomendations;
 	Button exportTrans;
 	Button importTrans;
 	Button viewAlerts;
 
-	//Perform operations when the class is created.
+	// Perform operations when the class is created.
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.advanced_menu);
 		
-		//Listener for Report View Button.
+		// Listener for Report View Button.
 		vewReports = (Button) findViewById(R.id.advancedReports);
 		vewReports.setOnClickListener(new View.OnClickListener() {		
 						
@@ -52,13 +52,14 @@ public class AdvancedMenu extends Activity {
 			}	
 		});
 		
-		//Listener for Recommendation View Button.
+		// Listener for Recommendation View Button.
 		viewRecomendations = (Button) findViewById(R.id.advancedRecommendations);
 		viewRecomendations.setOnClickListener(new View.OnClickListener() {		
 						
 		@Override
-			public void onClick(View v) {
+		public void onClick(View v) {
 			try{
+				// Start the view recommendation activity
 				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.RecommendationView");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
@@ -75,6 +76,7 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 			try{
+				// Start the export transaction activity
 				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ExportActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);
@@ -91,6 +93,7 @@ public class AdvancedMenu extends Activity {
 		@Override
 			public void onClick(View v) {
 			try{
+				// Start the import transaction activity 
 				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ImportActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
 				startActivity(newIntent);

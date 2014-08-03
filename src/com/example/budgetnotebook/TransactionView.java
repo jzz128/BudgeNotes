@@ -371,17 +371,17 @@ public class TransactionView extends Activity {
 					} else {
 						// Do Nothing.
 					}
-					db.deleteReccTransactions(transaction);
+					db.deleteRecommendationTransactions(transaction);
 					db.recalcAlert(transaction);
             		db.cleanTransactions(getBaseContext(), spinDateEnd);
-            		db.checkTranStatus();
+            		db.checkTransactionStatus();
             		break;
 				case DialogInterface.BUTTON_NEGATIVE:
 					if(!transaction.getName().toString().contains("-")) {Toast.makeText(getBaseContext(), "Can not delete a base transaction!" , Toast.LENGTH_LONG).show(); break;}
 					reverseTransaction();
             		db.deleteTransaction(transaction);
 					db.recalcAlert(db.getTransaction(baseID));
-            		db.checkTranStatus();
+            		db.checkTransactionStatus();
                     break;
 				}
 				loadAccountSpinnerData();

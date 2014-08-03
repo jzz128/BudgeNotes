@@ -81,7 +81,7 @@ public class Transaction {
 		return transaction_change;
 	}
 	
-	public String getCColor() {
+	public String getChangeColor() {
 		return t_change_color;
 	}
 	
@@ -130,8 +130,7 @@ public class Transaction {
 		this.transaction_change = transaction_change;
 	}
 
-	public void setCColor(String t_change_color) {
+	public void setChangeColor(String t_change_color) {
 		this.t_change_color = t_change_color;
-	}
-	
+	}	
 }

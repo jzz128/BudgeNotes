@@ -106,10 +106,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	//Values to use for the Recommendation table.
 	
-	//TODO Convert to string array resource.
-	private String[] cats = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
-	//TODO Convert to string array resource.
-	private String[] thresh = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
+	private String[] recommendationCategories = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
+	private String[] recommendationThreadholds = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
 	
 	//Fields associated with the Alert Table.
 	public static final String ALERT_TABLE = "alert_table";
@@ -153,7 +151,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, VERSION);
 	}
 
-	//Creates the database using the SQL statements.
+	// Creates the database using the SQL statements.
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(createGoal);
@@ -166,7 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		
         //Add Recommendations to the database table.
         for (int i = 0; i <11; i++) {
-        	db.execSQL("INSERT INTO " + REC_TABLE + "(criteria_one, criteria_two, is_valid) VALUES ('" + cats[i] + "', '" + thresh[i] + "', 0);");
+        	db.execSQL("INSERT INTO " + REC_TABLE + "(criteria_one, criteria_two, is_valid) VALUES ('" + recommendationCategories[i] + "', '" + recommendationThreadholds[i] + "', 0);");
         }
 	}
 
@@ -238,7 +236,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// ---------------------------------------------------------------------------------------------------------------------
 				
 	// Returns a cursor filled with all the recommendations.
-	public Cursor getRcommendations() {
+	public Cursor getRecommendations() {
 		SQLiteDatabase db = this.getWritableDatabase();
 			
 		String query = "SELECT * FROM " + REC_TABLE;
@@ -249,7 +247,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Returns a Recommendation object with the passed id.
-	public Recommendation getRec(int id) {
+	public Recommendation getRecommendation(int id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 			
 		Cursor cursor =
@@ -260,11 +258,11 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 		Recommendation rec = new Recommendation();
 		rec.setId(Integer.parseInt(cursor.getString(0)));
-		rec.setC1(cursor.getString(1));
-		rec.setC2(cursor.getString(2));
-		rec.setC3(cursor.getString(3));
-		rec.setC4(cursor.getString(4));
-		rec.setC5(cursor.getString(5));
+		rec.setCategory1(cursor.getString(1));
+		rec.setCategory2(cursor.getString(2));
+		rec.setCategory3(cursor.getString(3));
+		rec.setCategory4(cursor.getString(4));
+		rec.setCategory5(cursor.getString(5));
 			 
 		 Log.d("getRec("+id+")", rec.toString());
 		 
@@ -272,17 +270,17 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Updates the recommendation with the id of the passed object with the attributes of the passed object.
-	public int updateRec(Recommendation rec) {
+	public int updateRecommendation(Recommendation rec) {
 			
 		SQLiteDatabase db = this.getWritableDatabase();
 			
 		ContentValues values = new ContentValues();
-		values.put(R_CRITERIA_1,  rec.getC1());
-		values.put(R_CRITERIA_2, rec.getC2());
-		values.put(R_CRITERIA_3, rec.getC3());
-		values.put(R_CRITERIA_4, rec.getC4());
-		values.put(R_CRITERIA_5, rec.getC5());
-		values.put(R_IS_VALID, rec.getIV());
+		values.put(R_CRITERIA_1,  rec.getCategory1());
+		values.put(R_CRITERIA_2, rec.getCategory2());
+		values.put(R_CRITERIA_3, rec.getCategory3());
+		values.put(R_CRITERIA_4, rec.getCategory4());
+		values.put(R_CRITERIA_5, rec.getCategory5());
+		values.put(R_IS_VALID, rec.getIsValid());
 			
 		int i = db.update(REC_TABLE, values, R_ID + " = ?", new String[] { String.valueOf(rec.getId()) });
 			
@@ -292,7 +290,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Returns a list of Recommendation objects for all records in the Recommendation table.
-	public List<Recommendation> getListAllRecs() {
+	public List<Recommendation> getAllRecommendations() {
 		List<Recommendation> recs = new LinkedList<Recommendation>();
 			
 		String query = "SELECT * FROM " + REC_TABLE;
@@ -305,12 +303,12 @@ public class DBHelper extends SQLiteOpenHelper {
 			do {
 				rec = new Recommendation();
 				rec.setId(Integer.parseInt(cursor.getString(0)));
-				rec.setC1(cursor.getString(1));
-				rec.setC2(cursor.getString(2));
-				rec.setC3(cursor.getString(3));
-				rec.setC4(cursor.getString(4));
-				rec.setC5(cursor.getString(5));
-				rec.setIV(Boolean.parseBoolean(cursor.getString(6)));
+				rec.setCategory1(cursor.getString(1));
+				rec.setCategory2(cursor.getString(2));
+				rec.setCategory3(cursor.getString(3));
+				rec.setCategory4(cursor.getString(4));
+				rec.setCategory5(cursor.getString(5));
+				rec.setIsValid(Boolean.parseBoolean(cursor.getString(6)));
 					
 				recs.add(rec);
 			} while (cursor.moveToNext());
@@ -323,7 +321,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Goal methods ---------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	// Checking the status of t he gaols, setting thei r icon color and generating the alert message.
+	// Checking the status of the goals, setting their icon color and generating the alert message.
 	@SuppressLint("SimpleDateFormat")
 	public void checkGoalStatus() {
 		List<Goal> goalList = getListAllGoals();	
@@ -867,7 +865,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 	// Check if any Transactions exist.
-	public boolean checkTransExists() {
+	public boolean checkTransactionExists() {
 		String query = "SELECT * FROM " + TRANSACTION_TABLE;
 					
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -933,7 +931,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted());
 		values.put(TRANSACTION_CHANGE, transaction.getChange());
-		values.put(T_CHANGE_COLOR, transaction.getCColor());
+		values.put(T_CHANGE_COLOR, transaction.getChangeColor());
 			
 		db.insert(TRANSACTION_TABLE, null, values);
 					
@@ -967,7 +965,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		transaction.setDescription(cursor.getString(8));
 		transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 		transaction.setChange(cursor.getString(10));
-		transaction.setCColor(cursor.getString(11));
+		transaction.setChangeColor(cursor.getString(11));
 				 
 		 Log.d("getTransaction("+id+")", transaction.toString());
 				 
@@ -1015,7 +1013,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				transaction.setDescription(cursor.getString(8));
 				transaction.setAccounted(accounted); // Updated to incorporate new transaction method.
 				transaction.setChange(cursor.getString(10));
-				transaction.setCColor(cursor.getString(11));
+				transaction.setChangeColor(cursor.getString(11));
 						
 				transactions.add(transaction);
 			} while (cursor.moveToNext());
@@ -1138,10 +1136,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			rngDateEnd = String.valueOf(iYear) + nMonth + nDay;
 			//**************END DATE*********************
-			
-			
-			
-					
+
 			SQLiteDatabase db = this.getWritableDatabase();
 						
 			String where = null;
@@ -1167,7 +1162,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	
 	//TODO Toast all Transaction dates -- REMOVE AFTER TESTING --
-	public void toastTranDates(Context context) {
+	public void toastTransactionDates(Context context) {
 		SQLiteDatabase db = this.getWritableDatabase();
 			
 		String where = null;
@@ -1223,7 +1218,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		values.put(TRANSACTION_DESCRIPTION, transaction.getDescription());
 		values.put(TRANSACTION_ACCOUNTED, transaction.getAccounted()); // Updated to incorporate new transaction method.
 		values.put(TRANSACTION_CHANGE, transaction.getChange());
-		values.put(T_CHANGE_COLOR, transaction.getCColor());
+		values.put(T_CHANGE_COLOR, transaction.getChangeColor());
 					
 		int i = db.update(TRANSACTION_TABLE, values, T_ID + " = ?", new String[] { String.valueOf(transaction.getId()) });
 					
@@ -1378,7 +1373,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			numAccounts = accList.size();				
 			
 			// Check if any transactions exist.
-			if(checkTransExists()) {
+			if(checkTransactionExists()) {
 				// Iterate through all accounts.
 				for (int i = 0; i < numAccounts; i++) {
 					// Get the _id of the current account.
@@ -1424,14 +1419,14 @@ public class DBHelper extends SQLiteOpenHelper {
 						updateAccount(account);
 						tranList.get(i).setChange(account.getBalance());
 						
-						if (newBalance > 100) {tranList.get(i).setCColor("#006400");} else
-						if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setCColor("#DAA520");} else
-						if (newBalance < 0) {tranList.get(i).setCColor("#FF0000");}
+						if (newBalance > 100) {tranList.get(i).setChangeColor("#006400");} else
+						if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setChangeColor("#DAA520");} else
+						if (newBalance < 0) {tranList.get(i).setChangeColor("#FF0000");}
 						
 						updateTransaction(tranList.get(i));
 					} else {
 						tranList.get(i).setChange(null);
-						tranList.get(i).setCColor(null);
+						tranList.get(i).setChangeColor(null);
 						updateTransaction(tranList.get(i));
 					}
 				}
@@ -1446,7 +1441,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	@SuppressLint("SimpleDateFormat")
-	public void checkTranStatus() {
+	public void checkTransactionStatus() {
 		Log.d("Checking Transaction Status","-");
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 		java.util.Date today = null;
@@ -1590,9 +1585,9 @@ public class DBHelper extends SQLiteOpenHelper {
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
 				
-				if (newBalance > 100) {tranList.get(i).setCColor("#006400");} else
-				if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setCColor("#DAA520");} else
-				if (newBalance < 0) {tranList.get(i).setCColor("#FF0000");}
+				if (newBalance > 100) {tranList.get(i).setChangeColor("#006400");} else
+				if (0 <= newBalance  && newBalance <= 100) {tranList.get(i).setChangeColor("#DAA520");} else
+				if (newBalance < 0) {tranList.get(i).setChangeColor("#FF0000");}
 				
 				tranList.get(i).setChange(account.getBalance());
 				updateTransaction(tranList.get(i));
@@ -1602,7 +1597,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
 				tranList.get(i).setChange(null);
-				tranList.get(i).setCColor(null);
+				tranList.get(i).setChangeColor(null);
 				updateTransaction(tranList.get(i));
 			} else if(pAccounted == tranList.get(i).getAccounted()) {
 				//Do Nothing.
@@ -1614,7 +1609,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Creates a years worth of recurring transactions according to the interval passed by interval.
 	@SuppressLint("SimpleDateFormat")
-	public void createReccTransactions (int interval, String transDateS, int T_ID) {
+	public void createRecommendationTransactions (int interval, String transDateS, int T_ID) {
 		Transaction transaction = getTransaction(T_ID);
 		int recDayInt = 0;
 		int recMonInt = 0;
@@ -1697,7 +1692,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				transaction.setDate(intDate);
 				transaction.setAccounted(false);
 				transaction.setChange(null);
-				transaction.setCColor(null);
+				transaction.setChangeColor(null);
 				addTransaction(transaction);
 				
 				try {
@@ -1732,7 +1727,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Delete recurring transactions spawned from passed transaction object and original transaction object.
-	public void deleteReccTransactions(Transaction transaction) {
+	public void deleteRecommendationTransactions(Transaction transaction) {
 		int nLen = transaction.getName().length() + 2;
 		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";
 		
@@ -1791,7 +1786,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Edit recurring transactions spawned from passed transaction object and original transaction object.
-	public void editReccTransactions(Transaction transaction, int id, boolean subsTransOnly) {
+	public void editRecommendationTransactions(Transaction transaction, int id, boolean subsTransOnly) {
 		// Create an object for the initially generated transaction.
 		Transaction baseTran = getTransaction(id);
 		// Set the name offset length so transactions can be queried

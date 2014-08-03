@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainMenu extends Activity {
+	// UI Components
 	Button view_account;
 	Button add_transaction;
 	Button view_profile;
@@ -80,17 +81,17 @@ public class MainMenu extends Activity {
 					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalView");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
 					startActivity(newIntent);
-					} catch(ClassNotFoundException e) {
+				} 
+				catch(ClassNotFoundException e) {
 						e.printStackTrace();
-					}	
+				}	
 			}
 		});
 		
 		// ======================================================================================================================
 		// Set the VIEW RECOMMENDATIONS button to display the VIEW RECOMMENDATIONS page when clicked
 		view_recommendations = (Button) findViewById(R.id.view_recommendations);
-		view_recommendations.setOnClickListener(new View.OnClickListener() {
-					
+		view_recommendations.setOnClickListener(new View.OnClickListener() {					
 			@Override
 			public void onClick(View v) {
 				try{
@@ -103,20 +104,14 @@ public class MainMenu extends Activity {
 			}
 		});
 		// ======================================================================================================================
-		
 		// Set the EXIT button to exit the application when clicked
 		exit = (Button) findViewById(R.id.exit);
 		exit.setOnClickListener(new View.OnClickListener() {
-					
 			@Override
 			public void onClick(View v) {
 				//finish();
-	            System.exit(0);
-						
+	            System.exit(0);			
 			}
-
 		});	
-	
 	}
-
 }

@@ -45,8 +45,7 @@ public class Splash extends Activity {
 				} finally {
 					// Display main menu if a profile exists. Otherwise prompt user to create a profile
 					Intent openMainActivity;
-					//
-					
+
 					if (profile_exists) {
 						openMainActivity = new Intent("com.example.budgetnotebook.MAINMENU");
 					} else {
@@ -57,13 +56,10 @@ public class Splash extends Activity {
 					startActivity(openMainActivity);
 					
 				}
-				
-				
 			}
 		};
 		
 		timer.start();
-		
 	}
 	
 	@Override
@@ -72,6 +68,4 @@ public class Splash extends Activity {
 		super.onPause();
 		finish();
 	}
-	
-
 }

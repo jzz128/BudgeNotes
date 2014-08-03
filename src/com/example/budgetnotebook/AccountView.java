@@ -30,10 +30,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AccountView extends Activity {
-	//Class variable definitions.
+	//UI Components.
 	Button addAccount;	
 	DBHelper db;
-	
 	RelativeLayout vwParentRow;
 	ListView accountList;
 	
@@ -101,12 +100,10 @@ public class AccountView extends Activity {
 				);
 		accountList = (ListView) findViewById(R.id.listViewAccounts);
 		accountList.setAdapter(myCursorAdapter);
-
 	}
 	
 	// Set Icon Button click action.
 	public void iconClickHandler(View v) {
-		
 		int a_id;
 				
 		// Get the row the clicked button is in
@@ -115,7 +112,7 @@ public class AccountView extends Activity {
         // Get the object that the account ID is stored in
         TextView child = (TextView)vwParentRow.getChildAt(1);
         
-     // Store the account id in the variable integer.
+        // Store the account id in the variable integer.
         a_id = Integer.parseInt((child.getText().toString().trim()));
         
         try {
@@ -140,36 +137,35 @@ public class AccountView extends Activity {
 		int a_id;
 					
 		// Get the row the clicked button is in
-	       vwParentRow = (RelativeLayout)v.getParent();
+		vwParentRow = (RelativeLayout)v.getParent();
 	        
 	    // Get the object that the account ID is stored in
 	    TextView child = (TextView)vwParentRow.getChildAt(1);
 	        
-	     // Store the account id in the variable integer.
-	     a_id = Integer.parseInt((child.getText().toString().trim()));
+	    // Store the account id in the variable integer.
+	    a_id = Integer.parseInt((child.getText().toString().trim()));
 	        
-	     try {
-	       	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
-	       	Intent newIntent = new Intent(AccountView.this,clickedClass);
+	    try {
+	       Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountForm");
+	       Intent newIntent = new Intent(AccountView.this,clickedClass);
 
-			// Brings us back to the root activity, where exit functions properly.
-			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	       // Brings us back to the root activity, where exit functions properly.
+	       newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				
-			// Pass the extras to the intent on AccountForm.
-	       	newIntent.putExtra("A_ID", a_id);
-	       	newIntent.putExtra("A_EDIT", true);
-	       	startActivity(newIntent);
+	       // Pass the extras to the intent on AccountForm.
+	       newIntent.putExtra("A_ID", a_id);
+	       newIntent.putExtra("A_EDIT", true);
+	       startActivity(newIntent);
 			
-	     } catch(ClassNotFoundException e) {
+	    }catch(ClassNotFoundException e) {
 	       	e.printStackTrace();
-	     }
+	    }
 	}
 	
 	// Set Delete Button click action.
-	public void deleteClickHandler(View v) {
-			
-		int a_id;
-		String a_name;
+	public void deleteClickHandler(View v) {			
+		int a_id;  // account id
+		String a_name; // account name
 			
 		// Get the row the clicked button is in
 	    vwParentRow = (RelativeLayout)v.getParent();
@@ -194,24 +190,23 @@ public class AccountView extends Activity {
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
 	        switch (which){
-	        case DialogInterface.BUTTON_POSITIVE:
-	            db.deleteAccount(account);
-	                    
-	            // Populate the ListView
-	            populateListViewAccounts();	
-	             break;
-
-	        case DialogInterface.BUTTON_NEGATIVE:
-	        		//Do Nothing.
-	        		break;
-	        }
-	    }
+		        case DialogInterface.BUTTON_POSITIVE:
+		            db.deleteAccount(account);
+		                    
+		            // Populate the ListView
+		            populateListViewAccounts();	
+		             break;
+	
+		        case DialogInterface.BUTTON_NEGATIVE:
+	        	default:
+		        		//Do Nothing.
+		        		break;
+		        }
+	    	}
 	};
 
 	AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Are you sure you want to delete account, " +a_name+"?").setPositiveButton("Yes", dialogClickListener)
-		.setNegativeButton("No", dialogClickListener).show();
-	        
+		.setNegativeButton("No", dialogClickListener).show();	        
 	}
 }
-

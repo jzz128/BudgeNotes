@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ImportActivity extends Activity {
-
+	// Strings
 	public static final String TAG = "ImportActivity";
 	public static final String FILE_DIR_NAME = "import";
 	public static final String FILE_NAME = "BudgeNotes";
@@ -28,6 +28,8 @@ public class ImportActivity extends Activity {
 	public static final String FLAG_IMPORT_S = "Import Sucess";
 	public static final String FLAG_FILE_ERR = "File Error";
 	public static final String FLAG_IMPORT_F = "Import Failure";
+	
+	// UI Components
 	Button button;
 	TextView dirPath;
 	DBHelper db;
@@ -70,8 +72,7 @@ public class ImportActivity extends Activity {
 
 	private class importOperation extends AsyncTask<String, Void, String> {
 		@SuppressWarnings("unused")
-		private final ProgressDialog dialog = new ProgressDialog(
-				ImportActivity.this);
+		private final ProgressDialog dialog = new ProgressDialog(ImportActivity.this);
 		boolean fileErr = false;
 
 		@Override
@@ -176,5 +177,4 @@ public class ImportActivity extends Activity {
 		protected void onProgressUpdate(Void... values) {
 		}
 	}
-
 }

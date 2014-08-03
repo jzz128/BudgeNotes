@@ -20,7 +20,7 @@ public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean
 	protected Boolean doInBackground(DBHelper... arguments) {
 		db = arguments[0];
 		db.cleanTransactions(context, "now");
-		db.checkTranStatus();
+		db.checkTransactionStatus();
 		return true;
 	}
 	
@@ -35,6 +35,5 @@ public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		db.toastAlerts(context, "TRAN");
-	}
-	
+	}	
 }

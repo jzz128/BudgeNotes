@@ -31,17 +31,20 @@ public class AccountForm extends Activity implements InputValidator{
 	Button saveAccount = null;
 	DBHelper db;
 	
+	// UI Components
 	EditText accountName;
 	EditText accountNumber;
 	RadioGroup accountType;
 	RadioButton accountTypeSelection;
 	EditText accountBalance;
 		
+	// Backing values for UI components
 	String accountNameS;
 	String accountNumberS;
 	String accountTypeS;
 	String accountBalanceS;
 	
+	// UI state variables
 	int A_ID;
 	boolean A_EDIT;
 	Account account;
@@ -74,14 +77,11 @@ public class AccountForm extends Activity implements InputValidator{
 		if (A_EDIT) {
 			account = db.getAccount(A_ID);
 			populateForm();
-		} else {
-			//Do Nothing.
 		}
 		
 		// Set the ADD ACCOUNT button to display the ADD Account form when clicked
 		saveAccount = (Button) findViewById(R.id.accountButtonSave);
-		saveAccount.setOnClickListener(new View.OnClickListener() {		
-			
+		saveAccount.setOnClickListener(new View.OnClickListener() {				
 			@Override
 			public void onClick(View v) {
 				try{
@@ -104,6 +104,7 @@ public class AccountForm extends Activity implements InputValidator{
 							// Call the add account method to add the account to the database.
 							addAccount();
 						}
+						
 						//Take us back to the AccountView after the click operation is complete.	
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AccountView");
 						Intent newIntent = new Intent(AccountForm.this, clickedClass);
@@ -117,7 +118,6 @@ public class AccountForm extends Activity implements InputValidator{
 				}
 			}				
 		});
-		
 	};
 	
 	//Private method used to add an account within this class.
@@ -138,6 +138,7 @@ public class AccountForm extends Activity implements InputValidator{
 		accountName.setText(account.getName());
 		accountNumber.setText(account.getNumber());
 		
+		// For each account type, setup the form in the proper state.
 		if (account.getType().equals("CHK")) {
 			accountTypeSelection = (RadioButton)findViewById(R.id.accountTypeChecking);
 			accountTypeSelection.setChecked(true);
@@ -152,6 +153,7 @@ public class AccountForm extends Activity implements InputValidator{
 			accountTypeSelection.setChecked(true);
 		}
 		
+		// Set the account balance regardless of type.
 		accountBalance.setText(account.getBalance());
 	}
 	
@@ -183,8 +185,7 @@ public class AccountForm extends Activity implements InputValidator{
 			accountNumber.setError(InputValidator.INPUT_REQUIRED);
 			valid = false;
 		}
-		
-			
+					
 		// Account type has been selected
 		if(accountTypeS.length() == 0){
 			accountTypeSelection.setError(InputValidator.INPUT_REQUIRED);
@@ -200,12 +201,11 @@ public class AccountForm extends Activity implements InputValidator{
 		return valid;
 	};	
 	
-	// Close the Database on destroy.
+	// Close the Database connect on destroy.
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		db.close();
 		finish();
 	};
-
 }

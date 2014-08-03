@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
 public class RecommendationView extends Activity {
+	// UI Components
 	ListView recTable;
 	Spinner recAccount;
 	String[] seperatedAccount;
@@ -45,22 +46,22 @@ public class RecommendationView extends Activity {
 		populateRecTable();
 		
 		//Set listener for Account Spinner selection.
-				recAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
-									
-					@Override
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-						///Get the Account spinner data and put it in a string array.
-						seperatedAccount = recAccount.getSelectedItem().toString().split(" ");
-						A_ID = Integer.parseInt(seperatedAccount[0]);
-						
-						populateRecTable();
-					}
+		recAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
+							
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				///Get the Account spinner data and put it in a string array.
+				seperatedAccount = recAccount.getSelectedItem().toString().split(" ");
+				A_ID = Integer.parseInt(seperatedAccount[0]);
+				
+				populateRecTable();
+			}
 
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub		
-					}
-				});
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub		
+			}
+		});
 	}
 	
 	// 
@@ -95,7 +96,7 @@ public class RecommendationView extends Activity {
 			reportCursor = db.dbQuery(query);
 			
 			// Fill cursor with all recommendations
-			recCursor = db.getRcommendations();
+			recCursor = db.getRecommendations();
 			
 			// Get the total unique categories and recommendations
 			catCount = reportCursor.getCount();
@@ -103,13 +104,14 @@ public class RecommendationView extends Activity {
 			recCount = recCursor.getCount();
 			Log.d("recCount", Integer.toString(recCount));
 			
-			recs = db.getListAllRecs();
+			recs = db.getAllRecommendations();
 			i = 0;
 			
 			for (int j = 0; j < recs.size(); j++) {
-				recs.get(j).setIV(false);
-				db.updateRec(recs.get(j));
+				recs.get(j).setIsValid(false);
+				db.updateRecommendation(recs.get(j));
 			}
+			
 			if (reportCursor.moveToFirst()) {
 				do {
 					if (recCursor.moveToFirst()) {
@@ -117,8 +119,8 @@ public class RecommendationView extends Activity {
 							if (recCursor.getString(1).equals(reportCursor.getString(5)) && Float.parseFloat(recCursor.getString(2)) <= Float.parseFloat(reportCursor.getString(13))) { // Updated to incorporate new transaction method.
 								// Set the Recommendation to True.
 								//Toast.makeText(this, "Recommendation found; " + i, Toast.LENGTH_LONG).show();
-								recs.get(i).setIV(true);
-								db.updateRec(recs.get(i));
+								recs.get(i).setIsValid(true);
+								db.updateRecommendation(recs.get(i));
 							}
 							
 							i++;
@@ -146,8 +148,8 @@ public class RecommendationView extends Activity {
 					R.layout.template_row_recommendations,
 					recCursor,
 					transFieldNames,
-					toViewIDs
-					);
+					toViewIDs);
+			
 			recTable = (ListView) findViewById(R.id.listViewRecommendations);
 			recTable.setAdapter(myCursorAdapter); 
 	}

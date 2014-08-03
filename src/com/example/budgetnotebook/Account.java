@@ -12,7 +12,7 @@
  * 
  * DBHelper adapter for modifying DB data associated with the Account Table.
  **/
-
+	
 package com.example.budgetnotebook;
 
 public class Account {
@@ -23,7 +23,7 @@ public class Account {
 	private String account_type;
 	private String balance;
 	
-	//Initializers --------------------------------------------------------------
+	// Constructors --------------------------------------------------------------	
 	public Account(){}
 	
 	public Account(String account_name, String account_number, String account_type, String balance) {
@@ -34,13 +34,13 @@ public class Account {
 		this.balance = balance;
 	}
 	
-	//Log reporting string -------------------------------------------------------
+	// Log reporting string -------------------------------------------------------
 	@Override
 	public String toString() {
 		return "Account [id=" + _id + ", account_name=" + account_name + ", account_number=" + account_number + ", account_type=" + account_type + ", balance=" + balance +"]";
 	}
 	
-	//Getters --------------------------------------------------------------------
+	// Getters --------------------------------------------------------------------
 	public int getId(){
 		return _id;
 	}
@@ -82,4 +82,3 @@ public class Account {
 		this.balance = balance;
 	}
 }
-

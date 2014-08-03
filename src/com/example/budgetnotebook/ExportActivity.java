@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ExportActivity extends Activity {
+	// String constants
 	public static final String TAG = "ExportActivity";
 	public static final String FILE_DIR_NAME = "export";
 	public static final String FILE_NAME = "BudgeNotes";
@@ -28,6 +29,8 @@ public class ExportActivity extends Activity {
 	public static final String FLAG_EXPORT_S = "Export Sucess";
 	public static final String FLAG_MEMORY_ERR = "Memory Error";
 	public static final String FLAG_EXPORT_F = "Export Failure";
+	
+	// UI Components
 	Button button;
 	TextView filePath;
 	DBHelper db;
@@ -80,10 +83,12 @@ public class ExportActivity extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			String success = "false";
-
+			
+			// Open the database file
 			File dbFile = getDatabasePath(DBHelper.DATABASE_NAME);
 			Log.v(TAG, "Db path is: " + dbFile); // get the path of db
 
+			// calculate free space
 			long freeBytesInternal = new File(getApplicationContext()
 					.getFilesDir().getAbsoluteFile().toString()).getFreeSpace();
 			long megAvailable = freeBytesInternal / 1048576;
@@ -97,6 +102,7 @@ public class ExportActivity extends Activity {
 					exportDir.mkdirs();
 				}
 				try {
+					// We have enough free space so write the file.
 					List<Transaction> listdata = db.getAllListTransactions(0);
 
 					File file;
@@ -155,10 +161,10 @@ public class ExportActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
+			// Ensure that we succeeded writing the file.
 			Context context = getApplicationContext();
 			Toast toast;
 			int duration = Toast.LENGTH_SHORT;
-
 
 			if (result == "true") {
 				toast = Toast.makeText(context, FLAG_EXPORT_S, duration);
@@ -179,7 +185,5 @@ public class ExportActivity extends Activity {
 
 		protected void onProgressUpdate(Integer... values) {
 		}
-
 	}
-
 }

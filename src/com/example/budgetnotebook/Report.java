@@ -42,34 +42,33 @@ public class Report extends Activity {
 		// Load the spinner data.
 		loadAccountSpinnerData();
 		
+		// Populate the tables
 		populateReportCountTable();
 		populateReportAmountCTable();
 		populateReportAmountDTable();
 		
 		//Set listener for Account Spinner selection.
-				transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
-									
-					@Override
-					public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-						///Get the Account spinner data and put it in a string array.
-						seperatedAccount = transAccount.getSelectedItem().toString().split(" ");
-						A_ID = Integer.parseInt(seperatedAccount[0]);
-						populateReportCountTable();
-						populateReportAmountCTable();
-						populateReportAmountDTable();
-					}
+		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
+							
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				///Get the Account spinner data and put it in a string array.
+				seperatedAccount = transAccount.getSelectedItem().toString().split(" ");
+				A_ID = Integer.parseInt(seperatedAccount[0]);
+				populateReportCountTable();
+				populateReportAmountCTable();
+				populateReportAmountDTable();
+			}
 
-					@Override
-					public void onNothingSelected(AdapterView<?> arg0) {
-						// TODO Auto-generated method stub		
-					}
-				});
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub		
+			}
+		});
 	}
 	
-	// 
 	@SuppressWarnings("deprecation")
 	private void populateReportCountTable() {
-
 		String query;
 		Cursor cursor;
 		Cursor cCursor;
@@ -97,8 +96,8 @@ public class Report extends Activity {
 				R.layout.template_row_report,
 				cursor,
 				transFieldNames,
-				toViewIDs
-				);
+				toViewIDs);
+		
 		reportTableCount = (ListView) findViewById(R.id.reportTableCount);
 		reportTableCount.setAdapter(myCursorAdapter); 
 	}
@@ -171,8 +170,8 @@ public class Report extends Activity {
 					R.layout.template_row_report,
 					cursor,
 					transFieldNames,
-					toViewIDs
-					);
+					toViewIDs);
+			
 			reportTableAmount = (ListView) findViewById(R.id.reportTableAmountD);
 			reportTableAmount.setAdapter(myCursorAdapter); 
 		}

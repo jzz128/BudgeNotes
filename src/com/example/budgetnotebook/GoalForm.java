@@ -23,7 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class GoalForm extends Activity implements InputValidator{
-
+	// UI Components
 	Button saveGoal;
 	DBHelper db;
 	Spinner goalAccount;
@@ -36,6 +36,7 @@ public class GoalForm extends Activity implements InputValidator{
 	EditText goalDelta;
 	EditText goalDescription;
 	
+	// UI Component backing variables
 	private Calendar cal;
 	private int day, month, year;
 	
@@ -213,99 +214,99 @@ public class GoalForm extends Activity implements InputValidator{
 		
 	};
 	
-		// Save all fields to strings
-		private void saveFieldsToStrings() {
-			// Associate fields in the Goal form (form_goal.xml) to our variables.
-			goalName = (EditText) findViewById(R.id.goalEditName);
-			goalEnd = (TextView) findViewById(R.id.goalEditEnd);
-			goalStart = (TextView) findViewById(R.id.goalEditStart);
-			goalDelta = (EditText) findViewById(R.id.goalEditDelta);
-			goalDescription = (EditText) findViewById(R.id.goalEditDescription);
-		}
-	
-		// Fill the goal variable with updated information.
-		private void fillGoalObject() {
-			goal.setId(G_ID);
-			goal.setAId(goalAccountI);
-			goal.setName(goalNameS);
-			goal.setDescription(goalDescriptionS);
-			goal.setType(goalTypeS);
-			goal.setStartAmount(goalStartS);
-			goal.setDeltaAmount(goalDeltaS);
-			goal.setEndDate(goalEndS);
-			goal.setStatus(goalStatus);
-		}
-		
-		// Fill the alert variable with updated information.
-		private void fillAlertObject() {
-			alert.setAId(goalAccountI);
-			alert.setDueDate(goalEndS);
-		}
-		
-		// Fill the form fields with database data.
-		private void populateForm() {	
-			//Toast.makeText(this, String.valueOf(goal.getStartAmount()), Toast.LENGTH_LONG).show();
-			// Set goal to account ID (subtract 1 because list is 0 based)
-			goalAccount.setSelection(S_A_ID-1, false);
-			goalAccountI = goal.getAId();
-			// Set goal name text
-			goalName.setText(goal.getName());
-			// Set goal type spinner
-			if (goal.getType().equals("Save DELTA Amount.")) {
-				goalType.setSelection(0);
-			} else if (goal.getType().equals("Pay off DELTA Amount.")) {
-				goalType.setSelection(1);
-			} else if (goal.getType().equals("Do not Spend more than DELTA.")) {
-				goalType.setSelection(2);
-			}
-			// Set goal end date text
-			goalEnd.setText(goal.getEndDate());
-			// Set goal delta amount text
-			goalDelta.setText(goal.getDeltaAmount());
-			// Set goal start amount text
-			goalStart.setText(goal.getStartAmount());
-			//Toast.makeText(this, goalStart.getText(), Toast.LENGTH_LONG).show();
-			// Set goal description text
-			goalDescription.setText(goal.getDescription());
-			
-			goalStatus = goal.getStatus();
-		}
-	
-	
-		// Defines onClickListener for the date selection action
-		private View.OnClickListener onDate = new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			public void onClick(View v) {
-				showDialog(0);
-			}
-		};
-		
-		// Defines calendar dialog pop up
-		@Override
-		@Deprecated
-		protected Dialog onCreateDialog(int id) {
-			return new DatePickerDialog(this, datePickerListener, year, month, day);
-		}
-
-		// Sets form text to the selected date after DONE is pressed
-		private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-		
-			public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-				
-				if (selectedMonth < 9) {
-					formatMonth = "0" + String.valueOf(selectedMonth + 1);
-				} else {
-					formatMonth = String.valueOf(selectedMonth + 1);
-				}
-				
-				if (selectedDay < 10) {
-					formatDay = "0" + String.valueOf(selectedDay);
-				} else {
-					formatDay = String.valueOf(selectedDay);
-				}
-				
-				goalEnd.setText(formatMonth + "/" + formatDay + "/" + selectedYear);
+	// Save all fields to strings
+	private void saveFieldsToStrings() {
+		// Associate fields in the Goal form (form_goal.xml) to our variables.
+		goalName = (EditText) findViewById(R.id.goalEditName);
+		goalEnd = (TextView) findViewById(R.id.goalEditEnd);
+		goalStart = (TextView) findViewById(R.id.goalEditStart);
+		goalDelta = (EditText) findViewById(R.id.goalEditDelta);
+		goalDescription = (EditText) findViewById(R.id.goalEditDescription);
 	}
+	
+	// Fill the goal variable with updated information.
+	private void fillGoalObject() {
+		goal.setId(G_ID);
+		goal.setAId(goalAccountI);
+		goal.setName(goalNameS);
+		goal.setDescription(goalDescriptionS);
+		goal.setType(goalTypeS);
+		goal.setStartAmount(goalStartS);
+		goal.setDeltaAmount(goalDeltaS);
+		goal.setEndDate(goalEndS);
+		goal.setStatus(goalStatus);
+	}
+	
+	// Fill the alert variable with updated information.
+	private void fillAlertObject() {
+		alert.setAId(goalAccountI);
+		alert.setDueDate(goalEndS);
+	}
+	
+	// Fill the form fields with database data.
+	private void populateForm() {	
+		//Toast.makeText(this, String.valueOf(goal.getStartAmount()), Toast.LENGTH_LONG).show();
+		// Set goal to account ID (subtract 1 because list is 0 based)
+		goalAccount.setSelection(S_A_ID-1, false);
+		goalAccountI = goal.getAId();
+		// Set goal name text
+		goalName.setText(goal.getName());
+		// Set goal type spinner
+		if (goal.getType().equals("Save DELTA Amount.")) {
+			goalType.setSelection(0);
+		} else if (goal.getType().equals("Pay off DELTA Amount.")) {
+			goalType.setSelection(1);
+		} else if (goal.getType().equals("Do not Spend more than DELTA.")) {
+			goalType.setSelection(2);
+		}
+		// Set goal end date text
+		goalEnd.setText(goal.getEndDate());
+		// Set goal delta amount text
+		goalDelta.setText(goal.getDeltaAmount());
+		// Set goal start amount text
+		goalStart.setText(goal.getStartAmount());
+		//Toast.makeText(this, goalStart.getText(), Toast.LENGTH_LONG).show();
+		// Set goal description text
+		goalDescription.setText(goal.getDescription());
+		
+		goalStatus = goal.getStatus();
+	}
+
+
+	// Defines onClickListener for the date selection action
+	private View.OnClickListener onDate = new View.OnClickListener() {
+		@SuppressWarnings("deprecation")
+		public void onClick(View v) {
+			showDialog(0);
+		}
+	};
+	
+	// Defines calendar dialog pop up
+	@Override
+	@Deprecated
+	protected Dialog onCreateDialog(int id) {
+		return new DatePickerDialog(this, datePickerListener, year, month, day);
+	}
+
+	// Sets form text to the selected date after DONE is pressed
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+	
+		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+			
+			if (selectedMonth < 9) {
+				formatMonth = "0" + String.valueOf(selectedMonth + 1);
+			} else {
+				formatMonth = String.valueOf(selectedMonth + 1);
+			}
+			
+			if (selectedDay < 10) {
+				formatDay = "0" + String.valueOf(selectedDay);
+			} else {
+				formatDay = String.valueOf(selectedDay);
+			}
+			
+			goalEnd.setText(formatMonth + "/" + formatDay + "/" + selectedYear);
+		}
 	};
 	
 	// Validate all form input
