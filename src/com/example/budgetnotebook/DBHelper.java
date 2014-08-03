@@ -891,6 +891,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		if (against.equals("now")) {
 			java.util.Date d = Calendar.getInstance().getTime(); // Current time
 			currentDate = sdf.format(d); // Get Date String according to date format
+			//currentDate = against;
 		} else {
 			currentDate = against;
 		}
@@ -902,12 +903,16 @@ public class DBHelper extends SQLiteOpenHelper {
 	    } catch (ParseException e) {
 	        e.printStackTrace();
 	    }
-			
+		Log.d("TRANSACTION DATE: ", String.valueOf(date));	
+		Log.d("TODAY DATE: ", String.valueOf(today));	
 		if (date.before(today) || date.equals(today)) {
+			Log.d("ACCOUNTED: ", "TRUE");
 			return true;
 		} else {
+			Log.d("ACCOUNTED: ", "FALSE");
 			return false;
 		}
+		
 	}
 		
 	// Add a single Transaction.
@@ -1049,10 +1054,14 @@ public class DBHelper extends SQLiteOpenHelper {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 			java.util.Date endDate = null;
 			java.util.Date startDate = null;
+			
 			String currentEnd;
 			String currentStart;
+			
 			Calendar rngCal;
+			
 			int iDay, iMonth, iYear;
+			
 			String nDay, nMonth;
 			String rngDateEnd, rngDateStart;
 			
@@ -1151,8 +1160,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			if (cursor != null) {
 				cursor.moveToFirst();
 			}
-						
+			db.close();			
 			return cursor;
+			
 		}
 	
 	//TODO Toast all Transaction dates -- REMOVE AFTER TESTING --
@@ -1435,6 +1445,9 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 	// Set transactions to be accounted according to the date passed in the date String in the account passed by A_ID.
 	public void seeFuture (Context context, String date, int A_ID) {
+		
+		Log.d ("SEEING THE FUTURE: ", "-");
+		Log.d("USING THE DATE: ", String.valueOf(date));
 		
 		List<Transaction> tranList = getAllListTransactions(A_ID);
 		int numTrans = tranList.size();

@@ -28,6 +28,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class TransactionView extends Activity {
 
 	int A_ID;
+	int AFTER_EDIT;
 	int S_A_ID;
 	int lowestID;
 	
@@ -86,10 +87,17 @@ public class TransactionView extends Activity {
 		
 		// Set month values to string
 		cal_for_month_today = Integer.toString(cal.get(Calendar.MONTH)+1);
+		//if (cal.get(Calendar.MONTH)+1 < 10) cal_for_month_today = "0" + Integer.toString(cal.get(Calendar.MONTH)+1);
+		
 		cal_for_last_month = Integer.toString(cal.get(Calendar.MONTH));
+		//if (cal.get(Calendar.MONTH) < 10) cal_for_last_month = "0" + Integer.toString(cal.get(Calendar.MONTH));
+		
 		cal_for_next_month = Integer.toString(cal.get(Calendar.MONTH)+2);
+		//if (cal.get(Calendar.MONTH)+2 < 10) cal_for_next_month = "0" + Integer.toString(cal.get(Calendar.MONTH)+2);
+		
 		// Set day value to string
 		cal_for_day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		//if (cal.get(Calendar.DAY_OF_MONTH) < 10) cal_for_day = "0" + Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
 
 		// Set year value to string
 		String cal_for_year = Integer.toString(cal.get(Calendar.YEAR));
@@ -104,9 +112,10 @@ public class TransactionView extends Activity {
 		
 		// Set default to be one month before and after current date
 		spinDate = oneMonthAgo;
+		transDate.setText(spinDate);
+		
 		spinDateEnd = oneMonthInTheFuture;
-		transDate.setText(oneMonthAgo);
-		transDateEnd.setText(oneMonthInTheFuture);
+		transDateEnd.setText(spinDateEnd);
 
 		// Add data to the spinner.
 		loadAccountSpinnerData();
@@ -114,10 +123,11 @@ public class TransactionView extends Activity {
 		// Get the extras from previous activity.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
+		AFTER_EDIT = intent.getIntExtra("AFTER_EDIT",0);
         lowestID = db.lowestAccountID();
         S_A_ID = A_ID - lowestID + 1 ;
-                        
-		transAccount.setSelection(S_A_ID-1,false);
+        
+		transAccount.setSelection(S_A_ID-1, false);
 		// Set a listener for the Account spinner selection.
 		transAccount.setOnItemSelectedListener(new OnItemSelectedListener() {
 			
@@ -129,7 +139,7 @@ public class TransactionView extends Activity {
 			// Populate the list view with transactions from specified account.
 			setViewAccount(Integer.parseInt(seperated[0]));
 			populateListViewTransactions(A_ID);
-										
+						
 			}
 
 			@Override
@@ -137,10 +147,7 @@ public class TransactionView extends Activity {
 				// TODO Auto-generated method stub		
 			}
 		});
-				
-		// Populate the ListView
-		populateListViewTransactions(A_ID);
-				
+							
 		// Set the ADD TRANSACTION button to display the ADD Transaction form when clicked
 		addTransaction = (Button) findViewById(R.id.addTransaction);
 		addTransaction.setOnClickListener(new View.OnClickListener() {		
@@ -161,6 +168,10 @@ public class TransactionView extends Activity {
 			}				
 		});
 		
+	// Populate the ListView
+	db.seeFuture(getApplicationContext(),spinDateEnd,A_ID);	
+	populateListViewTransactions(A_ID);
+
 	}
 	
 	//Perform operations when the icon button is clicked.
@@ -391,13 +402,19 @@ public class TransactionView extends Activity {
 	
 	// Populate the spinner with account numbers	
 	private void loadAccountSpinnerData() {
+		
+		Log.d("POPULATE TRANSACTIONS RUN!","-");
+		Log.d("A_ID = ", String.valueOf(A_ID));
+		Log.d("SPIN_DATE = ", String.valueOf(spinDate));
+		Log.d("SPIN_DATE_END = ", String.valueOf(spinDateEnd));	
+		
 		List<String> list = db.getAllStringAccounts();
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                      (this, android.R.layout.simple_spinner_item,list);
                       
         dataAdapter.setDropDownViewResource
                      (android.R.layout.simple_spinner_dropdown_item);
-		 transAccount.setAdapter(dataAdapter);
+		 transAccount.setAdapter(dataAdapter);		 
 	}
 	
 	// Fill the ListView with transactions.
@@ -448,8 +465,11 @@ public class TransactionView extends Activity {
 		@Override
 		protected void onResume() {
 			super.onResume();
-			db.cleanTransactions(this);
-			populateListViewTransactions(A_ID);
+			if(AFTER_EDIT == 1) {
+				Log.d("CALLED ON RESUME!!!!!!!!!!!!!!!!!!!!!!", "STOP IT!!");
+				db.cleanTransactions(this);
+				populateListViewTransactions(A_ID);
+			}
 		};
 	
 	//Set the value of the currently viewed account id.

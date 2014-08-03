@@ -259,6 +259,7 @@ public class TransactionForm extends Activity implements InputValidator {
 						// Brings us back to the root activity, where exit functions properly.
 						newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						newIntent.putExtra("A_ID", transAccountI);
+						newIntent.putExtra("AFTER_EDIT", 1);
 						startActivity(newIntent);
                         // Finish Activity
                         finish();

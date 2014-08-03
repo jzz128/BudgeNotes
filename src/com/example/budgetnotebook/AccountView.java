@@ -126,6 +126,7 @@ public class AccountView extends Activity {
 			// Brings us back to the root activity, where exit functions properly.
 			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	newIntent.putExtra("A_ID", a_id);
+        	newIntent.putExtra("AFTER_EDIT", 0);
         	startActivity(newIntent);
 		
         } catch(ClassNotFoundException e) {
