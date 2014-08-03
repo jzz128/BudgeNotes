@@ -1464,6 +1464,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",1,4) LIKE 'TRAN'";
 		String[] nameSplit;
 		String query2;
+		String tranAmount;
 		
 		String cal_for_month, cal_for_year, cal_for_day;
 		
@@ -1532,6 +1533,7 @@ public class DBHelper extends SQLiteOpenHelper {
 						           
 						        if (tranCal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
 								newAlertDate = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+								tranAmount = transCursor.getString(4);
 								break;
 							}
 						} while (transCursor.moveToNext());

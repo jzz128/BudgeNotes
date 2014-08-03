@@ -280,7 +280,19 @@ public class TransactionForm extends Activity implements InputValidator {
 				if (prevAccounted) reverseTransaction();
 				//
 				if (transAccounted) updateAccount();
+				
+				if(transaction.getName().toString().contains("-")) {
+					String[] nSplit = new String[2];
+					nSplit = transaction.getName().toString().split("-");
+					baseTranID = Integer.parseInt(nSplit[1].toString());
+					Log.d("Edit all Transactions with ID->", nSplit[1].toString());
+				} else {
+					baseTranID = transaction.getId();
+				}
+				
 				db.updateTransaction(transaction);
+				db.recalcAlert(db.getTransaction(baseTranID));
+				db.checkTranStatus();
 				break;
 			//The user wishes to update all recurring transactions associated with the current transaction.
 			case 1:
@@ -293,7 +305,10 @@ public class TransactionForm extends Activity implements InputValidator {
 				} else {
 					baseTranID = transaction.getId();
 				}
+				
 				db.editReccTransactions(transaction, baseTranID, false);
+				db.recalcAlert(transaction);
+				db.checkTranStatus();
 				break;
 			//The user wishes to update the current transaction and all subsequent transactions.
 			case 2:
@@ -307,8 +322,11 @@ public class TransactionForm extends Activity implements InputValidator {
 					baseTranID = transaction.getId();
 				}
 				db.editReccTransactions(transaction, baseTranID, true);
+				db.recalcAlert(transaction);
+				db.checkTranStatus();
 				break;
-		}			
+		}
+		
 	}
 	
 	// Fill the transaction variable with updated information.
