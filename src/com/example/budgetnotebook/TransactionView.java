@@ -328,12 +328,15 @@ public class TransactionView extends Activity {
                 	loadAccountSpinnerData();
                 	S_A_ID = A_ID - lowestID + 1 ;
             		transAccount.setSelection(S_A_ID-1);
+            		AFTER_EDIT = 1;
+            		onResume();
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
                     //Do Nothing.
                     break;
                 }
+               
             }
         };
 
@@ -469,6 +472,7 @@ public class TransactionView extends Activity {
 			if(AFTER_EDIT == 1) {
 				Log.d("CALLED ON RESUME!!!!!!!!!!!!!!!!!!!!!!", "STOP IT!!");
 				db.cleanTransactions(this, spinDateEnd);
+				loadAccountSpinnerData();
 				populateListViewTransactions(A_ID);
 			}
 		};
