@@ -110,6 +110,11 @@ public class TransactionView extends Activity {
 		String oneMonthInTheFuture = cal_for_next_month + "/" + cal_for_day + "/" + cal_for_year;
 		Log.d("One Month Ahead=",oneMonthInTheFuture);
 		
+		// Get the extras from previous activity.
+		Intent intent = getIntent();
+		A_ID = intent.getIntExtra("A_ID",0);
+		AFTER_EDIT = intent.getIntExtra("AFTER_EDIT",0);
+		
 		// Set default to be one month before and after current date
 		spinDate = oneMonthAgo;
 		transDate.setText(spinDate);
@@ -120,10 +125,6 @@ public class TransactionView extends Activity {
 		// Add data to the spinner.
 		loadAccountSpinnerData();
 		
-		// Get the extras from previous activity.
-		Intent intent = getIntent();
-		A_ID = intent.getIntExtra("A_ID",0);
-		AFTER_EDIT = intent.getIntExtra("AFTER_EDIT",0);
         lowestID = db.lowestAccountID();
         S_A_ID = A_ID - lowestID + 1 ;
         
@@ -359,7 +360,7 @@ public class TransactionView extends Activity {
 						//Do Nothing.
 					}
 					db.deleteReccTransactions(transaction);
-            		db.cleanTransactions(getBaseContext());
+            		db.cleanTransactions(getBaseContext(), spinDateEnd);
             		break;
 				case DialogInterface.BUTTON_NEGATIVE:
 					reverseTransaction();
@@ -467,7 +468,7 @@ public class TransactionView extends Activity {
 			super.onResume();
 			if(AFTER_EDIT == 1) {
 				Log.d("CALLED ON RESUME!!!!!!!!!!!!!!!!!!!!!!", "STOP IT!!");
-				db.cleanTransactions(this);
+				db.cleanTransactions(this, spinDateEnd);
 				populateListViewTransactions(A_ID);
 			}
 		};

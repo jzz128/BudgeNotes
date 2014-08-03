@@ -19,7 +19,7 @@ public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean
 	@Override
 	protected Boolean doInBackground(DBHelper... arguments) {
 		DBHelper db = arguments[0];
-		db.cleanTransactions(context);
+		db.cleanTransactions(context, "now");
 		return true;
 	}
 	

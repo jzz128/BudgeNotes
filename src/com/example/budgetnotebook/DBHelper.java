@@ -1360,8 +1360,8 @@ public class DBHelper extends SQLiteOpenHelper {
 	// Other methods --------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	// Accounts for transactions that are on or before todays date
-	public void cleanTransactions(Context context) {
+	// Accounts for transactions that are on or before the spinner end date
+	public void cleanTransactions(Context context, String endDate) {
 			
 		int numAccounts;
 		int numTran = 0;
@@ -1411,7 +1411,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					account = getAccount(tranList.get(i).getAID());
 					currBalance = account.getBalance();
 					// Set the accounted flag against today's date and update the transaction
-					tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), "now"));
+					//tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), "now"));
+					tranList.get(i).setAccounted(checkAccountedDate(tranList.get(i).getDate(), endDate));
 					updateTransaction(tranList.get(i));
 					//Get the transaction amount.
 					changeAmount = tranList.get(i).getAmount();

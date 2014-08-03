@@ -250,7 +250,7 @@ public class TransactionForm extends Activity implements InputValidator {
 							if (transAccounted) updateAccount();
 							addTransaction();
 							db.createReccTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
-							db.cleanTransactions(getBaseContext());
+							db.cleanTransactions(getBaseContext(), "now");
 						}
 						
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionView");

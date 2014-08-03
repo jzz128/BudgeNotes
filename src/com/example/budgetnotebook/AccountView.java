@@ -74,7 +74,7 @@ public class AccountView extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		db.cleanTransactions(this);
+		db.cleanTransactions(this, "now");
 		populateListViewAccounts();
 	};
 	
