@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean> {
 	Context context;
-	
+	DBHelper db;
 	public void setContext(Context context) {
 		this.context = context;
 	}
@@ -18,8 +18,9 @@ public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean
 	
 	@Override
 	protected Boolean doInBackground(DBHelper... arguments) {
-		DBHelper db = arguments[0];
+		db = arguments[0];
 		db.cleanTransactions(context, "now");
+		db.checkTranStatus();
 		return true;
 	}
 	
@@ -33,6 +34,7 @@ public class CleanTransactionsInBack extends AsyncTask<DBHelper, String, Boolean
 	protected void onPostExecute(Boolean result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		db.toastAlerts(context, "TRAN");
 	}
 	
 }

@@ -363,7 +363,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		for(int i = 0; i < count; i++) {
 			goal = goalList.get(i);
 			alt_id = String.valueOf(goal.getId());
-			query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",6) LIKE " + alt_id;
+			query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_NAME + " LIKE 'GOAL-" + alt_id + "'";
 			cursor = dbQuery(query);
 			if(cursor.moveToFirst())
 				alert = getAlert(cursor.getInt(0));
@@ -406,8 +406,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void toastAlerts(Context context){
-		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_DESCRIPTION + " IS NOT NULL";
+	public void toastAlerts(Context context, String alertType){
+		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_DESCRIPTION + " IS NOT NULL AND substr(" + ALERT_NAME + ",1,4) LIKE '" + alertType + "'";
 			
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
@@ -886,25 +886,26 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 		java.util.Date today = null;
+		java.util.Date date = null;
 		String currentDate;
 			
 		if (against.equals("now")) {
 			java.util.Date d = Calendar.getInstance().getTime(); // Current time
 			currentDate = sdf.format(d); // Get Date String according to date format
-			//currentDate = against;
 		} else {
 			currentDate = against;
 		}
-		java.util.Date date = null;
-					
+							
 		try {
 	        date = sdf.parse(transDate);
 	        today = sdf.parse(currentDate);
 	    } catch (ParseException e) {
 	        e.printStackTrace();
 	    }
+		
 		Log.d("TRANSACTION DATE: ", String.valueOf(date));	
-		Log.d("TODAY DATE: ", String.valueOf(today));	
+		Log.d("TODAY DATE: ", String.valueOf(today));
+		
 		if (date.before(today) || date.equals(today)) {
 			Log.d("ACCOUNTED: ", "TRUE");
 			return true;
@@ -1443,7 +1444,117 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		
 	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public void checkTranStatus() {
+		Log.d("Checking Transaction Status","-");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+		java.util.Date today = null;
+		java.util.Date date = null;
+		String currentDate;
+		String newAlertDate;
 		
+		java.util.Date d = Calendar.getInstance().getTime(); // Current time
+		currentDate = sdf.format(d); // Get Date String according to date format
+									
+		Transaction transaction;
+		Alert alert;
+		Account account;
+		
+		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",1,4) LIKE 'TRAN'";
+		String[] nameSplit;
+		String query2;
+		
+		String cal_for_month, cal_for_year, cal_for_day;
+		
+		Cursor alertCursor = dbQuery(query);
+		Cursor transCursor;
+		
+		long todayMilli, tranMilli, diffInDays;
+		Calendar todayCal = Calendar.getInstance();
+		Calendar tranCal = Calendar.getInstance();
+		Log.d("THERE ARE THIS MANY ALERTS: ", String.valueOf(alertCursor.getCount()));
+		if (alertCursor.moveToFirst()) {
+			
+			alert = new Alert();
+			account = new Account();
+			
+			do {
+				alert = getAlert(alertCursor.getInt(0));
+				account = getAccount(alertCursor.getInt(1));
+				
+				nameSplit = alertCursor.getString(2).split("-");
+				transaction = getTransaction(Integer.parseInt(nameSplit[1]));	
+				
+				try {
+			        date = sdf.parse(alertCursor.getString(4));
+			        tranCal.setTime(date);
+			        today = sdf.parse(currentDate);
+			        todayCal.setTime(today);
+			    } catch (ParseException e) {
+			        e.printStackTrace();
+			    }
+				
+				cal_for_month = Integer.toString(tranCal.get(Calendar.MONTH)+1);
+		        if (tranCal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
+		            
+		        cal_for_year = Integer.toString(tranCal.get(Calendar.YEAR));
+		            
+		        //Sets the day value to two digit format for sorting.
+		        cal_for_day = Integer.toString(tranCal.get(Calendar.DAY_OF_MONTH));
+		           
+		        if (tranCal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
+				newAlertDate = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+				
+				if (date.before(today) || date.equals(today)) {
+					query2 = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + TRANSACTION_NAME + " LIKE '" + transaction.getName() + "-" + transaction.getId() + "'";
+					transCursor = dbQuery(query2);
+					Log.d("THERE ARE THIS MANY TRANSACTIONS: ", String.valueOf(transCursor.getCount()));
+					if (transCursor.moveToFirst()) {
+						do {
+							try {
+								date = sdf.parse(transCursor.getString(3));
+								tranCal.setTime(date);
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
+							
+							Log.d("THE TRANSACTION DATE IS: ", String.valueOf(date));
+
+							if (date.after(today)) {
+								cal_for_month = Integer.toString(tranCal.get(Calendar.MONTH)+1);
+						        if (tranCal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
+						            
+						        cal_for_year = Integer.toString(tranCal.get(Calendar.YEAR));
+						            
+						        //Sets the day value to two digit format for sorting.
+						        cal_for_day = Integer.toString(tranCal.get(Calendar.DAY_OF_MONTH));
+						           
+						        if (tranCal.get(Calendar.DAY_OF_MONTH) < 10 ) cal_for_day = "0" + cal_for_day;
+								newAlertDate = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
+								break;
+							}
+						} while (transCursor.moveToNext());
+					}
+				}
+				
+				alert.setDueDate(newAlertDate);
+				todayMilli = todayCal.getTimeInMillis();
+				tranMilli = tranCal.getTimeInMillis();
+				diffInDays = (tranMilli- todayMilli)/(24*60*60*1000);
+				Log.d("THE DIFF IN DAYS IS: ", String.valueOf(date));
+				if(diffInDays <= 3 && diffInDays > 0) {
+					alert.setDescription("Transaction for " + transaction.getAmount() + " on Account " + account.getName() + " will occur on " + alert.getDueDate() + ".");
+				} else {
+					alert.setDescription(null);
+				}
+				updateAlert(alert);
+				
+			} while (alertCursor.moveToNext());
+		}
+		
+	}
+	
 	// Set transactions to be accounted according to the date passed in the date String in the account passed by A_ID.
 	public void seeFuture (Context context, String date, int A_ID) {
 		
@@ -1514,7 +1625,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		String intDate;
 		int iDay, iMonth, iYear;
 		String nDay, nMonth;
-			
+		Alert alert;
+		
 		//Handling the recurring transactions.
 		if (interval != 0) {
 				
@@ -1571,8 +1683,13 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			intDate = nMonth + "/" + nDay + "/" + String.valueOf(iYear);
 			//Toast.makeText(getBaseContext(), String.valueOf(intDate), Toast.LENGTH_LONG).show();
+			
 			String tName = transaction.getName();
 			int tID = transaction.getId();
+			
+			alert = new Alert (transaction.getAID(), "TRAN-" + String.valueOf(tID), null, intDate);
+			addAlert(alert);
+			
 			for (int i = 0; i < recCount; i++) {
 				transaction.setName(tName + "-" + String.valueOf(tID));
 				transaction.setDate(intDate);

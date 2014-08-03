@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/alert_icon" 
         android:padding="5dp"
+        android:onClick="deleteAlertClickHandler"
         android:src="@drawable/alert_icon" />
 
     <TextView
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/alertIcon"
         android:text="@string/id"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />
     
     <TextView
@@ -28,17 +29,39 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/alertID"
         android:text="@string/id"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/alertName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/alertIcon"
+        android:text="@string/alertName"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/alertEndDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/alertName"
+        android:layout_toRightOf="@+id/alertIcon"
         android:text="@string/alert_end"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/alertDescrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/alertIcon"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/alertEndDate"
+        android:layout_toRightOf="@+id/alertIcon"
+        android:text="@string/alertDescrip"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

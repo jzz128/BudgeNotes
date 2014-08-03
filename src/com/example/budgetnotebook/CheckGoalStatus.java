@@ -33,7 +33,7 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
-		db.toastAlerts(context);
+		db.toastAlerts(context, "GOAL");
 	}
 	
 }
