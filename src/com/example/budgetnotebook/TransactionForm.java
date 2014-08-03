@@ -292,7 +292,7 @@ public class TransactionForm extends Activity implements InputValidator {
 				
 				db.updateTransaction(transaction);
 				db.recalcAlert(db.getTransaction(baseTranID));
-				db.checkTranStatus();
+				db.checkTransactionStatus();
 				break;
 			//The user wishes to update all recurring transactions associated with the current transaction.
 			case 1:
