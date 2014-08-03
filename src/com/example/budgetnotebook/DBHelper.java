@@ -1733,12 +1733,17 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void deleteReccTransactions(Transaction transaction) {
 		int nLen = transaction.getName().length() + 2;
 		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";
+		
 		Transaction recTran;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
+		
 		Cursor cursor = db.rawQuery(query, null);
+				
 		float changeAmount = 0;
 		if (transaction.getAccounted()) changeAmount = 1;
+		
+		
 		Account account;
 		account = getAccount(transaction.getAID());
 		
@@ -1754,6 +1759,33 @@ public class DBHelper extends SQLiteOpenHelper {
 		changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;
 		account.setBalance(String.format("%.2f",changeAmount));
 		updateAccount(account);
+	}
+	
+	public void recalcAlert(Transaction transaction) {
+		
+		int nLen = transaction.getName().length() + 2;
+		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";
+		String alertQuery ="SELECT * FROM " + ALERT_TABLE + " WHERE " + AT_A_ID + " = " + transaction.getAID() + " AND " + ALERT_NAME + " = 'TRAN-" + transaction.getId() + "'"; 
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		Cursor cursor = db.rawQuery(query, null);
+		Cursor alertCursor = db.rawQuery(alertQuery, null);
+				
+		Alert alert = new Alert();
+
+		if (cursor.moveToFirst()) {
+			if(alertCursor.moveToFirst()) {
+				alert = getAlert(alertCursor.getInt(0));
+				alert.setDueDate("01/01/1999");
+				updateAlert(alert);
+			}
+		} else {
+			if(alertCursor.moveToFirst()) {
+				alert = getAlert(alertCursor.getInt(0));
+				deleteAlert(alert);
+			}
+		}
 	}
 	
 	//Edit recurring transactions spawned from passed transaction object and original transaction object.

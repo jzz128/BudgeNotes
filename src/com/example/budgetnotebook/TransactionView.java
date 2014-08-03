@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 public class TransactionView extends Activity {
 
@@ -53,6 +54,9 @@ public class TransactionView extends Activity {
 	String[] interval;
 	int intVal;
 	Intent newIntent;
+	
+	String[] nSplit;
+	int baseID;
 	
 	boolean start;
 	
@@ -347,7 +351,11 @@ public class TransactionView extends Activity {
 	
 	//Ask if the user wants to delete associated transactions or just the selected one.
 	private void checkAgain() {
-		
+		if(transaction.getName().toString().contains("-")) {
+			nSplit = new String[2];
+			nSplit = transaction.getName().toString().split("-");
+			baseID = Integer.parseInt(nSplit[1].toString());
+		}
 		DialogInterface.OnClickListener dialogClickListener2 = new DialogInterface.OnClickListener() {
 
 			@Override
@@ -355,19 +363,25 @@ public class TransactionView extends Activity {
 				switch (which) {
 				case DialogInterface.BUTTON_POSITIVE:
 					if(transaction.getName().toString().contains("-")) {
-						String[] nSplit = new String[2];
-						nSplit = transaction.getName().toString().split("-");
-						Log.d(nSplit[1].toString(), nSplit[1].toString());
-						transaction = db.getTransaction(Integer.parseInt(nSplit[1].toString()));
+						//nSplit = new String[2];
+						//nSplit = transaction.getName().toString().split("-");
+						//baseID = Integer.parseInt(nSplit[1].toString());
+						//Log.d(nSplit[1].toString(), nSplit[1].toString());
+						transaction = db.getTransaction(baseID);
 					} else {
-						//Do Nothing.
+						// Do Nothing.
 					}
 					db.deleteReccTransactions(transaction);
+					db.recalcAlert(transaction);
             		db.cleanTransactions(getBaseContext(), spinDateEnd);
+            		db.checkTranStatus();
             		break;
 				case DialogInterface.BUTTON_NEGATIVE:
+					if(!transaction.getName().toString().contains("-")) {Toast.makeText(getBaseContext(), "Can not delete a base transaction!" , Toast.LENGTH_LONG).show(); break;}
 					reverseTransaction();
             		db.deleteTransaction(transaction);
+					db.recalcAlert(db.getTransaction(baseID));
+            		db.checkTranStatus();
                     break;
 				}
 				loadAccountSpinnerData();
