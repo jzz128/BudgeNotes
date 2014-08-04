@@ -30,14 +30,6 @@
 			
 			<Button
                 android:background="@drawable/styledbutton"
-                android:id="@+id/advancedImportTransactions"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text= "@string/import_transactions"
-                style="@style/button_text" />
-			
-			<Button
-                android:background="@drawable/styledbutton"
                 android:id="@+id/advancedAlerts"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

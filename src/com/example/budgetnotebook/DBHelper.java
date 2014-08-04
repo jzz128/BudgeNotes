@@ -1474,6 +1474,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",1,4) LIKE 'TRAN'";
 		String[] nameSplit;
 		String query2;
+		@SuppressWarnings("unused")
 		String tranAmount;
 		
 		String cal_for_month, cal_for_year, cal_for_day;

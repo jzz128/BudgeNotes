@@ -86,22 +86,6 @@ public class AdvancedMenu extends Activity {
 			}	
 		});
 		
-		//Listener for Import Transaction Button.
-		importTrans = (Button) findViewById(R.id.advancedImportTransactions);
-		importTrans.setOnClickListener(new View.OnClickListener() {		
-						
-		@Override
-			public void onClick(View v) {
-			try{
-				// Start the import transaction activity 
-				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.ImportActivity");
-				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
-				startActivity(newIntent);
-				} catch(ClassNotFoundException e) {
-					e.printStackTrace();
-				}	
-			}	
-		});
 		
 		//Listener for Alert View Button.
 		viewAlerts = (Button) findViewById(R.id.advancedAlerts);
