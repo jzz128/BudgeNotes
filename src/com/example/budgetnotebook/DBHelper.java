@@ -119,6 +119,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// String for all ALERT_TABLE field names.
 	public static final String[] ALERT_FIELDS = new String[] {AT_ID, AT_A_ID, ALERT_NAME, ALERT_DESCRIPTION, ALERT_DUE_DATE};
+	private static final String ACCOUNT_ID = null;
 		
 	//SQL Statement for creating the Profile Table.
 	private final String createProfile = "CREATE TABLE IF NOT EXISTS " + PROFILE_TABLE + " ( " + P_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FIRST_NAME + " TEXT, "	+ LAST_NAME + " TEXT, " + GENDER + " TEXT, " + BIRTHDAY + " TEXT, " + CITY + " TEXT, " + EMAIL + " TEXT);";
@@ -229,6 +230,19 @@ public class DBHelper extends SQLiteOpenHelper {
 		    lastId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
 		}
 		return lastId;
+	}
+	
+	public int correctSpinID(int a_id) {
+	    int correct_id = -1;
+		Cursor accounts = getAllAccounts();
+	    if(accounts.moveToFirst()) {
+	        for(int i = 0; i < accounts.getCount(); i++) {
+	        	correct_id = accounts.getInt(0);
+	        	if (correct_id == a_id) {correct_id = i; break;}
+	        	accounts.moveToNext();
+	        }
+	    }
+	    return correct_id;
 	}
 	
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -788,7 +802,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 			
 		String where = null;
-		Cursor cursor = db.query(true, ACCOUNT_TABLE, ACCOUNT_FIELDS,  where,  null, null,  null, null, null);
+		Cursor cursor = db.query(true, ACCOUNT_TABLE, ACCOUNT_FIELDS,  where,  null, null,  null, ACCOUNT_ID + " ASC", null);
 			
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -1607,6 +1621,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		}		
 	}
 	
+	//TODO This method should be 'creatRecurringTransactions'.
+	
 	// Creates a years worth of recurring transactions according to the interval passed by interval.
 	@SuppressLint("SimpleDateFormat")
 	public void createRecommendationTransactions (int interval, String transDateS, int T_ID) {
@@ -1822,11 +1838,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				updateTransaction(transaction);
 			} while (cursor.moveToNext());
 		}
-			
-		// !!! **************************************************************************************************************************************
-		//TODO The Math here is off.  It needs to be fixed.
-		// !!! **************************************************************************************************************************************
-		
+
 		// Handles the base transaction like above if the scope is all associated transactions.
 		if(!subsTransOnly) {
 			transaction.setId(baseTran.getId());

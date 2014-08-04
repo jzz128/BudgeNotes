@@ -88,13 +88,10 @@ public class TransactionForm extends Activity implements InputValidator {
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
 		T_ID = intent.getIntExtra("T_ID", 0);
+		S_A_ID = intent.getIntExtra("S_A_ID", 0);
 		T_EDIT = intent.getBooleanExtra("T_EDIT", false);
 		E_SCOPE = intent.getIntExtra("E_SCOPE", 0);
-		
-        int lowestID;
-        lowestID = db.lowestAccountID();
-        S_A_ID = A_ID - lowestID + 1 ;
-		
+				
 		// Initialize date field.
 		transDate = (TextView) findViewById(R.id.transEditDate);
 		
@@ -162,7 +159,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		calendar.setOnClickListener(onDate);
 		
 		// Set the value of the account spinner using what was passed from the transaction view
-		transAccount.setSelection(S_A_ID-1);
+		transAccount.setSelection(S_A_ID);
 		
 		//Save the values entered in the Transaction form (form_transaction.xml).
 		transName = (EditText)findViewById(R.id.transEditName);

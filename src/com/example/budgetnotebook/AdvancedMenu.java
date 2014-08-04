@@ -109,7 +109,6 @@ public class AdvancedMenu extends Activity {
 						
 		@Override
 			public void onClick(View v) {
-				// TODO Open Alert view populated with alert data.
 			try{
 				Class<?> clickedClass = Class.forName("com.example.budgetnotebook.AlertActivity");
 				Intent newIntent = new Intent(AdvancedMenu.this, clickedClass);
