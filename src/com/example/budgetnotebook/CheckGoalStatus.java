@@ -1,3 +1,20 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * CheckGoalStatus.java
+ * 
+ *AsyncTask launched from the application splash screen.  Updates the status of user created goals and auto generated alerts.
+ *Alerts are displayed via Toast to the user when task complete.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.content.Context;
@@ -9,29 +26,18 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	public void setContext(Context context) {
 		this.context = context;
 	}
-	@Override
-	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-		super.onPreExecute();
-	}
 	
 	@Override
 	protected Boolean doInBackground(DBHelper... arguments) {
 		db = arguments[0];
-		//TODO Check the status of goals and update them.
+		//Check the status of goals, update goals and update goal alerts.
 		db.checkGoalStatus();
 		return true;
 	}
 	
 	@Override
-	protected void onProgressUpdate(String... values) {
-		// TODO Auto-generated method stub
-		super.onProgressUpdate(values);
-	}
-
-	@Override
 	protected void onPostExecute(Boolean result) {
-		// TODO Auto-generated method stub
+		//Display Goal alerts to user.
 		super.onPostExecute(result);
 		db.toastAlerts(context, "GOAL");
 	}

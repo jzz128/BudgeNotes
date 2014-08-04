@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Alert.java
+ * 
+ *DBHelper Adapter for modifying data associated with the alert table.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 public class Alert {

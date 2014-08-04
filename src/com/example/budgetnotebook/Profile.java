@@ -1,4 +1,20 @@
-	package com.example.budgetnotebook;
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Profile.java
+ * 
+ * DBHelper adapter used to to modify the profile table in the DB.
+ * 
+ **/
+
+package com.example.budgetnotebook;
 
 public class Profile {
 

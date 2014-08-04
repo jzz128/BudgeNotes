@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * InputValidator.java
+ * 
+ * Validation error messages.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 public interface InputValidator {

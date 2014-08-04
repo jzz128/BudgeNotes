@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Splash.java
+ * 
+ * Displays the application splash screen and runs starting AsyncTasks.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;
@@ -19,12 +35,12 @@ public class Splash extends Activity {
 		// Initialize an instance of the database.
 		DBHelper db = new DBHelper(getBaseContext());
 		
-		// Clean the transactions accounting through the current date.
+		// Clean the transactions accounting through the current date. Display recurring transaction alerts when finished.
 		CleanTransactionsInBack clean = new CleanTransactionsInBack ();
 		clean.setContext(getApplicationContext());
 		clean.execute(db);	
 		
-		//Check the status of the Goals and adjust their icons.
+		//Check the status of the Goals and adjust their icons. Display Goal alerts when finished.
 		CheckGoalStatus checkGoal = new CheckGoalStatus ();
 		checkGoal.setContext(getApplicationContext());
 		checkGoal.execute(db);	

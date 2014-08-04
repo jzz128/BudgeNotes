@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * TransactionForm.java
+ * 
+ * Displays form that allows user to create / edit transactions.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.util.Calendar;
@@ -116,7 +132,7 @@ public class TransactionForm extends Activity implements InputValidator {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				//  Do Nothing			
 			}
 		});
 		
@@ -131,7 +147,7 @@ public class TransactionForm extends Activity implements InputValidator {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				//  Do Nothing			
 			}
 		});
 		
@@ -140,12 +156,12 @@ public class TransactionForm extends Activity implements InputValidator {
 							
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO Auto-generated method stub													
+				//  Do Nothing														
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				//  Do Nothing			
 			}
 		});		
 		
@@ -246,7 +262,7 @@ public class TransactionForm extends Activity implements InputValidator {
 							//
 							if (transAccounted) updateAccount();
 							addTransaction();
-							db.createRecommendationTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
+							db.creatRecurringTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
 							db.cleanTransactions(getBaseContext(), "now");
 						}
 						

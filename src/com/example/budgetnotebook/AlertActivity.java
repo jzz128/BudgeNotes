@@ -1,3 +1,20 @@
+
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * AlertActivity.java
+ * 
+ *Alert view activity.  Listing the auto generated alerts and allowing user to delete.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;

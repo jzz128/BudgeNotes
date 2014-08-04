@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * ProfileView.java
+ * 
+ * Displays the current profile data to the user in read only format.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.os.Bundle;

@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * MainMenu.java
+ * 
+ * Application portal activity allows user to navigate through the application.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;

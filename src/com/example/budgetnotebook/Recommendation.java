@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Recommendation.java
+ * 
+ * DBHelper adapter for modifying information in the recommendation table of the DB.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 public class Recommendation {

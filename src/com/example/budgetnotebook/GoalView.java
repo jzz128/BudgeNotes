@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * GoalView.java
+ * 
+ * Activity for listing the goals. Allows users to Update / Edit / Delete goals.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import android.app.Activity;

@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Transaction.java
+ * 
+ * DBHelper adapter for modifying data related to the transaction table in the DB.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 public class Transaction {

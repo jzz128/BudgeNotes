@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * GoalForm.java
+ * 
+ *Activity for the goal form.  Allows user to create / edit goals via form entry.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.util.Calendar;
@@ -133,7 +149,7 @@ public class GoalForm extends Activity implements InputValidator{
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				// Do Nothing	
 			}
 		});
 		
@@ -142,12 +158,12 @@ public class GoalForm extends Activity implements InputValidator{
 					
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO Auto-generated method stub
+				// Do Nothing	
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub			
+				// Do Nothing		
 			}
 		});
 		

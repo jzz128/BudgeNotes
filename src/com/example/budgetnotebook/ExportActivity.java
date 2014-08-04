@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * ExportActivity.java
+ * 
+ *Activity for exporting current transactions to a .csv file.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.io.File;
@@ -135,15 +151,16 @@ public class ExportActivity extends Activity {
 									t.getInterval(), t.getDescription() };
 
 							csvWrite.writeNext(arrStr);
-						// TODO: adding percentage number info
-						//	progress += 100/listdata.size();
+						/*
+						// Adding percentage number info
+							progress += 100/listdata.size();
 							
-						//	mHandler.post(new Runnable() {
-						//		public void run(){
-						//			mProgress.setProgress(progress);
-						//		}
-						//	});
-
+							mHandler.post(new Runnable() {
+								public void run(){
+									mProgress.setProgress(progress);
+								}
+							});
+						*/
 						}
 						success = "true";
 

@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * ProfileForm.java
+ * 
+ * Profile form activity allows user to create / edit the user profile.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.util.Calendar;

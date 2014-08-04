@@ -143,10 +143,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ " DELETE FROM " + ALERT_TABLE + " WHERE " + AT_A_ID + " = old._id;"
 			+ " END";
 	
-	//TODO Create triggers for Alert functionality
-
 	//SQL Statement for creating the Alert Table.
-	//private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT, " + "FOREIGN KEY (" + AT_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + AT_ID + "));";
 	private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT);";
 	
 	public DBHelper(Context context) {
@@ -187,7 +184,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------
-	//TODO Generic Query methods !!! This is probably not safe and should be controlled further with predefined queries. !!!
+	//Generic Query methods.
 	// ---------------------------------------------------------------------------------------------------------------------
 	
 	//Returns a cursor filled with the result of the passed query string.
@@ -233,6 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return lastId;
 	}
 	
+	//Returns the spinner an int that can be used as a spinner location for account spinners. Corrects for case when accounts have been deleted.
 	public int correctSpinID(int a_id) {
 	    int correct_id = -1;
 		Cursor accounts = getAllAccounts();
@@ -529,7 +527,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 		
-	//TODO Toast all Goals -- REMOVE AFTER TESTING --
+	/*
 	public void toastGoal(Context context){
 		String query = "SELECT * FROM " + GOAL_TABLE;
 			
@@ -546,7 +544,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			Toast.makeText(context, "No Goals yet!", Toast.LENGTH_LONG).show();
 		}
 	}
-		
+	*/
+	
 	// Update a single Goal.
 	public int updateGoal(Goal goal) {
 			
@@ -640,7 +639,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return cursor.getCount();
 	}
 		
-	//TODO Toast profile  -- REMOVE AFTER TESTING --
+	/*
 	public void toastProfile(Context context){
 		String query = "SELECT * FROM " + PROFILE_TABLE;
 			
@@ -657,7 +656,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			Toast.makeText(context, "No Profile yet!", Toast.LENGTH_LONG).show();
 		}
 	}
-		
+	*/
+	
 	// Update the Profile.
 	public int updateProfile(Profile profile) {
 			
@@ -678,7 +678,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return i;
 	}
 		
-	//TODO Delete the Profile. -- REMOVE AFTER TESTING -- NOT NEEDED.
+	/*
 	public void deleteProfile(Profile profile) {
 			
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -687,7 +687,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 		db.close();		
 	}
-		
+	*/
+	
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Account methods ------------------------------------------------------------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -812,7 +813,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 		
-	//TODO Toast all Accounts -- REMOVE AFTER TESTING --
+	/*
 	public void toastAccount(Context context){
 		String query = "SELECT * FROM " + ACCOUNT_TABLE;
 			
@@ -829,7 +830,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			Toast.makeText(context, "No Accounts yet!", Toast.LENGTH_LONG).show();
 		}
 	}
-		
+	*/
+	
 	// Update a single Account.
 	public int updateAccount(Account account) {
 			
@@ -1176,7 +1178,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 		}
 	
-	//TODO Toast all Transaction dates -- REMOVE AFTER TESTING --
+	/*
 	public void toastTransactionDates(Context context) {
 		SQLiteDatabase db = this.getWritableDatabase();
 			
@@ -1198,8 +1200,9 @@ public class DBHelper extends SQLiteOpenHelper {
 			Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
 		}
 	}
+	*/
 		
-	//TODO Toast all Transactions -- REMOVE AFTER TESTING --
+	/*
 	public void toastTransaction(Context context){
 		String query = "SELECT * FROM " + TRANSACTION_TABLE;
 			
@@ -1216,7 +1219,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			Toast.makeText(context, "No Transactions yet!", Toast.LENGTH_LONG).show();
 		}
 	}
-				
+	*/
+		
 	// Update a single Transaction.
 	public int updateTransaction(Transaction transaction) {
 					
@@ -1622,12 +1626,10 @@ public class DBHelper extends SQLiteOpenHelper {
 			}
 		}		
 	}
-	
-	//TODO This method should be 'creatRecurringTransactions'.
-	
+		
 	// Creates a years worth of recurring transactions according to the interval passed by interval.
 	@SuppressLint("SimpleDateFormat")
-	public void createRecommendationTransactions (int interval, String transDateS, int T_ID) {
+	public void creatRecurringTransactions (int interval, String transDateS, int T_ID) {
 		Transaction transaction = getTransaction(T_ID);
 		int recDayInt = 0;
 		int recMonInt = 0;

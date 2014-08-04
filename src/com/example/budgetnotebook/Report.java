@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * Report.java
+ * 
+ * Displays query results to the user via listviews.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.util.List;
@@ -62,7 +78,7 @@ public class Report extends Activity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				//  Do Nothing			
 			}
 		});
 	}

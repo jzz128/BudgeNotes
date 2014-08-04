@@ -1,3 +1,19 @@
+/*
+ * PSU SWENG 500 - Software Engineering Studio
+ * Summer 2014
+ * TEAM 5:	Ryan Donovan
+ * 			Daniel Montanez
+ * 			Tricia Murray
+ * 			Jimmy Zhang
+ */
+
+/**
+ * TransactionView.java
+ * 
+ * Displays transactions to the user for a user set account in a user set date range.
+ * 
+ **/
+
 package com.example.budgetnotebook;
 
 import java.util.Calendar;
@@ -147,7 +163,7 @@ public class TransactionView extends Activity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub		
+				//  Do Nothing			
 			}
 		});
 							
@@ -180,7 +196,7 @@ public class TransactionView extends Activity {
 	
 	//Perform operations when the icon button is clicked.
 	public void iconClickHandler(View v) {
-		//TODO Do Something when Transaction Icon clicked. Or Nothing.
+		//Do Nothing.
 	}
 	
 	// Show the date picker when the start date picker icon is clicked.
