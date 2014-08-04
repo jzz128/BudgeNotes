@@ -140,10 +140,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	private final String deleteAccountTrigger = "CREATE TRIGGER " + DELETE_ACCOUNT_TRIGGER + " AFTER DELETE ON " + ACCOUNT_TABLE + " FOR EACH ROW BEGIN"
 			+ " DELETE FROM " + GOAL_TABLE + " WHERE " + G_A_ID + " = old._id;"
 			+ " DELETE FROM " + TRANSACTION_TABLE + " WHERE " + T_A_ID + " = old._id;"
+			+ " DELETE FROM " + ALERT_TABLE + " WHERE " + AT_A_ID + " = old._id;"
 			+ " END";
 	
 	//TODO Create triggers for Alert functionality
-	
+
 	//SQL Statement for creating the Alert Table.
 	//private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT, " + "FOREIGN KEY (" + AT_A_ID + ") REFERENCES " + ACCOUNT_TABLE + "(" + AT_ID + "));";
 	private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT);";
