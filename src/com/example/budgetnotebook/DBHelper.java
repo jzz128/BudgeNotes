@@ -247,7 +247,27 @@ public class DBHelper extends SQLiteOpenHelper {
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Recommendation methods ----------------------------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------------------------------------------------
+	
+	// Add a single Recommendation. 							<-- ADDED TO ASIST IN TESTING -->
+	public void addRecommendation(Recommendation recommend){
+		Log.d("addRecommendation", recommend.toString());
 				
+		SQLiteDatabase db = this.getWritableDatabase();
+				
+		ContentValues values = new ContentValues();
+		values.put(R_ID, recommend.getId());
+		values.put(R_CRITERIA_1, recommend.getCategory1());
+		values.put(R_CRITERIA_2, recommend.getCategory2());
+		values.put(R_CRITERIA_3, recommend.getCategory3());
+		values.put(R_CRITERIA_4, recommend.getCategory4());
+		values.put(R_CRITERIA_5, recommend.getCategory5());
+		values.put(R_IS_VALID, recommend.getIsValid());
+				
+		db.insert(REC_TABLE, null, values);
+				
+		db.close();
+	}
+	
 	// Returns a cursor filled with all the recommendations.
 	public Cursor getRecommendations() {
 		SQLiteDatabase db = this.getWritableDatabase();
