@@ -319,7 +319,7 @@ public class TransactionForm extends Activity implements InputValidator {
 					baseTranID = transaction.getId();
 				}
 				
-				db.editRecommendationTransactions(transaction, baseTranID, false);
+				db.editRecurringTransactions(transaction, baseTranID, false);
 				db.recalcAlert(transaction);
 				db.checkTransactionStatus();
 				break;
@@ -334,7 +334,7 @@ public class TransactionForm extends Activity implements InputValidator {
 				} else {
 					baseTranID = transaction.getId();
 				}
-				db.editRecommendationTransactions(transaction, baseTranID, true);
+				db.editRecurringTransactions(transaction, baseTranID, true);
 				db.recalcAlert(transaction);
 				db.checkTransactionStatus();
 				break;

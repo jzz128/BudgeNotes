@@ -89,6 +89,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String GOAL_DELTA_AMOUNT = "goal_delta_amount";
 	public static final String GOAL_END_DATE = "goal_end_date";
 	public static final String GOAL_STATUS = "goal_status";
+	public static final String DELETE_GOAL_TRIGGER = "delete_goal";
 	// String for all GOAL_TABLE field names.
 	public static final String[] GOAL_FIELDS = new String[] {G_ID, G_A_ID, GOAL_NAME, GOAL_DESCRIPTION, GOAL_TYPE, GOAL_START_AMOUNT, GOAL_DELTA_AMOUNT, GOAL_END_DATE, GOAL_STATUS};
 	
@@ -143,6 +144,12 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ " DELETE FROM " + ALERT_TABLE + " WHERE " + AT_A_ID + " = old._id;"
 			+ " END";
 	
+	/*
+	private final String deleteGoalTrigger = "CREATE TRIGGER " + DELETE_GOAL_TRIGGER + " AFTER DELETE ON " + GOAL_TABLE + " FOR EACH ROW BEGIN"
+			+ " DELETE FROM " + ALERT_TABLE + " WHERE " + ALERT_NAME + " LIKE 'GOAL-old." + G_ID + "';"
+			+ " END";
+	*/
+	
 	//SQL Statement for creating the Alert Table.
 	private final String createAlert = "CREATE TABLE IF NOT EXISTS " + ALERT_TABLE + " ( " + AT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + AT_A_ID + " INTEGER, " + ALERT_NAME + " TEXT, " + ALERT_DESCRIPTION + " TEXT,  " + ALERT_DUE_DATE + " TEXT);";
 	
@@ -159,6 +166,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(createTransaction);
 		db.execSQL(createAlert);
 		db.execSQL(deleteAccountTrigger);
+		//db.execSQL(deleteGoalTrigger);
 		db.execSQL(createRec);
 		
         //Add Recommendations to the database table.
@@ -1557,7 +1565,7 @@ public class DBHelper extends SQLiteOpenHelper {
 							
 							Log.d("THE TRANSACTION DATE IS: ", String.valueOf(date));
 
-							if (date.after(today)) {
+							if (date.after(today) || date.equals(today)) {
 								cal_for_month = Integer.toString(tranCal.get(Calendar.MONTH)+1);
 						        if (tranCal.get(Calendar.MONTH)+1 < 10 ) cal_for_month = "0" + cal_for_month;
 						            
@@ -1826,7 +1834,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Edit recurring transactions spawned from passed transaction object and original transaction object.
-	public void editRecommendationTransactions(Transaction transaction, int id, boolean subsTransOnly) {
+	public void editRecurringTransactions(Transaction transaction, int id, boolean subsTransOnly) {
 		// Create an object for the initially generated transaction.
 		Transaction baseTran = getTransaction(id);
 		// Set the name offset length so transactions can be queried

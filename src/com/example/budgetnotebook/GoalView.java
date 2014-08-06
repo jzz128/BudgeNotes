@@ -131,7 +131,8 @@ public class GoalView extends Activity{
 	// Functionality performed when delete goal is clicked	
 	public void deleteGoalClickHandler(View v) {
 		int g_id;
-		
+		Cursor alertCursor;
+		Alert alert;
 		// Get the row the clicked button is in
         vwParentRow = (RelativeLayout)v.getParent();
         
@@ -143,7 +144,13 @@ public class GoalView extends Activity{
 		
         // Initialize the objects.
         goal = db.getGoal(g_id);
-        
+        alertCursor = db.dbQuery("SELECT * FROM " + DBHelper.ALERT_TABLE + " WHERE " + DBHelper.ALERT_NAME + " LIKE 'GOAL-" + g_id + "'");
+        if (alertCursor.moveToFirst()) {
+        	do{
+        		alert = db.getAlert(alertCursor.getInt(0));
+        		db.deleteAlert(alert);
+        	} while (alertCursor.moveToNext());
+        }
 		// Alert dialog to confirm delete.
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -152,6 +159,7 @@ public class GoalView extends Activity{
                 	// YES Clicked
 	                case DialogInterface.BUTTON_POSITIVE:
 	                	db.deleteGoal(goal);
+	                	
 	                	populateListViewGoals();
 	                    break;
 	                 // No Clicked
