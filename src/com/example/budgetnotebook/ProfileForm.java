@@ -283,6 +283,7 @@ public class ProfileForm extends Activity implements InputValidator {
 	    Log.d("month",month);
 	    String year = birthdaySplit[2].trim();
 	    Log.d("year",year); 
+	    
 	    // Save each value as an integer
 	    int yearInt = Integer.parseInt(year);
 	    int monthInt = Integer.parseInt(month);
@@ -290,7 +291,11 @@ public class ProfileForm extends Activity implements InputValidator {
 
 	    // Set birth date calendar date to birth date
 	    birthDate.set(yearInt,monthInt,dayInt);
-	    Log.d("date to string",birthDate.toString());
+
+	    // Set today to current date
+	    today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH)+1, (today.get(Calendar.DAY_OF_MONTH)));
+
+	    
 	    // Check if birth date is in the future
 	    if (birthDate.after(today)) {
 	    	profileBirthday.setError(InputValidator.FUTURE_BDAY);
