@@ -1506,8 +1506,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE substr(" + ALERT_NAME + ",1,4) LIKE 'TRAN'";
 		String[] nameSplit;
 		String query2;
-		@SuppressWarnings("unused")
-		String tranAmount;
+
+		String tranAmount = "error";
 		
 		String cal_for_month, cal_for_year, cal_for_day;
 		
@@ -1525,13 +1525,14 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			do {
 				alert = getAlert(alertCursor.getInt(0));
+				alert.setDueDate("1/1/1990");
 				account = getAccount(alertCursor.getInt(1));
 				
 				nameSplit = alertCursor.getString(2).split("-");
 				transaction = getTransaction(Integer.parseInt(nameSplit[1]));	
 				
 				try {
-			        date = sdf.parse(alertCursor.getString(4));
+			        date = sdf.parse(alert.getDueDate());
 			        tranCal.setTime(date);
 			        today = sdf.parse(currentDate);
 			        todayCal.setTime(today);
@@ -1589,7 +1590,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				diffInDays = (tranMilli- todayMilli)/(24*60*60*1000);
 				Log.d("THE DIFF IN DAYS IS: ", String.valueOf(date));
 				if(diffInDays <= 3 && diffInDays > 0) {
-					alert.setDescription("Transaction for " + transaction.getAmount() + " on Account " + account.getName() + " will occur on " + alert.getDueDate() + ".");
+					alert.setDescription("Transaction for " + tranAmount + " on Account " + account.getName() + " will occur on " + alert.getDueDate() + ".");
 				} else {
 					alert.setDescription(null);
 				}
