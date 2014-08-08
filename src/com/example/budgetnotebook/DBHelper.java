@@ -423,8 +423,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			diffInDays = (goalMilli- todayMilli)/(24*60*60*1000);
 			
-			if(diffInDays > 3) {Log.d("OPTION 1: ", "-"); newStatus =String.valueOf(R.drawable.goal_prog);} else
-			if(diffInDays <= 3 && diffInDays > 0) {Log.d("OPTION 2: ", "-"); newStatus = String.valueOf(R.drawable.goal_jep); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
+			if(diffInDays > 3) {Log.d("OPTION 1: ", "-"); newStatus =String.valueOf(R.drawable.goal_prog); newStatus = String.valueOf(R.drawable.goal_jep); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
+			if(diffInDays <= 3 && diffInDays > 0) {Log.d("OPTION 2: ", "-"); newStatus = String.valueOf(R.drawable.goal_jep);} else
 			if(diffInDays <= 0) {	
 				if(check >= end) {Log.d("OPTION 3.1: ", "-"); newStatus = String.valueOf(R.drawable.goal_success); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' was achieved!";} else
 				if(check < end) {Log.d("OPTION 3.2: ", "-"); newStatus = String.valueOf(R.drawable.goal_fail); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' failed!";}
@@ -445,15 +445,41 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	public void toastAlerts(Context context, String alertType){
 		String query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_DESCRIPTION + " IS NOT NULL AND substr(" + ALERT_NAME + ",1,4) LIKE '" + alertType + "'";
-			
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
+		java.util.Date today = null;
+		java.util.Date date = null;
+		String currentDate;
+		
+		long todayMilli, alertMilli, diffInDays;
+		Calendar todayCal = Calendar.getInstance();
+		Calendar tranCal = Calendar.getInstance();
+
+		java.util.Date d = Calendar.getInstance().getTime(); // Current time
+		currentDate = sdf.format(d); // Get Date String according to date format
+		
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(query, null);
-			
+		
 		if (cursor.moveToFirst()) {
 			do {
-				Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
+				try {
+					date = sdf.parse(cursor.getString(4));
+					tranCal.setTime(date);
+					today = sdf.parse(currentDate);
+					todayCal.setTime(today);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				todayMilli = todayCal.getTimeInMillis();
+				alertMilli = tranCal.getTimeInMillis();
+				diffInDays = (alertMilli - todayMilli)/(24*60*60*1000);
+				
+				if(-3 <= diffInDays && diffInDays <= 3)Toast.makeText(context, cursor.getString(3), Toast.LENGTH_LONG).show();		
 					
 			} while (cursor.moveToNext());
 		}
@@ -1589,11 +1615,11 @@ public class DBHelper extends SQLiteOpenHelper {
 				tranMilli = tranCal.getTimeInMillis();
 				diffInDays = (tranMilli- todayMilli)/(24*60*60*1000);
 				Log.d("THE DIFF IN DAYS IS: ", String.valueOf(date));
-				if(diffInDays <= 3 && diffInDays > 0) {
+				//if(diffInDays <= 3 && diffInDays > 0) {
 					alert.setDescription("Transaction for " + tranAmount + " on Account " + account.getName() + " will occur on " + alert.getDueDate() + ".");
-				} else {
-					alert.setDescription(null);
-				}
+				//} else {
+				//	alert.setDescription(null);
+				//}
 				updateAlert(alert);
 				
 			} while (alertCursor.moveToNext());
