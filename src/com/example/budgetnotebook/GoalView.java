@@ -97,7 +97,7 @@ public class GoalView extends Activity{
 	public void editGoalClickHandler(View v) {
 		int g_id;
 		int a_id;
-		
+		int s_a_id;
 		// Get the row the clicked button is in
         vwParentRow = (RelativeLayout)v.getParent();
         
@@ -108,6 +108,7 @@ public class GoalView extends Activity{
         // Store the goal id in the variable integers.
         a_id = Integer.parseInt((child.getText().toString().trim())); // The value stored in the this child is the 
         g_id = Integer.parseInt((child2.getText().toString().trim()));
+        s_a_id = db.correctSpinID(a_id);
         
         // Display Goal Form
         try {
@@ -121,6 +122,7 @@ public class GoalView extends Activity{
 			newIntent.putExtra("G_ID", g_id);
         	newIntent.putExtra("A_ID", a_id);
         	newIntent.putExtra("G_EDIT", true);
+        	newIntent.putExtra("S_A_ID", s_a_id);
         	startActivity(newIntent);
         	
         } catch(ClassNotFoundException e) {

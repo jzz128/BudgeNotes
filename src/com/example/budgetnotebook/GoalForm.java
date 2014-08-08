@@ -37,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GoalForm extends Activity implements InputValidator{
 	// UI Components
@@ -89,10 +90,7 @@ public class GoalForm extends Activity implements InputValidator{
 		G_ID = intent.getIntExtra("G_ID",0);
 		A_ID = intent.getIntExtra("A_ID", 0);
 		G_EDIT = intent.getBooleanExtra("G_EDIT", false);
-		
-		int lowestID;
-        lowestID = db.lowestAccountID();
-        S_A_ID = A_ID - lowestID +1; // If we have deleted accounts in the past, the decrement in the populateForm method may fail. This corrects that issue. - DJM 
+		S_A_ID = intent.getIntExtra("S_A_ID", 0);
 		
 		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
@@ -328,7 +326,7 @@ public class GoalForm extends Activity implements InputValidator{
 	// Validate all form input
 	public boolean inputsValid(){
 		boolean valid = true;
-		
+		Account account = db.getAccount(goalAccountI);
 		// Goal name not empty
 		if(goalNameS.length() == 0){
 			goalName.setError("Input is required.");
@@ -350,6 +348,12 @@ public class GoalForm extends Activity implements InputValidator{
 		// Description not empty
 		if(goalDescriptionS.length() == 0){
 			goalDescription.setError("Input is required");
+			valid = false;
+		}
+		
+		if(goalTypeS.equals("Pay off DELTA Amount.") && !account.getType().equals("CR")) {
+			Toast.makeText(this,"Goal type only supported by Credit Card accounts.", Toast.LENGTH_LONG).show();
+			setProgressBarIndeterminateVisibility(false);
 			valid = false;
 		}
 		

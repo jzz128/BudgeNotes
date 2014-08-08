@@ -372,6 +372,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		String currentDate;
 		String newStatus = null, newDescription = null;
+		String[] goalType;
+		String typeVal;
 		String query, alt_id;
 		Cursor cursor;
 		
@@ -385,7 +387,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		java.util.Date d = Calendar.getInstance().getTime(); // Current time
 		currentDate = sdf.format(d); // Get Date String according to date format
 		
-		float start, delta, end, check;
+		float start = 0, delta = 0, end = 0, check = 0;
 		
 		Calendar todayCal = Calendar.getInstance();
 		Calendar goalCal = Calendar.getInstance();
@@ -401,17 +403,28 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		for(int i = 0; i < count; i++) {
 			goal = goalList.get(i);
+			goalType = goal.getType().split(" ");
+			typeVal = goalType[0];
+			
 			alt_id = String.valueOf(goal.getId());
+			
 			query = "SELECT * FROM " + ALERT_TABLE + " WHERE " + ALERT_NAME + " LIKE 'GOAL-" + alt_id + "'";
 			cursor = dbQuery(query);
 			if(cursor.moveToFirst())
 				alert = getAlert(cursor.getInt(0));
 			account = getAccount(goal.getAId());
-			check = Float.parseFloat(account.getBalance());
+			
 			start = Float.parseFloat(goal.getStartAmount());
 			delta = Float.parseFloat(goal.getDeltaAmount());
-			end = start + delta;
+						
+			//=============================== Check is set based on the Goal Type ======================================
 			
+			if (typeVal.equals("Save")) {check = Float.parseFloat(account.getBalance()); end = start + delta;} else
+			if (typeVal.equals("Pay")) {end = Float.parseFloat(account.getBalance()); check = start - delta;} else
+			if (typeVal.equals("Do")) {check = Float.parseFloat(account.getBalance()); end = start - delta;}
+			
+			//==========================================================================================================
+						
 			try {
 		        date = sdf.parse(goal.getEndDate());
 		        goalCal.setTime(date);
@@ -423,8 +436,8 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			diffInDays = (goalMilli- todayMilli)/(24*60*60*1000);
 			
-			if(diffInDays > 3) {Log.d("OPTION 1: ", "-"); newStatus =String.valueOf(R.drawable.goal_prog); newStatus = String.valueOf(R.drawable.goal_jep); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
-			if(diffInDays <= 3 && diffInDays > 0) {Log.d("OPTION 2: ", "-"); newStatus = String.valueOf(R.drawable.goal_jep);} else
+			if(diffInDays > 3) {Log.d("OPTION 1: ", "-"); newStatus =String.valueOf(R.drawable.goal_prog); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
+			if(diffInDays <= 3 && diffInDays > 0) {Log.d("OPTION 2: ", "-"); newStatus = String.valueOf(R.drawable.goal_jep); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' is approaching on: " + goal.getEndDate();} else
 			if(diffInDays <= 0) {	
 				if(check >= end) {Log.d("OPTION 3.1: ", "-"); newStatus = String.valueOf(R.drawable.goal_success); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' was achieved!";} else
 				if(check < end) {Log.d("OPTION 3.2: ", "-"); newStatus = String.valueOf(R.drawable.goal_fail); newDescription = "Goal '" + goal.getName() + "' for account '" + account.getName() + "' failed!";}
