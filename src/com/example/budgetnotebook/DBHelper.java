@@ -1471,6 +1471,7 @@ public class DBHelper extends SQLiteOpenHelper {
 					Log.d("numTran", Integer.toString(numTran));
 					//Returns a sum of all Transactions that are currently accounted for.
 					tranSum = querySum(query + " AND " + TRANSACTION_ACCOUNTED + " = " + 1);
+					if(accList.get(i).getType().equals("CR")) tranSum = -tranSum;
 					//Returns the base (beginning) balance of the current account.
 					accBase = Float.parseFloat((accList.get(i).getBalance())) - tranSum;
 					
@@ -1669,8 +1670,10 @@ public class DBHelper extends SQLiteOpenHelper {
 			//Toast.makeText(this, String.valueOf(tranList.get(i).getAccounted()), Toast.LENGTH_LONG).show();
 				
 			if(!pAccounted && tranList.get(i).getAccounted()) {
-				changeAmount = tranList.get(i).getAmount();
-				newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
+				changeAmount = tranList.get(i).getAmount();			
+				if (account.getType().equals("CR")) {newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);} else
+				{newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);}
+				//newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
 				
@@ -1682,7 +1685,8 @@ public class DBHelper extends SQLiteOpenHelper {
 				updateTransaction(tranList.get(i));
 			} else if (pAccounted && !tranList.get(i).getAccounted()) {
 				changeAmount = tranList.get(i).getAmount();
-				newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);
+				if (account.getType().equals("CR")) {newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);} else
+				{newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);}
 				account.setBalance(String.format("%.2f",newBalance));				
 				updateAccount(account);
 				tranList.get(i).setChange(null);
@@ -1827,7 +1831,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery(query, null);
 				
 		float changeAmount = 0;
-		if (transaction.getAccounted()) changeAmount = 1;
+		if (transaction.getAccounted()) changeAmount = Float.parseFloat(transaction.getAmount());
 		
 		
 		Account account;
@@ -1836,11 +1840,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				recTran = getTransaction(cursor.getInt(0));
-				if (recTran.getAccounted()) changeAmount = changeAmount + 1;
+				if (recTran.getAccounted()) changeAmount = changeAmount + Float.parseFloat(recTran.getAmount());
 				deleteTransaction(recTran);
 			} while (cursor.moveToNext());
 		}
-		changeAmount = changeAmount * Float.parseFloat(transaction.getAmount());
+		//changeAmount = changeAmount * Float.parseFloat(transaction.getAmount());
 		deleteTransaction(getTransaction(transaction.getId()));
 		if (account.getType().equals("CR")) {changeAmount = Float.parseFloat(account.getBalance()) + changeAmount;} else
 			{changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;}
@@ -1927,11 +1931,17 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		
 		//Reverses all previously accounted transactions and stores the new amount
-		changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;
+		if (account.getType().equals("CR")) {changeAmount = Float.parseFloat(account.getBalance()) + changeAmount;} else
+			{changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;}
+
 		// Sets the new delta amount using the counter and passed transaction amount
 		changeBackAmount = changeBackAmount * Float.parseFloat(transaction.getAmount());
 		// Set teh new account balance
-		changeAmount = changeAmount + changeBackAmount;
+		
+		if (account.getType().equals("CR")) {changeAmount = changeAmount - changeBackAmount;} else
+		{changeAmount = changeAmount + changeBackAmount;}
+		
+		
 		account.setBalance(String.format("%.2f",changeAmount));
 		updateAccount(account);
 	}

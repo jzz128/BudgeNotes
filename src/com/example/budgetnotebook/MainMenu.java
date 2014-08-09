@@ -64,6 +64,7 @@ public class MainMenu extends Activity {
 				try{
 					Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionForm");
 					Intent newIntent = new Intent(MainMenu.this, clickedClass);
+					newIntent.putExtra("A_ID", 1);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
