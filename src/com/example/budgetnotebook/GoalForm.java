@@ -90,7 +90,7 @@ public class GoalForm extends Activity implements InputValidator{
 		G_ID = intent.getIntExtra("G_ID",0);
 		A_ID = intent.getIntExtra("A_ID", 0);
 		G_EDIT = intent.getBooleanExtra("G_EDIT", false);
-		S_A_ID = intent.getIntExtra("S_A_ID", 0);
+		S_A_ID = db.correctSpinID(A_ID);
 		
 		// Initialize the Spinners.
 		goalAccount = (Spinner) findViewById(R.id.goalEditAccountSpinner);
@@ -261,7 +261,7 @@ public class GoalForm extends Activity implements InputValidator{
 	private void populateForm() {	
 		//Toast.makeText(this, String.valueOf(goal.getStartAmount()), Toast.LENGTH_LONG).show();
 		// Set goal to account ID (subtract 1 because list is 0 based)
-		goalAccount.setSelection(S_A_ID-1, false);
+		goalAccount.setSelection(S_A_ID, false);
 		goalAccountI = goal.getAId();
 		// Set goal name text
 		goalName.setText(goal.getName());

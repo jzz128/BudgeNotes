@@ -1500,7 +1500,8 @@ public class DBHelper extends SQLiteOpenHelper {
 					changeAmount = tranList.get(i).getAmount();
 					// If the transaction is accounted update the account balance.
 					if(tranList.get(i).getAccounted()) {
-						newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);
+						if(account.getType().equals("CR")) {newBalance = Float.parseFloat(currBalance) - Float.parseFloat(changeAmount);} else
+							{newBalance = Float.parseFloat(currBalance) + Float.parseFloat(changeAmount);}
 						account.setBalance(String.format("%.2f",newBalance));
 						updateAccount(account);
 						tranList.get(i).setChange(account.getBalance());
@@ -1553,7 +1554,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		Cursor alertCursor = dbQuery(query);
 		Cursor transCursor;
 		
-		long todayMilli, tranMilli, diffInDays;
+		//long todayMilli, tranMilli, diffInDays;
 		Calendar todayCal = Calendar.getInstance();
 		Calendar tranCal = Calendar.getInstance();
 		Log.d("THERE ARE THIS MANY ALERTS: ", String.valueOf(alertCursor.getCount()));
@@ -1624,9 +1625,9 @@ public class DBHelper extends SQLiteOpenHelper {
 				}
 				
 				alert.setDueDate(newAlertDate);
-				todayMilli = todayCal.getTimeInMillis();
-				tranMilli = tranCal.getTimeInMillis();
-				diffInDays = (tranMilli- todayMilli)/(24*60*60*1000);
+				//todayMilli = todayCal.getTimeInMillis();
+				//tranMilli = tranCal.getTimeInMillis();
+				//diffInDays = (tranMilli- todayMilli)/(24*60*60*1000);
 				Log.d("THE DIFF IN DAYS IS: ", String.valueOf(date));
 				//if(diffInDays <= 3 && diffInDays > 0) {
 					alert.setDescription("Transaction for " + tranAmount + " on Account " + account.getName() + " will occur on " + alert.getDueDate() + ".");
@@ -1697,7 +1698,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 	// Creates a years worth of recurring transactions according to the interval passed by interval.
 	@SuppressLint("SimpleDateFormat")
-	public void creatRecurringTransactions (int interval, String transDateS, int T_ID) {
+	public void createRecurringTransactions (int interval, String transDateS, int T_ID) {
 		Transaction transaction = getTransaction(T_ID);
 		int recDayInt = 0;
 		int recMonInt = 0;

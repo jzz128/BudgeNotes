@@ -133,7 +133,7 @@ public class TransactionView extends Activity {
 		// Get the extras from previous activity.
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
-		S_A_ID = intent.getIntExtra("S_A_ID",0);
+		S_A_ID = db.correctSpinID(A_ID);
 		AFTER_EDIT = intent.getIntExtra("AFTER_EDIT",0);
 		
 		// Set default to be one month before and after current date
@@ -180,7 +180,7 @@ public class TransactionView extends Activity {
 					// Brings us back to the root activity, where exit functions properly.
 					newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					newIntent.putExtra("A_ID", A_ID);
-					newIntent.putExtra("S_A_ID", S_A_ID);
+					//newIntent.putExtra("S_A_ID", S_A_ID);
 					startActivity(newIntent);
 					} catch(ClassNotFoundException e) {
 						e.printStackTrace();
@@ -272,7 +272,7 @@ public class TransactionView extends Activity {
 			// Pass the extras to the intent on AccountForm.
         	newIntent.putExtra("A_ID", a_id);
         	newIntent.putExtra("T_ID", t_id);
-        	newIntent.putExtra("S_A_ID", S_A_ID);
+        	//newIntent.putExtra("S_A_ID", S_A_ID);
         	newIntent.putExtra("T_EDIT", true);
         	
         	// 

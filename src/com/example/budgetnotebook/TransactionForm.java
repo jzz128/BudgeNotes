@@ -104,7 +104,7 @@ public class TransactionForm extends Activity implements InputValidator {
 		Intent intent = getIntent();
 		A_ID = intent.getIntExtra("A_ID",0);
 		T_ID = intent.getIntExtra("T_ID", 0);
-		S_A_ID = intent.getIntExtra("S_A_ID", 0);
+		S_A_ID = db.correctSpinID(A_ID);
 		T_EDIT = intent.getBooleanExtra("T_EDIT", false);
 		E_SCOPE = intent.getIntExtra("E_SCOPE", 0);
 				
@@ -262,7 +262,7 @@ public class TransactionForm extends Activity implements InputValidator {
 							//
 							if (transAccounted) updateAccount();
 							addTransaction();
-							db.creatRecurringTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
+							db.createRecurringTransactions(transInterval.getSelectedItemPosition(), transDateS, T_ID);
 							db.cleanTransactions(getBaseContext(), "now");
 						}
 						

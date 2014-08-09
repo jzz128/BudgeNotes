@@ -106,7 +106,7 @@ public class AccountView extends Activity {
 	// Set Icon Button click action.
 	public void iconClickHandler(View v) {
 		int a_id;
-		int s_a_id;
+		//int s_a_id;
 		// Get the row the clicked button is in
         vwParentRow = (RelativeLayout)v.getParent();
         
@@ -116,8 +116,8 @@ public class AccountView extends Activity {
         // Store the account id in the variable integer.
         a_id = Integer.parseInt((child.getText().toString().trim()));
         Log.d("THE ACCOUNT NUMBER IS: ", String.valueOf(a_id));
-        s_a_id = db.correctSpinID(a_id);
-        Log.d("THE ACCOUNT NUMBER CORRECTED IS: ", String.valueOf(s_a_id));
+        //s_a_id = db.correctSpinID(a_id);
+        //Log.d("THE ACCOUNT NUMBER CORRECTED IS: ", String.valueOf(s_a_id));
         try {
         	//Take us to the transaction view on click.
         	Class<?> clickedClass = Class.forName("com.example.budgetnotebook.TransactionView");
@@ -126,7 +126,7 @@ public class AccountView extends Activity {
 			// Brings us back to the root activity, where exit functions properly.
 			newIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	newIntent.putExtra("A_ID", a_id);
-        	newIntent.putExtra("S_A_ID", s_a_id);
+        	//newIntent.putExtra("S_A_ID", s_a_id);
         	newIntent.putExtra("AFTER_EDIT", 0);
         	startActivity(newIntent);
 		
