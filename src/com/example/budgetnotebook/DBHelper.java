@@ -1816,7 +1816,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 	
 	//Delete recurring transactions spawned from passed transaction object and original transaction object.
-	public void deleteRecommendationTransactions(Transaction transaction) {
+	public void deleteRecurringTransactions(Transaction transaction) {
 		int nLen = transaction.getName().length() + 2;
 		String query = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE substr(" + TRANSACTION_NAME + "," + nLen + ") = '" + transaction.getId() + "'";
 		
@@ -1842,7 +1842,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		}
 		changeAmount = changeAmount * Float.parseFloat(transaction.getAmount());
 		deleteTransaction(getTransaction(transaction.getId()));
-		changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;
+		if (account.getType().equals("CR")) {changeAmount = Float.parseFloat(account.getBalance()) + changeAmount;} else
+			{changeAmount = Float.parseFloat(account.getBalance()) - changeAmount;}
 		account.setBalance(String.format("%.2f",changeAmount));
 		updateAccount(account);
 	}

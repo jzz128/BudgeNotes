@@ -236,6 +236,7 @@ public class TransactionView extends Activity {
 			}
 			db.seeFuture(getBaseContext(),spinDateEnd,A_ID);
 			loadAccountSpinnerData();
+			transAccount.setSelection(S_A_ID);
 			populateListViewTransactions(A_ID);
 		
 		}
@@ -387,7 +388,7 @@ public class TransactionView extends Activity {
 					} else {
 						// Do Nothing.
 					}
-					db.deleteRecommendationTransactions(transaction);
+					db.deleteRecurringTransactions(transaction);
 					db.recalcAlert(transaction);
             		db.cleanTransactions(getBaseContext(), spinDateEnd);
             		db.checkTransactionStatus();
@@ -503,6 +504,7 @@ public class TransactionView extends Activity {
 				Log.d("CALLED ON RESUME!!!!!!!!!!!!!!!!!!!!!!", "STOP IT!!");
 				db.cleanTransactions(this, spinDateEnd);
 				loadAccountSpinnerData();
+				transAccount.setSelection(S_A_ID);
 				populateListViewTransactions(A_ID);
 			}
 		};
