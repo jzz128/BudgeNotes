@@ -209,13 +209,14 @@ public class ProfileForm extends Activity implements InputValidator {
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
 			String dayString = Integer.toString(selectedDay);
-			String monthString = Integer.toString(selectedMonth+1);
+			String monthString = Integer.toString(selectedMonth + 1);
 			String yearString = Integer.toString(selectedYear);
 			// Add 0 to the front of day or month if less than 10 so that format is correct
 			if 	(selectedDay < 10){
 				dayString = "0" + Integer.toString(selectedDay);
-			} else if (selectedMonth + 1 < 10) {
-				monthString = "0" + Integer.toString(selectedMonth+1);
+			}
+			if (selectedMonth + 1 < 10) {
+				monthString = "0" + Integer.toString(selectedMonth + 1);
 			}
 			profileBirthday.setText(monthString + "/" + dayString + "/" + yearString);
 }
