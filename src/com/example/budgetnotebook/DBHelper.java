@@ -1566,7 +1566,7 @@ public class DBHelper extends SQLiteOpenHelper {
 			
 			do {
 				alert = getAlert(alertCursor.getInt(0));
-				alert.setDueDate("1/1/1990");
+				alert.setDueDate("01/01/1990");
 				account = getAccount(alertCursor.getInt(1));
 				
 				nameSplit = alertCursor.getString(2).split("-");
@@ -1593,7 +1593,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				newAlertDate = cal_for_month + "/" + cal_for_day + "/" + cal_for_year;
 				
 				if (date.before(today) || date.equals(today)) {
-					query2 = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + TRANSACTION_NAME + " LIKE '" + transaction.getName() + "-" + transaction.getId() + "'";
+					query2 = "SELECT * FROM " + TRANSACTION_TABLE + " WHERE " + TRANSACTION_NAME + " LIKE '" + transaction.getName() + "-" + transaction.getId() + "' OR " + T_ID + " = " + transaction.getId();
 					transCursor = dbQuery(query2);
 					Log.d("THERE ARE THIS MANY TRANSACTIONS: ", String.valueOf(transCursor.getCount()));
 					if (transCursor.moveToFirst()) {
