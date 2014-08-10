@@ -234,6 +234,7 @@ public class TransactionView extends Activity {
 				spinDateEnd = (selectedMonth + 1) + "/" + selectedDay + "/" + selectedYear;
 				transDateEnd.setText(spinDateEnd);
 			}
+			db.cleanTransactions(getBaseContext(), "now");
 			db.seeFuture(getBaseContext(),spinDateEnd,A_ID);
 			loadAccountSpinnerData();
 			transAccount.setSelection(S_A_ID);
