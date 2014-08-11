@@ -137,6 +137,9 @@ public class RecommendationView extends Activity {
 								//Toast.makeText(this, "Recommendation found; " + i, Toast.LENGTH_LONG).show();
 								recs.get(i).setIsValid(true);
 								db.updateRecommendation(recs.get(i));
+							} else {
+								recs.get(i).setIsValid(false);
+								db.updateRecommendation(recs.get(i));
 							}
 							
 							i++;
