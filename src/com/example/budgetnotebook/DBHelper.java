@@ -108,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	//Values to use for the Recommendation table.
 	
 	private String[] recommendationCategories = new String[]{"3 - Home","4 - Daily Living","5 - Transportation","6 - Entertainment","7 - Health","8 - Vacation","9 - Recreation","10 - Dues / Subscriptions","11 - Personal","12 - Obligation","13 - Other"};
-	private String[] recommendationThreadholds = new String[] {"30","20","10","5","5","5","5","5","5","5","5"};
+	private String[] recommendationThreadholds = new String[] {"40","20","10","5","5","5","5","5","5","5","5"};
 	
 	//Fields associated with the Alert Table.
 	public static final String ALERT_TABLE = "alert_table";
