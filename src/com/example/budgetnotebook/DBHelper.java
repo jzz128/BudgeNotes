@@ -1397,10 +1397,14 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 	// For List population of Alert
 	public Cursor getAllAlerts() {
+		String order;
 		SQLiteDatabase db = this.getReadableDatabase();
 			
 		String where = null;
-		Cursor cursor = db.query(true, ALERT_TABLE, ALERT_FIELDS,  where,  null, null,  null, null, null);
+		
+		order = "substr(" + ALERT_DUE_DATE + ",7) || substr(" + ALERT_DUE_DATE + ",1,2) || substr(" + ALERT_DUE_DATE + ",4,2)";
+		
+		Cursor cursor = db.query(true, ALERT_TABLE, ALERT_FIELDS,  where,  null, null,  null, order, null);
 			
 		if (cursor != null) {
 			cursor.moveToFirst();
