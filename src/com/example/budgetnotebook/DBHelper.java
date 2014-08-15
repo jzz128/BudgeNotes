@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 6; // Updated Goal Table. 1 Aug 2014 - DJM
+	public static final int VERSION = 41; // Updated Goal Table. 1 Aug 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
@@ -364,7 +364,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	// Checking the status of the goals, setting their icon color and generating the alert message.
 	@SuppressLint("SimpleDateFormat")
-	public void checkGoalStatus() {
+	public void checkGoalStatus(String asOf) {
 		List<Goal> goalList = getListAllGoals();	
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy"); // Set your date format
 		java.util.Date today = null;
@@ -386,7 +386,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		
 		java.util.Date d = Calendar.getInstance().getTime(); // Current time
 		currentDate = sdf.format(d); // Get Date String according to date format
-		
+		if (!asOf.equals("now")) currentDate = asOf;
 		float start = 0, delta = 0, end = 0, check = 0;
 		
 		Calendar todayCal = Calendar.getInstance();

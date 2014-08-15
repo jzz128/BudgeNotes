@@ -46,7 +46,7 @@ public class GoalView extends Activity{
 
 		//Create Database instance
 		db = new DBHelper(getBaseContext());
-		db.checkGoalStatus();			
+		db.checkGoalStatus("now");			
 		// Populate the ListView
 		populateListViewGoals();	
 

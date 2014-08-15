@@ -202,13 +202,13 @@ public class GoalForm extends Activity implements InputValidator{
 							fillAlertObject();
 							db.updateGoal(goal);
 							db.updateAlert(alert);
-							db.checkGoalStatus();
+							db.checkGoalStatus("now");
 						} else {
 							// Call the add goal method to add the goal to the database
 							addGoal();
 							alert = new Alert(goalAccountI, "GOAL-" + String.valueOf(G_ID), null, goalEndS);
 							db.addAlert(alert);
-							db.checkGoalStatus();
+							db.checkGoalStatus("now");
 
 						}
 						Class<?> clickedClass = Class.forName("com.example.budgetnotebook.GoalView");

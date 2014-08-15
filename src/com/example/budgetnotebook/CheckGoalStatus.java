@@ -31,7 +31,7 @@ public class CheckGoalStatus extends AsyncTask<DBHelper, String, Boolean> {
 	protected Boolean doInBackground(DBHelper... arguments) {
 		db = arguments[0];
 		//Check the status of goals, update goals and update goal alerts.
-		db.checkGoalStatus();
+		db.checkGoalStatus("now");
 		return true;
 	}
 	
