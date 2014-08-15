@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 	//Name of the database storing the tables for the Budget Notebook application.
 	public static final String DATABASE_NAME = "BudgetNotebook.db";
-	public static final int VERSION = 41; // Updated Goal Table. 1 Aug 2014 - DJM
+	public static final int VERSION = 42; // Updated Goal Table. 1 Aug 2014 - DJM
 	
 	//Fields associated with the Profile Table.
 	public static final String PROFILE_TABLE = "profile_table";
